@@ -44,14 +44,15 @@ public class Statue : MonoBehaviour, IMoveable
     };
 
     /// <summary>
-    /// True when the player is actively moving this statue
+    /// Stores the name of the direction in which the player
+    /// engaged with this statue
     /// </summary>
-    bool isBeingPulled = false;
-    public bool IsBeingPulled
+    string interactedFrom = "";
+    public string InteractedFrom
     {
-        set { this.isBeingPulled = true; }
+        get { return this.interactedFrom; }
     }
-
+   
     /// <summary>
     /// Assigns references
     /// </summary>
@@ -62,31 +63,50 @@ public class Statue : MonoBehaviour, IMoveable
     }
 
     /// <summary>
-    /// Returns the name of the direction from which the player interacted with the statue
+    /// Stores the direction from which the player engaged with this statue
+    /// Freeze all other axis excluding the one from which the player interacted from
     /// </summary>
-    /// <param name="playerRigidBody"></param>
-    public string GetInteractionDirectionName(Rigidbody playerRigidBody)
+    public void PlayerEngaged()
     {
-        string fromDirection = "";
         Vector3 origin = this.rigidbody.position;
 
         foreach (KeyValuePair<string, Vector3> dirInfo in this.directions) {
             string dirName = dirInfo.Key;
             Vector3 direction = dirInfo.Value;
 
-            // Show a line in the editor to see when we are calculating for attraction
-            Debug.DrawLine(origin, origin + direction * this.rayDistance, Color.red);
-
             Ray ray = new Ray(origin, direction);
             RaycastHit hitInfo;
 
             if (Physics.Raycast(ray, out hitInfo, this.rayDistance, this.playerLayer)) {
-                fromDirection = dirName;
+                this.interactedFrom = dirName;
+                if (dirName == "forward" || dirName == "back") {
+                    this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionZ;
+                } else {
+                    this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionX;
+                }
                 break;
             }
         }
-
-        return fromDirection;
     }
 
+    /// <summary>
+    /// Player is no longer interacting with this statue
+    /// Freeze all contraints
+    /// </summary>
+    public void PlayerDisingaged()
+    {
+        this.interactedFrom = "";
+        this.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    /// <summary>
+    /// Called by the player to move this statue in the direction given
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="speed"></param>
+    public void MoveTowardsDirection(Vector3 direction, float speed)
+    {
+        Vector3 targetPosition = this.rigidbody.position + direction * speed * Time.fixedDeltaTime;
+        this.rigidbody.MovePosition(targetPosition);
+    }
 }

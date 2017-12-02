@@ -174,8 +174,8 @@ public class Player : MonoBehaviour, IMoveable
             // Player is facing a statue, let's grab it
             if (this.statue != null) {
                 this.isInteractingWithStatue = true;
-                this.statue.transform.SetParent(this.transform);
-                string dirName = this.statue.GetInteractionDirectionName(this.rigidbody);
+                this.statue.PlayerEngaged();
+                string dirName = this.statue.InteractedFrom;
 
                 if (dirName == "forward" || dirName == "back") {
                     this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionZ;
@@ -185,11 +185,11 @@ public class Player : MonoBehaviour, IMoveable
             }
         }
 
-        // No longer grabing on to the statue
+        // No longer grabing the statue
         if (!isActionButton) {
             if(this.statue != null) {
-                this.statue.transform.SetParent(null);
                 this.isInteractingWithStatue = false;
+                this.statue.PlayerDisingaged();
                 this.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             }
         }
@@ -263,14 +263,56 @@ public class Player : MonoBehaviour, IMoveable
 
     /// <summary>
     /// Handles moving the player and the statue the player is currently interacting with
+    /// When the player moves towards the statue we move the player and allow the physics engine to push the statue
+    /// When the player is moving away from then we move the statue and let it push the player
     /// </summary>
     void InteractWithStatue()
     {
         Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
         direction.y = 0f;
 
-        Vector3 targetPosition = this.rigidbody.position + direction * this.moveSpeed * Time.fixedDeltaTime;
-        this.rigidbody.MovePosition(targetPosition);
+        // Ignore Axis based on where the player intected with the block
+        string dirName = this.statue.InteractedFrom;
+        if(dirName == "forward" || dirName == "back") {
+            direction.x = 0f;
+        } else {
+            direction.z = 0f;
+        }
+
+        // Trie when moving in the opposite direction
+        bool isPulling = false;
+
+        // Pulling up
+        if(dirName == "forward" && direction.z > 0) {
+            Debug.Log("Pulling Up");
+            isPulling = true;
+        }
+
+        // Pulling Left
+        if (dirName == "left" && direction.x < 0) {
+            Debug.Log("Pulling Left");
+            isPulling = true;
+        }
+
+        // Pulling Down
+        if (dirName == "back" && direction.z < 0) {
+            Debug.Log("Pulling Down");
+            isPulling = true;
+        }
+
+        // Pulling Right
+        if (dirName == "right" && direction.x > 0) {
+            Debug.Log("Pulling Right");
+            isPulling = true;
+        }
+
+        // When pulling we move the statue
+        if (isPulling) {
+            this.statue.MoveTowardsDirection(direction, this.moveSpeed);
+        } else {
+            Vector3 targetPosition = this.rigidbody.position + direction * this.moveSpeed * Time.fixedDeltaTime;
+            this.rigidbody.MovePosition(targetPosition);
+        }        
     }
     
     /// <summary>
