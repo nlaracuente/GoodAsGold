@@ -6,7 +6,7 @@ using UnityEngine;
 /// Controls player behavior
 /// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(MeshRenderer), typeof(Material))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IMoveable
 {
     /// <summary>
     /// The fasted the players moves when fully healed
@@ -43,6 +43,18 @@ public class Player : MonoBehaviour
     /// </summary>
     [SerializeField]
     int maxPickups = 5;
+
+    /// <summary>
+    /// A reference to the where the statue are on
+    /// </summary>
+    [SerializeField]
+    LayerMask statueLayer;
+
+    /// <summary>
+    /// The raycast distance from the player to where they can interact with an object
+    /// </summary>
+    [SerializeField]
+    float rayDistance = 1f;
 
     /// <summary>
     /// How much to reduce the player's movement speed
@@ -96,6 +108,25 @@ public class Player : MonoBehaviour
     Color[] cursedColors;
 
     /// <summary>
+    /// Returns true while the player is holding the "action" button
+    /// which triggers pulling/pushing
+    /// </summary>
+    public bool IsActionButtonHeld
+    {
+        get { return Input.GetButton("Jump"); }
+    }
+
+    /// <summary>
+    /// True while the player is pulling
+    /// </summary>
+    bool isInteractingWithStatue = false;
+
+    /// <summary>
+    /// The current statue the player is interacting with
+    /// </summary>
+    Statue statue;
+
+    /// <summary>
     /// Initialize
     /// </summary>
     void Awake ()
@@ -118,6 +149,7 @@ public class Player : MonoBehaviour
 
     /// <summary>
     /// Store player inputs to trigger rotation/movement
+    /// Handles player pull/push action
     /// </summary>
     void Update ()
     {
@@ -130,7 +162,59 @@ public class Player : MonoBehaviour
         if(this.inputVector.magnitude > 1) {
             this.inputVector.Normalize();
         }
-	}
+
+        bool isActionButton = Input.GetButton("Jump");
+
+        // Currently not enaged
+        // Trigger animation to engage
+        if(isActionButton && !this.isInteractingWithStatue) {
+
+            this.statue = this.GetStatueInfront();
+
+            // Player is facing a statue, let's grab it
+            if (this.statue != null) {
+                this.isInteractingWithStatue = true;
+                this.statue.transform.SetParent(this.transform);
+                string dirName = this.statue.GetInteractionDirectionName(this.rigidbody);
+
+                if (dirName == "forward" || dirName == "back") {
+                    this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionZ;
+                } else {
+                    this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionX;
+                }
+            }
+        }
+
+        // No longer grabing on to the statue
+        if (!isActionButton) {
+            if(this.statue != null) {
+                this.statue.transform.SetParent(null);
+                this.isInteractingWithStatue = false;
+                this.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns the statue that is directly infront of the player
+    /// </summary>
+    /// <returns></returns>
+    Statue GetStatueInfront()
+    {
+        Statue statue = null;
+        Vector3 origin = this.rigidbody.position;
+        Vector3 direction = this.transform.forward;
+
+        Debug.DrawLine(origin, origin + direction * this.rayDistance, Color.blue);
+        Ray ray = new Ray(origin, direction);
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, this.rayDistance, this.statueLayer)) {
+            statue = hit.collider.GetComponent<Statue>();
+        }
+
+        return statue;
+    }
 
     /// <summary>
     /// Performs rotations and movements
@@ -142,21 +226,34 @@ public class Player : MonoBehaviour
             return;
         }
 
+        if (this.isInteractingWithStatue) {
+            this.InteractWithStatue();
+        } else {
+            this.RotateAndMove();
+        }
+    }
+
+    /// <summary>
+    /// Handles rotating and moving the player
+    /// This is when the player is not pushing or pulling a statue
+    /// </summary>
+    void RotateAndMove()
+    {
         // Translate input vector based on camera position
         Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
         direction.y = 0f;
-        
+
         Quaternion targetRotation = Quaternion.Lerp(
                 this.rigidbody.rotation,
                 Quaternion.LookRotation(direction, Vector3.up),
                 this.rotationSpeed * Time.fixedDeltaTime
         );
-                
+
         this.rigidbody.MoveRotation(targetRotation);
 
         // Wait until rotation is at a certain angle before allowing movement
         // so that the player does not look awkward trying to moving while facing a different direction
-        if(Quaternion.Angle(this.rigidbody.rotation, targetRotation) > this.angleDistance) {
+        if (Quaternion.Angle(this.rigidbody.rotation, targetRotation) > this.angleDistance) {
             return;
         }
 
@@ -164,6 +261,18 @@ public class Player : MonoBehaviour
         this.rigidbody.MovePosition(targetPosition);
     }
 
+    /// <summary>
+    /// Handles moving the player and the statue the player is currently interacting with
+    /// </summary>
+    void InteractWithStatue()
+    {
+        Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
+        direction.y = 0f;
+
+        Vector3 targetPosition = this.rigidbody.position + direction * this.moveSpeed * Time.fixedDeltaTime;
+        this.rigidbody.MovePosition(targetPosition);
+    }
+    
     /// <summary>
     /// Triggers the curse's effect by slowing down the player's movement and rotation
     /// Changes the the mesh's color to simulate turning into gold
