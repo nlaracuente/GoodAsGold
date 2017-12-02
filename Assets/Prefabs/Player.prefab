@@ -55,14 +55,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1009715167144120}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 1.13, z: 5.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4128844230873702}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4128844230873702
 Transform:
   m_ObjectHideFlags: 1
@@ -124,7 +124,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: fed4e78bda2b3de45954637fee164b8c, type: 2}
+  - {fileID: 2100000, guid: 61b400ef3b3e68a468ad6a03d4aa84e7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -184,10 +184,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3112f958c9ebf47b61ef271a2afc8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 6
-  rotationSpeed: 10
+  maxSpeed: 6
+  maxRotationSpeed: 10
   angleDistance: 0.01
-  inputVector: {x: 0, y: 0, z: 0}
+  maxPickups: 8
+  pickups: 0
+  colorChangeDelay: 1
+  cursedColors:
+  - {r: 0, g: 1, b: 0.46288037, a: 0.29411766}
+  - {r: 0.44800544, g: 1, b: 0, a: 0.49019608}
+  - {r: 0.8194728, g: 1, b: 0, a: 0.78431374}
+  - {r: 1, g: 0.8907368, b: 0, a: 1}
 --- !u!136 &136155166133608066
 CapsuleCollider:
   m_ObjectHideFlags: 1
