@@ -50,6 +50,7 @@ public class PickupMover : MonoBehaviour, ITriggerable
     void Start ()
     {
         this.startingPos = this.transform.position;
+        this.targetPos = this.startingPos;
 
         TriggerButton button = FindObjectOfType<TriggerButton>();
         if (button != null) {
