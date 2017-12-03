@@ -85,7 +85,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        if (this.disableMenu || this.player.IsDead) {
+        if (this.disableMenu || this.player.IsDead || this.player.Disabled) {
 
             if (this.player.IsDead) {
                 this.GameOverMenu();
@@ -118,7 +118,7 @@ public class LevelMenu : MonoBehaviour
     /// <param name="buttonText"></param>
     void SetMenuButtonText(string buttonText)
     {
-        this.menuButton.GetComponentInChildren<Text>().text = "Restart";
+        this.menuButton.GetComponentInChildren<Text>().text = buttonText;
     }
 
     /// <summary>
@@ -137,7 +137,7 @@ public class LevelMenu : MonoBehaviour
     /// <summary>
     /// Opens the game over menu 
     /// </summary>
-    void GameOverMenu()
+    public void GameOverMenu()
     {
         this.isMenuOpened = true;
         this.description.text = this.gameOverText;
@@ -149,8 +149,9 @@ public class LevelMenu : MonoBehaviour
     /// <summary>
     /// Opens the game won menu 
     /// </summary>
-    void GameWonMenu()
+    public void GameWonMenu()
     {
+        this.player.Disabled = true;
         this.isMenuOpened = true;
         this.description.text = this.gameWonText;
         this.SetMenuButtonText("Again!");

@@ -108,6 +108,11 @@ public class Player : MonoBehaviour, IMoveable
     Color[] cursedColors;
 
     /// <summary>
+    /// A reference to the level menu
+    /// </summary>
+    LevelMenu menu;
+
+    /// <summary>
     /// Returns true while the player is holding the "action" button
     /// which triggers pulling/pushing
     /// </summary>
@@ -140,6 +145,11 @@ public class Player : MonoBehaviour, IMoveable
     }
 
     /// <summary>
+    /// True when the player is disabled
+    /// </summary>
+    public bool Disabled { get; set; }
+
+    /// <summary>
     /// The current statue the player is interacting with
     /// </summary>
     Statue statue;
@@ -162,6 +172,7 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     void Start()
     {
+        this.menu = FindObjectOfType<LevelMenu>();
         this.levelCamera = FindObjectOfType<LevelCamera>();
     }
 
@@ -171,6 +182,12 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     void Update ()
     {
+        // @TODO: replace this with a game manager to determine when to disable the player
+        if (this.menu.isMenuOpened || this.Disabled) {
+            this.inputVector = Vector3.zero;
+            return;
+        }
+
         this.inputVector = new Vector3(
             Input.GetAxisRaw("Horizontal"),
             0f,

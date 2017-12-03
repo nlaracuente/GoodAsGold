@@ -50,10 +50,28 @@ public class LevelCamera : MonoBehaviour
     /// True while the camera is still rotating
     /// </summary>
     bool isRotating = false;
-	
-	// Update is called once per frame
-	void Update ()
+
+    /// <summary>
+    /// A reference to the level menu
+    /// </summary>
+    LevelMenu menu;
+
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    private void Start()
     {
+        this.menu = FindObjectOfType<LevelMenu>();
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
+        // @TODO: replace this with a game manager to determine when to disable the player
+        if (this.menu.isMenuOpened) {
+            return;
+        }
+
         float angle = 0;
 
         // Left
@@ -82,6 +100,13 @@ public class LevelCamera : MonoBehaviour
         this.isRotating = true;
 
         while (this.targetAngle != 0) {
+
+            // @TODO: replace this with a game manager to determine when to disable the player
+            if (this.menu.isMenuOpened) {
+                yield return new WaitForEndOfFrame();
+                continue;
+            }
+
             float speed = this.targetAngle > 0f ? -this.rotationSpeed : this.rotationSpeed;
             this.transform.RotateAround(this.targertTransform.position, Vector3.up, speed);
             this.targetAngle += speed;
