@@ -37,4 +37,12 @@ public class PlayerAvatarModel : MonoBehaviour
     {
         this.player.DoTheAction = true;
     }
+
+    /// <summary>
+    /// Proxies the notification that the animation is done
+    /// </summary>
+    public void WinOrDeathAnimationDone()
+    {
+        this.player.WinOrDeathAnimationDone();
+    }
 }

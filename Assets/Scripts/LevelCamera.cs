@@ -63,6 +63,15 @@ public class LevelCamera : MonoBehaviour
     LevelMenu menu;
 
     /// <summary>
+    /// Enables/Disables the level camera
+    /// This is use when we want to turn on the player camera
+    /// </summary>
+    public bool DisableCamera
+    {
+        set { this.MainCamera.gameObject.SetActive(value); }
+    }
+
+    /// <summary>
     /// Initialize
     /// </summary>
     private void Start()

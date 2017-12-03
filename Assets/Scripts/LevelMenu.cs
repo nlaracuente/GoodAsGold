@@ -86,11 +86,6 @@ public class LevelMenu : MonoBehaviour
     void Update ()
     {
         if (this.disableMenu || this.player.IsDead || this.player.IsDisabled) {
-
-            if (this.player.IsDead) {
-                this.GameOverMenu();
-            }
-
             return;
         }
 

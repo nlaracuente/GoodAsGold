@@ -116,6 +116,12 @@ public class Player : MonoBehaviour, IMoveable
     Color[] cursedColors;
 
     /// <summary>
+    /// A reference to the player camera which is always facing the players
+    /// </summary>
+    [SerializeField]
+    Camera playerCamera;
+
+    /// <summary>
     /// A reference to the level menu
     /// </summary>
     LevelMenu menu;
@@ -207,6 +213,11 @@ public class Player : MonoBehaviour, IMoveable
         if (this.IsDisabled || this.menu.isMenuOpened) {
             this.inputVector = Vector3.zero;
             return;
+        }
+
+        // Player has died, trigger death sequence
+        if (this.IsDead) {
+            this.PlayerDeath();
         }
 
         this.inputVector = new Vector3(
@@ -556,5 +567,32 @@ public class Player : MonoBehaviour, IMoveable
         this.pickups = 0;
         this.moveSpeed = this.maxSpeed;
         this.rotationSpeed = this.maxRotationSpeed;
+    }
+
+    /// <summary>
+    /// Disable the level camera to enable the player camera
+    /// Trigger the death animation
+    /// Wait until the animation completes to display game over screen
+    /// </summary>
+    void PlayerDeath()
+    {
+        this.IsDisabled = true;
+        Debug.Log("Death Sequence");
+        this.levelCamera.DisableCamera = true;
+        this.playerCamera.gameObject.SetActive(true);
+        this.UpdateAnimator("Death");
+    }
+
+    /// <summary>
+    /// Notified by the avatar once the animation for either death or win
+    /// is done to open the corresponding meny
+    /// </summary>
+    public void WinOrDeathAnimationDone()
+    {
+        if (this.IsDead) {
+            this.menu.GameOverMenu();
+        } else {
+            this.menu.GameWonMenu();
+        }
     }
 }
