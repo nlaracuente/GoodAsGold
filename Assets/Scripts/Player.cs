@@ -446,6 +446,14 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     void OnPlayerLean()
     {
+        // Rotate the player to fully face the direction they interacted from
+        Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
+        direction.y = 0f;
+
+        if(direction != Vector3.zero) {
+            this.rigidbody.MoveRotation(Quaternion.LookRotation(direction, Vector3.up));
+        }
+
         this.inputVector = Vector3.zero;
         this.UpdateAnimator("Lean");
         this.StartCoroutine(this.WaitForAnimationEnd("PlayerLeanAnimation"));

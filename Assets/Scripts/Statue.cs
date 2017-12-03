@@ -52,7 +52,21 @@ public class Statue : MonoBehaviour, IMoveable
     {
         get { return this.interactedFrom; }
     }
-   
+
+    /// <summary>
+    /// Returns the vector3 that represents the direction the player interacted from
+    /// </summary>
+    Vector3 InteractionDirection
+    {
+        get {
+            Vector3 direction = Vector3.zero;
+            if (this.directions.ContainsKey(this.interactedFrom)) {
+                direction = this.directions[this.interactedFrom];
+            }
+            return direction;
+        }
+    }
+
     /// <summary>
     /// Assigns references
     /// </summary>
@@ -81,6 +95,7 @@ public class Statue : MonoBehaviour, IMoveable
 
             if (Physics.Raycast(ray, out hitInfo, this.rayDistance, this.playerLayer)) {
                 this.interactedFrom = dirName;
+
                 if (dirName == "forward" || dirName == "back") {
                     this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionZ;
                 } else {
