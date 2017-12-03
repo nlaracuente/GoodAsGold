@@ -284,25 +284,21 @@ public class Player : MonoBehaviour, IMoveable
 
         // Pulling up
         if(dirName == "forward" && direction.z > 0) {
-            Debug.Log("Pulling Up");
             isPulling = true;
         }
 
         // Pulling Left
         if (dirName == "left" && direction.x < 0) {
-            Debug.Log("Pulling Left");
             isPulling = true;
         }
 
         // Pulling Down
         if (dirName == "back" && direction.z < 0) {
-            Debug.Log("Pulling Down");
             isPulling = true;
         }
 
         // Pulling Right
         if (dirName == "right" && direction.x > 0) {
-            Debug.Log("Pulling Right");
             isPulling = true;
         }
 
