@@ -8,6 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour, IMoveable
 {
+    #region Variables
     /// <summary>
     /// The fasted the players moves when fully healed
     /// </summary>
@@ -120,18 +121,18 @@ public class Player : MonoBehaviour, IMoveable
     LevelMenu menu;
 
     /// <summary>
-    /// Returns true while the player is holding the "action" button
-    /// which triggers pulling/pushing
+    /// The current statue the player is interacting with
     /// </summary>
-    public bool IsActionButtonHeld
-    {
-        get { return Input.GetButton("Jump"); }
-    }
+    Statue statue;
 
     /// <summary>
-    /// True while the player is pulling
+    /// True while the player is leaning on a statue 
+    /// This includes pulling/pushing
     /// </summary>
-    bool isInteractingWithStatue = false;
+    bool IsInteractingWithStatue
+    {
+        get { return this.statue != null; }
+    }
 
     /// <summary>
     /// Returns the the current curse percent the player is at
@@ -154,13 +155,27 @@ public class Player : MonoBehaviour, IMoveable
     /// <summary>
     /// True when the player is disabled
     /// </summary>
-    public bool Disabled { get; set; }
+    public bool IsDisabled { get; set; }
 
     /// <summary>
-    /// The current statue the player is interacting with
+    /// True while an action is playing and waiting for the 
+    /// animation to notify it is done
     /// </summary>
-    Statue statue;
+    bool isActionCompleted = true;
+    public bool IsActionCompleted
+    {
+        get { return this.isActionCompleted; }
+        set { this.isActionCompleted = value; }
+    }
 
+    /// <summary>
+    /// True when the animations are within the frames
+    /// where it makes sense to move the player/statue
+    /// </summary>
+    public bool DoTheAction { get; set; }
+    #endregion
+
+    #region Unity Methods
     /// <summary>
     /// Initialize
     /// </summary>
@@ -189,7 +204,7 @@ public class Player : MonoBehaviour, IMoveable
     void Update ()
     {
         // @TODO: replace this with a game manager to determine when to disable the player
-        if (this.menu.isMenuOpened || this.Disabled) {
+        if (this.IsDisabled || this.menu.isMenuOpened) {
             this.inputVector = Vector3.zero;
             return;
         }
@@ -208,13 +223,12 @@ public class Player : MonoBehaviour, IMoveable
 
         // Currently not enaged
         // Trigger animation to engage
-        if(isActionButton && !this.isInteractingWithStatue) {
+        if(isActionButton && !this.IsInteractingWithStatue) {
 
             this.statue = this.GetStatueInfront();
 
             // Player is facing a statue, let's grab it
             if (this.statue != null) {
-                this.isInteractingWithStatue = true;
                 this.statue.PlayerEngaged();
                 string dirName = this.statue.InteractedFrom;
 
@@ -223,16 +237,14 @@ public class Player : MonoBehaviour, IMoveable
                 } else {
                     this.rigidbody.constraints = ~RigidbodyConstraints.FreezePositionX;
                 }
+                
+                this.OnPlayerLean();
             }
         }
 
         // No longer grabing the statue
-        if (!isActionButton) {
-            if(this.statue != null) {
-                this.isInteractingWithStatue = false;
-                this.statue.PlayerDisingaged();
-                this.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            }
+        if (!isActionButton && this.IsInteractingWithStatue) {
+            this.OnPlayerLeanCancelled();
         }
 
         // Updates animations
@@ -240,21 +252,23 @@ public class Player : MonoBehaviour, IMoveable
     }
 
     /// <summary>
-    /// Updates animator variables to trigger corresponding animations
+    /// Performs rotations and movements
     /// </summary>
-    void UpdateAnimator()
+    void FixedUpdate()
     {
-        // Don't have a reference to the animator
-        if(this.animator == null) {
+        // Vector3.zero means the player is not moving
+        // Also, don't do anything while disabled
+        if (this.inputVector == Vector3.zero || this.IsDisabled) {
             return;
         }
 
-        if(this.inputVector == Vector3.zero) {
-            this.animator.SetFloat("MoveSpeed", 0f);
+        if (this.IsInteractingWithStatue) {
+            this.InteractWithStatue();
         } else {
-            this.animator.SetFloat("MoveSpeed", this.moveSpeed);
+            this.RotateAndMove();
         }
     }
+    #endregion
 
     /// <summary>
     /// Returns the statue that is directly infront of the player
@@ -266,11 +280,11 @@ public class Player : MonoBehaviour, IMoveable
         Vector3 origin = this.rigidbody.position;
         Vector3 direction = this.transform.forward;
 
-        Debug.DrawLine(origin, origin + direction * this.rayDistance, Color.blue);
+        Debug.DrawLine(origin, origin + direction * this.rayDistance, Color.green, .25f);
         Ray ray = new Ray(origin, direction);
         RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit, this.rayDistance, this.statueLayer)) {
+        if (Physics.Raycast(ray, out hit, this.rayDistance, this.statueLayer)) {
             statue = hit.collider.GetComponent<Statue>();
         }
 
@@ -278,19 +292,26 @@ public class Player : MonoBehaviour, IMoveable
     }
 
     /// <summary>
-    /// Performs rotations and movements
+    /// Updates animator variables to trigger corresponding animations
     /// </summary>
-    void FixedUpdate()
+    void UpdateAnimator(string triggerName = "")
     {
-        // Vector3.zero means the player is not moving
-        if (this.inputVector == Vector3.zero) {
+        // Don't have a reference to the animator
+        if (this.animator == null) {
             return;
         }
 
-        if (this.isInteractingWithStatue) {
-            this.InteractWithStatue();
+        // Set of a trigger
+        if (triggerName != "") {
+            this.animator.SetTrigger(triggerName);
+        }
+
+        // Movement Blend
+        if (this.inputVector == Vector3.zero) {
+            this.animator.SetFloat("MoveSpeed", 0f);
         } else {
-            this.RotateAndMove();
+            // We want a number between 0 and 1 for the animation blend
+            this.animator.SetFloat("MoveSpeed", this.moveSpeed / this.maxSpeed);
         }
     }
 
@@ -329,6 +350,11 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     void InteractWithStatue()
     {
+        // Wait until the current push/pull action is completed
+        if (!this.IsActionCompleted) {
+            return;
+        }
+
         Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
         direction.y = 0f;
 
@@ -340,7 +366,7 @@ public class Player : MonoBehaviour, IMoveable
             direction.z = 0f;
         }
 
-        // Trie when moving in the opposite direction
+        // True when is moving in the opposite direction
         bool isPulling = false;
 
         // Pulling up
@@ -363,15 +389,82 @@ public class Player : MonoBehaviour, IMoveable
             isPulling = true;
         }
 
-        // When pulling we move the statue
+        this.StartCoroutine(this.PushOrPullAction(isPulling, direction));
+    }
+
+    /// <summary>
+    /// While the push or pull animation is playing
+    /// Continue to move the player and statue
+    /// </summary>
+    /// <param name="isPulling"></param>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    IEnumerator PushOrPullAction(bool isPulling, Vector3 direction)
+    {
+        this.IsDisabled = true;
+        this.IsActionCompleted = false;
+        AnimatorStateInfo animationInfo = this.animator.GetCurrentAnimatorStateInfo(0);
+
+        // Update Action
         if (isPulling) {
-            this.statue.MoveTowardsDirection(direction, this.moveSpeed);
+            this.UpdateAnimator("Pull");
         } else {
-            Vector3 targetPosition = this.rigidbody.position + direction * this.moveSpeed * Time.fixedDeltaTime;
-            this.rigidbody.MovePosition(targetPosition);
-        }        
+            this.UpdateAnimator("Push");
+        }
+
+        // Wait for the animation to hit the sweet spot to let us know to move
+        while (!this.DoTheAction) {
+            yield return new WaitForEndOfFrame();
+        }
+
+        // Turn it off for future use
+        this.DoTheAction = false;
+
+        while (!this.IsActionCompleted && !this.IsDead) {
+            // Statue pushes the player
+            if (isPulling) {
+                this.statue.MoveTowardsDirection(direction, this.moveSpeed);
+
+            // Player pushes the statue
+            } else {
+                Vector3 targetPosition = this.rigidbody.position + direction * this.moveSpeed * Time.fixedDeltaTime;
+                this.rigidbody.MovePosition(targetPosition);
+            }
+
+            // Ensure physics calculations are processes
+            yield return new WaitForFixedUpdate();
+        }
+
+        // Wait for the animator to start playing the animation
+        yield return new WaitForEndOfFrame();
+
+        this.IsDisabled = false;
+    }
+
+    /// <summary>
+    /// Triggers player leaning on statue to push or pull
+    /// </summary>
+    void OnPlayerLean()
+    {
+        this.inputVector = Vector3.zero;
+        this.UpdateAnimator("Lean");
+        this.StartCoroutine(this.WaitForAnimationEnd("PlayerLeanAnimation"));
     }
     
+    /// <summary>
+    /// Triggers player leaning off statue and returning to idle
+    /// </summary>
+    void OnPlayerLeanCancelled()
+    {
+        this.inputVector = Vector3.zero;
+        this.UpdateAnimator("StopLeaning");
+        this.StartCoroutine(this.WaitForAnimationEnd("PlayerStopsLeaningAnimation"));
+
+        this.statue.PlayerDisingaged();
+        this.statue = null;
+        this.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+    }
+
     /// <summary>
     /// Triggers the curse's effect by slowing down the player's movement and rotation
     /// Changes the the mesh's color to simulate turning into gold
@@ -380,11 +473,13 @@ public class Player : MonoBehaviour, IMoveable
     {
         this.pickups++;
 
+        // Reduce Movement Speed
         this.moveSpeed = Mathf.Max(
             0,
             Mathf.Min(this.maxSpeed, this.moveSpeed - this.speedDamper)
         );
 
+        // Reduce Rotation Speed
         this.rotationSpeed = Mathf.Max(
             0,
             Mathf.Min(this.maxRotationSpeed, this.rotationSpeed - this.rotationDamper)
@@ -425,6 +520,23 @@ public class Player : MonoBehaviour, IMoveable
             );
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    /// <summary>
+    /// Disables the player while waiting for the animation to finish playing
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator WaitForAnimationEnd(string animationName)
+    {
+        this.IsDisabled = true;
+        AnimatorStateInfo animationInfo = this.animator.GetCurrentAnimatorStateInfo(0);
+
+        // When the name changes then we are done playing the animation
+        while (animationInfo.IsName(animationName)) {
+            yield return new WaitForEndOfFrame();
+        }
+        
+        this.IsDisabled = false;
     }
 
     /// <summary>

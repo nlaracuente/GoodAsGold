@@ -77,6 +77,8 @@ public class Statue : MonoBehaviour, IMoveable
             Ray ray = new Ray(origin, direction);
             RaycastHit hitInfo;
 
+            Debug.DrawRay(origin, direction, Color.yellow);
+
             if (Physics.Raycast(ray, out hitInfo, this.rayDistance, this.playerLayer)) {
                 this.interactedFrom = dirName;
                 if (dirName == "forward" || dirName == "back") {

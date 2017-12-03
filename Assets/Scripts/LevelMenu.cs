@@ -85,7 +85,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        if (this.disableMenu || this.player.IsDead || this.player.Disabled) {
+        if (this.disableMenu || this.player.IsDead || this.player.IsDisabled) {
 
             if (this.player.IsDead) {
                 this.GameOverMenu();
@@ -140,6 +140,7 @@ public class LevelMenu : MonoBehaviour
     public void GameOverMenu()
     {
         this.isMenuOpened = true;
+        this.player.IsDisabled = true;
         this.description.text = this.gameOverText;
         this.SetMenuButtonText("Retry");
         this.UpdateCursedText();
@@ -151,7 +152,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void GameWonMenu()
     {
-        this.player.Disabled = true;
+        this.player.IsDisabled = true;
         this.isMenuOpened = true;
         this.description.text = this.gameWonText;
         this.SetMenuButtonText("Again!");
