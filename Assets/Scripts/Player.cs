@@ -122,6 +122,24 @@ public class Player : MonoBehaviour, IMoveable
     bool isInteractingWithStatue = false;
 
     /// <summary>
+    /// Returns the the current curse percent the player is at
+    /// </summary>
+    public float CursePercent
+    {
+        get {
+            return ((float)this.pickups / (float)this.maxPickups) * 100;
+        }
+    }
+
+    /// <summary>
+    /// Returns true once the player has reached 100 or more of the curse
+    /// </summary>
+    public bool IsDead
+    {
+        get { return this.pickups >= this.maxPickups; }
+    }
+
+    /// <summary>
     /// The current statue the player is interacting with
     /// </summary>
     Statue statue;
@@ -344,7 +362,7 @@ public class Player : MonoBehaviour, IMoveable
         Color newColor = this.renderer.material.color;
 
         // Update based on curse percentage
-        float cursedPercent = ((float)this.pickups / (float)this.maxPickups) * 100;
+        float cursedPercent = this.CursePercent;
 
         if (cursedPercent >= 25 && cursedPercent < 50) {
             newColor = this.cursedColors[0];

@@ -7,7 +7,7 @@ using UnityEngine;
 /// Preassure Sensitive Button
 /// Requires that an object be on top of this object to be marked as active
 /// </summary>
-public class TriggerButton : Button
+public class TriggerButton : ButtonTile
 {
     
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Base class for button type switches
 /// </summary>
-public abstract class Button : MonoBehaviour
+public abstract class ButtonTile : MonoBehaviour
 {
     /// <summary>
     /// Color to display when the switch is active
