@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Controls player behavior
 /// </summary>
-[RequireComponent(typeof(Rigidbody), typeof(MeshRenderer), typeof(Material))]
+[RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour, IMoveable
 {
     /// <summary>
@@ -76,7 +76,14 @@ public class Player : MonoBehaviour, IMoveable
     /// <summary>
     /// A reference to the Mesh Renderer component
     /// </summary>
+    [SerializeField]
     new MeshRenderer renderer;
+
+    /// <summary>
+    /// A reference to the animation controller component
+    /// </summary>
+    [SerializeField]
+    Animator animator;
 
     /// <summary>
     /// A reference to the level camera to process movements/rotations based on its position
@@ -160,7 +167,6 @@ public class Player : MonoBehaviour, IMoveable
     void Awake ()
     {
         this.rigidbody      = GetComponent<Rigidbody>();
-        this.renderer       = GetComponent<MeshRenderer>();
         this.moveSpeed      = this.maxSpeed;
         this.rotationSpeed  = this.maxRotationSpeed;
         this.speedDamper    = this.maxSpeed / this.maxPickups;
@@ -227,6 +233,26 @@ public class Player : MonoBehaviour, IMoveable
                 this.statue.PlayerDisingaged();
                 this.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             }
+        }
+
+        // Updates animations
+        this.UpdateAnimator();
+    }
+
+    /// <summary>
+    /// Updates animator variables to trigger corresponding animations
+    /// </summary>
+    void UpdateAnimator()
+    {
+        // Don't have a reference to the animator
+        if(this.animator == null) {
+            return;
+        }
+
+        if(this.inputVector == Vector3.zero) {
+            this.animator.SetFloat("MoveSpeed", 0f);
+        } else {
+            this.animator.SetFloat("MoveSpeed", this.moveSpeed);
         }
     }
 
