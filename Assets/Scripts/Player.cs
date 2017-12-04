@@ -499,15 +499,15 @@ public class Player : MonoBehaviour, IMoveable
         );
 
         // Fire off the color changer
-        StopCoroutine(this.TurnIntoGold());
-        StartCoroutine(this.TurnIntoGold());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StartCoroutine(this.ChangeMaterialPerCurse());
     }
 
     /// <summary>
     /// Gradually changes the alpha of the gold color of the player to match their current curse state
     /// </summary>
     /// <returns></returns>
-    IEnumerator TurnIntoGold()
+    IEnumerator ChangeMaterialPerCurse()
     {
         float cursedPercent = this.CursePercent;        
         float currentAlpha  = this.renderer.materials[1].color.a;
@@ -554,6 +554,7 @@ public class Player : MonoBehaviour, IMoveable
         this.pickups = 0;
         this.moveSpeed = this.maxSpeed;
         this.rotationSpeed = this.maxRotationSpeed;
+        StartCoroutine(this.ChangeMaterialPerCurse());
     }
 
     /// <summary>
@@ -575,6 +576,7 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     public void PlayerVictory()
     {
+        this.LiftCurse();
         this.EndOfLevel("Victory");
     }
 
