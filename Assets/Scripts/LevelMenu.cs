@@ -106,15 +106,6 @@ public class LevelMenu : MonoBehaviour
     {
         this.cursedPercent.text = "Cursed is at: " + this.player.CursePercent + "%";
     }
-    
-    /// <summary>
-    /// Updates the text on the menu button
-    /// </summary>
-    /// <param name="buttonText"></param>
-    void SetMenuButtonText(string buttonText)
-    {
-        this.menuButton.GetComponentInChildren<Text>().text = buttonText;
-    }
 
     /// <summary>
     /// Opens the level menu displaying current status
@@ -124,7 +115,6 @@ public class LevelMenu : MonoBehaviour
     {
         this.isMenuOpened = true;
         this.description.text = this.levelText;
-        this.SetMenuButtonText("Restart");
         this.UpdateCursedText();
         this.menuContainer.SetActive(true);
     }
@@ -137,7 +127,6 @@ public class LevelMenu : MonoBehaviour
         this.isMenuOpened = true;
         this.player.IsDisabled = true;
         this.description.text = this.gameOverText;
-        this.SetMenuButtonText("Retry");
         this.UpdateCursedText();
         this.menuContainer.SetActive(true);
     }
@@ -150,7 +139,6 @@ public class LevelMenu : MonoBehaviour
         this.player.IsDisabled = true;
         this.isMenuOpened = true;
         this.description.text = this.gameWonText;
-        this.SetMenuButtonText("Again!");
         this.UpdateCursedText();
         this.menuContainer.SetActive(true);
     }
@@ -173,7 +161,14 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void OnReloadButtonPressed()
     {
-        Debug.Log("Reload");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>
+    /// Loads the main menu scene
+    /// </summary>
+    public void QuitToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
