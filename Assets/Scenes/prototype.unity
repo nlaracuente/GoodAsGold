@@ -1612,11 +1612,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 114079224171288450, guid: 361f3954ea5cd524f835c0a81ddc3b6b,
-        type: 2}
-      propertyPath: clips.Array.data[6].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: e60ed8c1071c0b54d9452728a6b442b0, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 361f3954ea5cd524f835c0a81ddc3b6b, type: 2}
   m_IsPrefabParent: 0

@@ -72,4 +72,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: d8eb5f72df05a694591fd18ac50935ee, type: 3}
   - soundName: DragStatue
     volume: 0.5
-    clip: {fileID: 8300000, guid: 3e8c137292dc218448e23918833a71a0, type: 3}
+    clip: {fileID: 8300000, guid: e60ed8c1071c0b54d9452728a6b442b0, type: 3}
+  - soundName: GameOver
+    volume: 0.75
+    clip: {fileID: 8300000, guid: 1714579c511c624498967455850b7d93, type: 3}
+  - soundName: Victory
+    volume: 0.75
+    clip: {fileID: 8300000, guid: 52cdda0d2e2520b4d88f665b12efbbe9, type: 3}

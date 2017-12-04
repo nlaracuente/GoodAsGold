@@ -43,4 +43,14 @@ public class PlayerSoundEffects : MonoBehaviour
     {
         AudioManager.instance.PlaySound("DragStatue");
     }
+
+    public void GameOver()
+    {
+        AudioManager.instance.PlaySound("GameOver");
+    }
+
+    public void Victory()
+    {
+        AudioManager.instance.PlaySound("Victory");
+    }
 }
