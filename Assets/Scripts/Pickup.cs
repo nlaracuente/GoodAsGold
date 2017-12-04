@@ -66,6 +66,7 @@ public class Pickup : MonoBehaviour
     IEnumerator ItemCollected(Player player)
     {
         yield return null;
+        AudioManager.instance.PlaySound("CoinPickup");
         this.isItemCollected = true;
         player.CursedItemCollected();
         Destroy(this.gameObject);

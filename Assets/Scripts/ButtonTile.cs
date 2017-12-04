@@ -59,6 +59,7 @@ public abstract class ButtonTile : MonoBehaviour
         if(moveable != null) {
             this.activatedBy = moveable;
             this.OnButtonPressed();
+            AudioManager.instance.PlaySound("ButtonPressed");
         }
     }
 
