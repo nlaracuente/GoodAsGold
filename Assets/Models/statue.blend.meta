@@ -1,0 +1,151 @@
+fileFormatVersion: 2
+guid: e23d24b4cecdb444c81dc9e53a6ae335
+timeCreated: 1512365087
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Bone_001
+    100004: Bone_005
+    100006: chest
+    100008: Cylinder
+    100010: foot_L
+    100012: foot_R
+    100014: hand_L
+    100016: hand_R
+    100018: head
+    100020: leg_control_L
+    100022: leg_control_R
+    100024: lowerArm_L
+    100026: lowerArm_R
+    100028: lowerLeg_L
+    100030: lowerLeg_R
+    100032: neck
+    100034: //RootNode
+    100036: thumb_L
+    100038: thumb_R
+    100040: torso
+    100042: upperArm_L
+    100044: upperArm_R
+    100046: upperLeg_L
+    100048: upperLeg_R
+    400000: Armature
+    400002: Bone_001
+    400004: Bone_005
+    400006: chest
+    400008: Cylinder
+    400010: foot_L
+    400012: foot_R
+    400014: hand_L
+    400016: hand_R
+    400018: head
+    400020: leg_control_L
+    400022: leg_control_R
+    400024: lowerArm_L
+    400026: lowerArm_R
+    400028: lowerLeg_L
+    400030: lowerLeg_R
+    400032: neck
+    400034: //RootNode
+    400036: thumb_L
+    400038: thumb_R
+    400040: torso
+    400042: upperArm_L
+    400044: upperArm_R
+    400046: upperLeg_L
+    400048: upperLeg_R
+    4300000: Cylinder
+    7400000: Default Take
+    7400002: celebrate
+    7400004: death
+    7400006: lean
+    7400008: pull
+    7400010: push
+    7400012: push_001
+    7400014: walk
+    9500000: //RootNode
+    13700000: Cylinder
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__jones3
+    second: {fileID: 2100000, guid: 5948a60960581c643b4a8f22a07ebcef, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

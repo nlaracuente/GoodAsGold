@@ -132,6 +132,17 @@ public class Player : MonoBehaviour, IMoveable
     Statue statue;
 
     /// <summary>
+    /// The material to put on the player when running the death sequence
+    /// </summary>
+    [SerializeField]
+    Material deathMaterial;
+
+    /// <summary>
+    /// A refrence to the material the player starts with
+    /// </summary>
+    Material originalMaterial;
+
+    /// <summary>
     /// True while the player is leaning on a statue 
     /// This includes pulling/pushing
     /// </summary>
@@ -201,6 +212,7 @@ public class Player : MonoBehaviour, IMoveable
     {
         this.menu = FindObjectOfType<LevelMenu>();
         this.levelCamera = FindObjectOfType<LevelCamera>();
+        this.originalMaterial = this.renderer.material;
     }
 
     /// <summary>
@@ -505,38 +517,31 @@ public class Player : MonoBehaviour, IMoveable
         );
 
         // Fire off the color changer
-        StopCoroutine(this.ChangeColorPerCurse());
-        StartCoroutine(this.ChangeColorPerCurse());
+        StopCoroutine(this.TurnIntoGold());
+        StartCoroutine(this.TurnIntoGold());
     }
 
     /// <summary>
-    /// Gradually changes the color of the player to match their current curse state
+    /// Gradually changes the alpha of the gold color of the player to match their current curse state
     /// </summary>
     /// <returns></returns>
-    IEnumerator ChangeColorPerCurse()
+    IEnumerator TurnIntoGold()
     {
-        // Default to current
-        Color newColor = this.renderer.material.color;
+        float cursedPercent = this.CursePercent;        
+        float currentAlpha  = this.renderer.materials[1].color.a;
+        float targetAlpha   = cursedPercent * .01f;
 
-        // Update based on curse percentage
-        float cursedPercent = this.CursePercent;
-
-        if (cursedPercent >= 25 && cursedPercent < 50) {
-            newColor = this.cursedColors[0];
-        } else if (cursedPercent >= 50 && cursedPercent < 75) {
-            newColor = this.cursedColors[1];
-        } else if (cursedPercent >= 75 & cursedPercent < 100) {
-            newColor = this.cursedColors[2];
-        } else if (cursedPercent >= 100) {
-            newColor = this.cursedColors[3];
-        }
-
-        while (this.renderer.material.color != newColor) {
-            this.renderer.material.color = Color.Lerp(
-            this.renderer.material.color,
-                newColor,
+        // Wait until they are close enough
+        while (!Mathf.Approximately(currentAlpha, targetAlpha)) {
+            currentAlpha = Mathf.Lerp(
+                currentAlpha, 
+                targetAlpha, 
                 this.colorChangeDelay * Time.deltaTime
             );
+
+            Color newColor = this.renderer.materials[1].color;
+            newColor.a = currentAlpha;
+            this.renderer.materials[1].color = newColor;            
             yield return new WaitForEndOfFrame();
         }
     }
@@ -575,6 +580,10 @@ public class Player : MonoBehaviour, IMoveable
     void PlayerDeath()
     {
         this.IsDisabled = true;
+        Material[] materials = this.renderer.materials;
+        materials[1] = this.deathMaterial;
+
+        this.renderer.materials = materials;
         this.levelCamera.CameraEnabled = false;
         this.playerCamera.gameObject.SetActive(true);
         this.UpdateAnimator("Death");

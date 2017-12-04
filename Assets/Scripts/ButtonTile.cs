@@ -8,16 +8,16 @@ using UnityEngine;
 public abstract class ButtonTile : MonoBehaviour
 {
     /// <summary>
-    /// Color to display when the switch is active
+    /// Mesh to change to when the button is pressed
     /// </summary>
     [SerializeField]
-    Material activeMaterial;
+    Mesh activeMesh;
 
     /// <summary>
-    /// Color to display when the switch is not active
+    /// Mesh to change to when the button is not pressed
     /// </summary>
     [SerializeField]
-    Material inactiveMaterial;
+    Mesh inactiveMesh;
 
     /// <summary>
     /// A reference to the mesh renderer component
@@ -102,8 +102,8 @@ public abstract class ButtonTile : MonoBehaviour
             this.OnButtonPressedEvent();
         }
 
-        if(this.renderer != null && this.activeMaterial != null) {
-            this.renderer.material = this.activeMaterial;
+        if(this.renderer != null && this.activeMesh != null) {
+            this.renderer.GetComponent<MeshFilter>().sharedMesh = this.activeMesh;
         }
     }
 
@@ -117,8 +117,8 @@ public abstract class ButtonTile : MonoBehaviour
             this.OnButtonReleasedEvent();
         }
 
-        if (this.renderer != null && this.inactiveMaterial != null) {
-            this.renderer.material = this.inactiveMaterial;
+        if (this.renderer != null && this.inactiveMesh != null) {
+            this.renderer.GetComponent<MeshFilter>().sharedMesh = this.inactiveMesh;
         }
     }
 }
