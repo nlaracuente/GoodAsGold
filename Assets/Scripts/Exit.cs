@@ -29,7 +29,7 @@ public class Exit : MonoBehaviour
         if(other.tag != "Player" || this.menu.isMenuOpened) {
             return;
         }
-
+        
         other.GetComponent<Player>().PlayerVictory();
     }
 }

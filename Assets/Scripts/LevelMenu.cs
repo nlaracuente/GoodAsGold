@@ -126,6 +126,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void GameOverMenu()
     {
+        GameManager.instance.IsGameWon = false;
         this.isMenuOpened = true;
         this.player.IsDisabled = true;
         this.description.text = this.gameOverText;
@@ -138,6 +139,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void GameWonMenu()
     {
+        GameManager.instance.IsGameWon = true;
         this.player.IsDisabled = true;
         this.isMenuOpened = true;
         this.description.text = this.gameWonText;

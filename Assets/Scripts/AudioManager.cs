@@ -111,7 +111,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// A reference to the AudioManager singleton
     /// </summary>
-    public static AudioManager instance;
+    public static AudioManager instance = null;
 
     /// <summary>
     /// Contains a list of all the sound clips to use
@@ -132,7 +132,20 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// A reference to the music clip so that we can change it at will
     /// </summary>
-    SoundClip musicClip;
+    SoundClip musicClip;    
+
+    /// <summary>
+    /// Singleton setup
+    /// </summary>
+    void Awake()
+    {
+        if (instance == null) {
+            instance = this;
+        } else {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
+    }
 
     /// <summary>
     /// Creates game objects for all of the sound clips
@@ -142,20 +155,7 @@ public class AudioManager : MonoBehaviour
         foreach (SoundClip clip in this.clips) {
             // store a reference so that we can invoke it later
             this.soundClips[clip.soundName] = clip;
-        }        
-    }
-
-    /// <summary>
-    /// Singleton setup
-    /// </summary>
-    void Update()
-    {
-        if (instance == null) {
-            instance = this;
-        } else {
-            Destroy(this);
         }
-        DontDestroyOnLoad(this);
     }
 
     /// <summary>
@@ -219,6 +219,14 @@ public class AudioManager : MonoBehaviour
         this.musicClip = musicClip;        
         this.musicClip.Loop = true;
         this.musicClip.Play();
+    }
+
+    /// <summary>
+    /// Stops the music from playing
+    /// </summary>
+    public void ChangeMusicVolume(float volume)
+    {
+        this.musicClip.ChangeVolume(volume);
     }
 
     /// <summary>

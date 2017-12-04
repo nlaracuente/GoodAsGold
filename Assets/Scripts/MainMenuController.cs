@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Simple controller for handling the Main Menu options
@@ -9,16 +8,17 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
     /// <summary>
-    /// The name of the level to load
+    /// A reference to the game won container to enable disable based on the game state
     /// </summary>
     [SerializeField]
-    string levelName = "Level";
-
+    GameObject gameWonBG;
+        
     /// <summary>
     /// Play title music
     /// </summary>
     void Update()
     {
+        this.gameWonBG.SetActive(GameManager.instance.IsGameWon);
         AudioManager.instance.PlayMusic("TitleMusic");
     }
 
@@ -27,7 +27,7 @@ public class MainMenuController : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene(this.levelName);
+        GameManager.instance.StartGame();
     }
 
     /// <summary>
@@ -35,9 +35,6 @@ public class MainMenuController : MonoBehaviour
     /// </summary>
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-        Debug.Log("Application Quit");
-        #endif
-        Application.Quit();
+        GameManager.instance.Exit();
     }
 }

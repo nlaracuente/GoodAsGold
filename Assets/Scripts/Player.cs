@@ -561,14 +561,13 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     void PlayerDeath()
     {
-        this.IsDisabled = true;
+        // Show the losing face
         Material[] materials = this.renderer.materials;
         materials[1] = this.deathMaterial;
-
         this.renderer.materials = materials;
-        this.levelCamera.CameraEnabled = false;
-        this.playerCamera.gameObject.SetActive(true);
-        this.UpdateAnimator("Death");
+
+        this.EndOfLevel("Death");
+        
     }
 
     /// <summary>
@@ -587,6 +586,7 @@ public class Player : MonoBehaviour, IMoveable
     /// <param name="triggerName"></param>
     void EndOfLevel(string triggerName)
     {
+        AudioManager.instance.ChangeMusicVolume(0f);
         this.IsDisabled = true;
         this.levelCamera.CameraEnabled = false;
         this.playerCamera.gameObject.SetActive(true);
@@ -599,6 +599,7 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     public void WinOrDeathAnimationDone()
     {
+        AudioManager.instance.ChangeMusicVolume(1f);
         if (this.IsDead) {
             this.menu.GameOverMenu();
         } else {
