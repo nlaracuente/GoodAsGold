@@ -85,6 +85,8 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     void Update ()
     {
+        AudioManager.instance.PlayMusic("LevelMusic");
+
         if (this.disableMenu || this.player.IsDead || this.player.IsDisabled) {
             return;
         }

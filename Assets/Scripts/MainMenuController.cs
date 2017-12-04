@@ -15,9 +15,17 @@ public class MainMenuController : MonoBehaviour
     string levelName = "Level";
 
     /// <summary>
+    /// Play title music
+    /// </summary>
+    void Update()
+    {
+        AudioManager.instance.PlayMusic("TitleMusic");
+    }
+
+    /// <summary>
     /// Goes to the level scene
     /// </summary>
-	public void StartGame()
+    public void StartGame()
     {
         SceneManager.LoadScene(this.levelName);
     }

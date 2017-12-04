@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Contains the information for a sound clip such as volume and clip itself
@@ -33,6 +34,19 @@ public class SoundClip
     /// </summary>
     AudioSource source;
 
+    public bool IsPlaying
+    {
+        get { return this.source.isPlaying; }
+    }
+
+    /// <summary>
+    /// Sets the clip to loop or not to loop
+    /// </summary>
+    public bool Loop
+    {
+        set { this.source.loop = value; }
+    }
+
     /// <summary>
     /// Create the AudioSource and assign it the clio
     /// </summary>
@@ -58,15 +72,6 @@ public class SoundClip
     public void Stop()
     {
         this.source.Stop();
-    }
-
-    /// <summary>
-    /// Plays this sound clip if not already playing
-    /// </summary>
-    public void Loop()
-    {
-        this.source.loop = true;
-        this.Play();
     }
 
     /// <summary>
@@ -120,6 +125,27 @@ public class AudioManager : MonoBehaviour
     Dictionary<string, SoundClip> soundClips = new Dictionary<string, SoundClip>();
 
     /// <summary>
+    /// This is a game object that holds the audio source for all the music played
+    /// </summary>
+    GameObject musicPlayerGO;
+
+    /// <summary>
+    /// A reference to the music clip so that we can change it at will
+    /// </summary>
+    SoundClip musicClip;
+
+    /// <summary>
+    /// Creates game objects for all of the sound clips
+    /// </summary>
+    void Start()
+    {
+        foreach (SoundClip clip in this.clips) {
+            // store a reference so that we can invoke it later
+            this.soundClips[clip.soundName] = clip;
+        }        
+    }
+
+    /// <summary>
     /// Singleton setup
     /// </summary>
     void Update()
@@ -133,17 +159,6 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates game objects for all of the sound clips
-    /// </summary>
-    void Start()
-    {
-        foreach (SoundClip clip in this.clips) {
-            // store a reference so that we can invoke it later
-            this.soundClips[clip.soundName] = clip;
-        }
-    }
-
-    /// <summary>
     /// Spawns a new object with an AudioSource to fire off the sound given
     /// Thus preventing the same sound trying to play twice from the same audio source
     /// Triggers the destruction of the object based on the clip's length
@@ -151,29 +166,18 @@ public class AudioManager : MonoBehaviour
     /// <param name="soundName"></param>
     public void PlaySound(string soundName)
     {
-        if (this.soundClips.ContainsKey(soundName)) {
-            SoundClip soundClip = this.soundClips[soundName];
-            GameObject soundGO = new GameObject(soundClip.soundName);            
+        if (this.soundClips.ContainsKey(soundName)) {            
+            GameObject soundGO = new GameObject(soundName);            
             soundGO.AddComponent(typeof(SoundClip));
 
+            SoundClip soundClip = this.soundClips[soundName];
             soundClip.SetSource(soundGO.AddComponent<AudioSource>());
             soundClip.Play();
             
             Destroy(soundGO, soundClip.clip.length);
         }
     }
-
-    /// <summary>
-    /// Plays the given sound if it exists
-    /// </summary>
-    /// <param name="soundName"></param>
-    public void LoopSound(string soundName)
-    {
-        if (this.soundClips.ContainsKey(soundName)) {
-            this.soundClips[soundName].Loop();
-        }
-    }
-
+    
     /// <summary>
     /// Stops the given sound if it exists from playing
     /// </summary>
@@ -183,5 +187,49 @@ public class AudioManager : MonoBehaviour
         if (this.soundClips.ContainsKey(soundName)) {
             this.soundClips[soundName].Stop();
         }
+    }
+
+    /// <summary>
+    /// Plays the given music
+    /// </summary>
+    /// <param name="musicName"></param>
+    public void PlayMusic(string musicName)
+    {
+        // The create the sound player
+        if(this.musicPlayerGO == null) {
+            this.CreateSoundPlayer();
+        }
+
+        // Don't know it
+        if (!this.soundClips.ContainsKey(musicName)) {
+            return;
+        }
+
+        // Already playing no need to trigger it
+        if(this.musicClip.soundName == musicName && this.musicClip.IsPlaying) {
+            return;
+        }
+
+        this.musicClip.Stop();
+
+        // Play and loop the new music
+        SoundClip musicClip = this.soundClips[musicName];
+        musicClip.SetSource(this.musicPlayerGO.GetComponent<AudioSource>());
+
+        this.musicClip = musicClip;        
+        this.musicClip.Loop = true;
+        this.musicClip.Play();
+    }
+
+    /// <summary>
+    /// Creates the sound player game object and SoundClip 
+    /// </summary>
+    void CreateSoundPlayer()
+    {
+        this.musicPlayerGO = new GameObject("MusicPlayer");
+        this.musicPlayerGO.AddComponent(typeof(SoundClip));
+
+        this.musicClip = new SoundClip();
+        this.musicClip.SetSource(this.musicPlayerGO.AddComponent<AudioSource>());
     }
 }

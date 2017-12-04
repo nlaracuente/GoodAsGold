@@ -83,5 +83,11 @@ MonoBehaviour:
     volume: 0.5
     clip: {fileID: 8300000, guid: a3c25f8b8313293418c46dae7bc85b36, type: 3}
   - soundName: CoinPickup
-    volume: 0.25
+    volume: 0.5
     clip: {fileID: 8300000, guid: 473a3cfe1172a2148880f9dbaa3226fd, type: 3}
+  - soundName: TitleMusic
+    volume: 1
+    clip: {fileID: 8300000, guid: 8e2b8a424b5d9e547a4b087883e71304, type: 3}
+  - soundName: LevelMusic
+    volume: 0.8
+    clip: {fileID: 8300000, guid: 5a836f5d22618a34cade4e1042053cac, type: 3}
