@@ -86,7 +86,7 @@ public class Statue : MonoBehaviour, IMoveable
     /// Stores the direction from which the player engaged with this statue
     /// Freeze all other axis excluding the one from which the player interacted from
     /// </summary>
-    public void PlayerEngaged()
+    public void UpdateInteractedFrom()
     {
         Vector3 origin = this.rigidbody.position;
         origin.y += this.rayHeight;
@@ -101,7 +101,6 @@ public class Statue : MonoBehaviour, IMoveable
             Debug.DrawLine(origin, origin + (direction * this.rayDistance), Color.yellow, 1f);
 
             if (Physics.Raycast(ray, out hitInfo, this.rayDistance, this.playerLayer)) {
-                Debug.Log("Collided on " + dirName);
                 this.interactedFrom = dirName;
 
                 if (dirName == "forward" || dirName == "back") {

@@ -249,7 +249,7 @@ public class Player : MonoBehaviour, IMoveable
         // Trigger animation to engage
         if(isActionButton && !this.IsInteractingWithStatue) {
 
-            Statue statue = this.GetStatueInfront();
+            Statue statue = this.GetStatueInfront(this.transform.forward);
 
             // Player is facing a statue, let's grab it
             if (statue != null && !string.IsNullOrEmpty(statue.InteractedFrom)) {
@@ -298,11 +298,10 @@ public class Player : MonoBehaviour, IMoveable
     /// Returns the statue that is directly infront of the player
     /// </summary>
     /// <returns></returns>
-    Statue GetStatueInfront()
+    Statue GetStatueInfront(Vector3 direction)
     {
         Statue statue = null;
         Vector3 origin = this.rigidbody.position;
-        Vector3 direction = this.transform.forward;
 
         Debug.DrawLine(origin, origin + direction * this.rayDistance, Color.green, .25f);
         Ray ray = new Ray(origin, direction);
@@ -310,7 +309,7 @@ public class Player : MonoBehaviour, IMoveable
 
         if (Physics.Raycast(ray, out hit, this.rayDistance, this.statueLayer)) {
             statue = hit.collider.GetComponent<Statue>();
-            statue.PlayerEngaged();
+            statue.UpdateInteractedFrom();
         }
 
         return statue;
@@ -380,40 +379,21 @@ public class Player : MonoBehaviour, IMoveable
             return;
         }
 
+        // Camera may have been rotated so we need to ensure we have the new position
+        this.statue.UpdateInteractedFrom();
+        
+        Vector3 forward = this.statue.InteractionDirection;
         Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
+        direction.x = Mathf.Round(direction.x);
         direction.y = 0f;
+        direction.z = Mathf.Round(direction.z);
 
-        // Ignore Axis based on where the player intected with the block
-        string dirName = this.statue.InteractedFrom;
-        if(dirName == "forward" || dirName == "back") {
-            direction.x = 0f;
-        } else {
-            direction.z = 0f;
+        // Invalid direction
+        if(direction != forward && direction != -forward) {
+            return;
         }
-
-        // True when is moving in the opposite direction
-        bool isPulling = false;
-
-        // Pulling up
-        if(dirName == "forward" && direction.z > 0) {
-            isPulling = true;
-        }
-
-        // Pulling Left
-        if (dirName == "left" && direction.x < 0) {
-            isPulling = true;
-        }
-
-        // Pulling Down
-        if (dirName == "back" && direction.z < 0) {
-            isPulling = true;
-        }
-
-        // Pulling Right
-        if (dirName == "right" && direction.x > 0) {
-            isPulling = true;
-        }
-
+        
+        bool isPulling = direction != -forward;
         this.StartCoroutine(this.PushOrPullAction(isPulling, direction));
     }
 
@@ -472,7 +452,7 @@ public class Player : MonoBehaviour, IMoveable
     void OnPlayerLean()
     {
         // Snap the player's rotation to the direction in which they interacted with the statue (well, opposite to look at )
-        Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.statue.InteractionDirection * -1);
+        Vector3 direction = this.statue.InteractionDirection * -1;
         direction.y = 0f;
 
         if(direction != Vector3.zero) {
