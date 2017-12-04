@@ -577,8 +577,7 @@ public class Player : MonoBehaviour, IMoveable
     void PlayerDeath()
     {
         this.IsDisabled = true;
-        Debug.Log("Death Sequence");
-        this.levelCamera.DisableCamera = true;
+        this.levelCamera.CameraEnabled = false;
         this.playerCamera.gameObject.SetActive(true);
         this.UpdateAnimator("Death");
     }

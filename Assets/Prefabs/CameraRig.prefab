@@ -130,7 +130,7 @@ MonoBehaviour:
   followSpeed: 5
   rotationAngle: 90
   rotationSpeed: 3
-  targetAngle: 0
+  targetAngle: 0.01
 --- !u!124 &124704866024387924
 Behaviour:
   m_ObjectHideFlags: 1
