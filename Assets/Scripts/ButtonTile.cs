@@ -23,7 +23,7 @@ public abstract class ButtonTile : MonoBehaviour
     /// A reference to the mesh renderer component
     /// </summary>
     [SerializeField]
-    new MeshRenderer renderer;
+    protected new Renderer renderer;
 
     /// <summary>
     /// Delegates for enabling/disabling the switch
