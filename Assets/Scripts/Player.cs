@@ -78,7 +78,7 @@ public class Player : MonoBehaviour, IMoveable
     /// A reference to the Mesh Renderer component
     /// </summary>
     [SerializeField]
-    new MeshRenderer renderer;
+    new Renderer renderer;
 
     /// <summary>
     /// A reference to the animation controller component
@@ -570,9 +570,7 @@ public class Player : MonoBehaviour, IMoveable
     }
 
     /// <summary>
-    /// Disable the level camera to enable the player camera
-    /// Trigger the death animation
-    /// Wait until the animation completes to display game over screen
+    /// Trigger the death sequence
     /// </summary>
     void PlayerDeath()
     {
@@ -580,6 +578,28 @@ public class Player : MonoBehaviour, IMoveable
         this.levelCamera.CameraEnabled = false;
         this.playerCamera.gameObject.SetActive(true);
         this.UpdateAnimator("Death");
+    }
+
+    /// <summary>
+    /// Triggers player victory sequence
+    /// </summary>
+    public void PlayerVictory()
+    {
+        this.EndOfLevel("Victory");
+    }
+
+    /// <summary>
+    /// Disable the level camera to enable the player camera
+    /// Trigger either the death or victory animation
+    /// Wait until the animation completes to display game over or level completed screen
+    /// </summary>
+    /// <param name="triggerName"></param>
+    void EndOfLevel(string triggerName)
+    {
+        this.IsDisabled = true;
+        this.levelCamera.CameraEnabled = false;
+        this.playerCamera.gameObject.SetActive(true);
+        this.UpdateAnimator(triggerName);
     }
 
     /// <summary>

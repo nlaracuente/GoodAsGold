@@ -173,6 +173,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void OnReloadButtonPressed()
     {
+        Debug.Log("Reload");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
