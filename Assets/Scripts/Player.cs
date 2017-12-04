@@ -129,6 +129,7 @@ public class Player : MonoBehaviour, IMoveable
     /// <summary>
     /// The current statue the player is interacting with
     /// </summary>
+    [SerializeField]
     Statue statue;
 
     /// <summary>
@@ -248,11 +249,11 @@ public class Player : MonoBehaviour, IMoveable
         // Trigger animation to engage
         if(isActionButton && !this.IsInteractingWithStatue) {
 
-            this.statue = this.GetStatueInfront();
+            Statue statue = this.GetStatueInfront();
 
             // Player is facing a statue, let's grab it
-            if (this.statue != null) {
-                this.statue.PlayerEngaged();
+            if (statue != null && !string.IsNullOrEmpty(statue.InteractedFrom)) {
+                this.statue = statue;
                 string dirName = this.statue.InteractedFrom;
 
                 if (dirName == "forward" || dirName == "back") {
@@ -309,6 +310,7 @@ public class Player : MonoBehaviour, IMoveable
 
         if (Physics.Raycast(ray, out hit, this.rayDistance, this.statueLayer)) {
             statue = hit.collider.GetComponent<Statue>();
+            statue.PlayerEngaged();
         }
 
         return statue;
@@ -469,8 +471,8 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     void OnPlayerLean()
     {
-        // Rotate the player to fully face the direction they interacted from
-        Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.inputVector);
+        // Snap the player's rotation to the direction in which they interacted with the statue (well, opposite to look at )
+        Vector3 direction = this.levelCamera.MainCamera.transform.TransformDirection(this.statue.InteractionDirection * -1);
         direction.y = 0f;
 
         if(direction != Vector3.zero) {

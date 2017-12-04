@@ -15,7 +15,13 @@ public class Statue : MonoBehaviour, IMoveable
     /// How far to cast the ray
     /// </summary>
     [SerializeField]
-    float rayDistance = 1f;
+    float rayDistance = 5f;
+
+    /// <summary>
+    /// How much to add to the current positio's Y axis to raise the spawn point of the ray
+    /// </summary>
+    [SerializeField]
+    float rayHeight = 2f;
 
     /// <summary>
     /// The layer where the player is on
@@ -56,7 +62,7 @@ public class Statue : MonoBehaviour, IMoveable
     /// <summary>
     /// Returns the vector3 that represents the direction the player interacted from
     /// </summary>
-    Vector3 InteractionDirection
+    public Vector3 InteractionDirection
     {
         get {
             Vector3 direction = Vector3.zero;
@@ -83,6 +89,7 @@ public class Statue : MonoBehaviour, IMoveable
     public void PlayerEngaged()
     {
         Vector3 origin = this.rigidbody.position;
+        origin.y += this.rayHeight;
 
         foreach (KeyValuePair<string, Vector3> dirInfo in this.directions) {
             string dirName = dirInfo.Key;
@@ -91,9 +98,10 @@ public class Statue : MonoBehaviour, IMoveable
             Ray ray = new Ray(origin, direction);
             RaycastHit hitInfo;
 
-            Debug.DrawRay(origin, direction, Color.yellow);
+            Debug.DrawLine(origin, origin + (direction * this.rayDistance), Color.yellow, 1f);
 
             if (Physics.Raycast(ray, out hitInfo, this.rayDistance, this.playerLayer)) {
+                Debug.Log("Collided on " + dirName);
                 this.interactedFrom = dirName;
 
                 if (dirName == "forward" || dirName == "back") {
