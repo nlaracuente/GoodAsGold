@@ -551,6 +551,12 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     public void LiftCurse()
     {
+        // Running out of time and want to make sure this is not a thing
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+
         this.pickups = 0;
         this.moveSpeed = this.maxSpeed;
         this.rotationSpeed = this.maxRotationSpeed;

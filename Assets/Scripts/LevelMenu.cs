@@ -166,7 +166,7 @@ public class LevelMenu : MonoBehaviour
     public void OnReloadButtonPressed()
     {
         // Spawn the player at the last checkpoint
-        if(GameManager.instance.RespawnPoint != Vector3.zero) {
+        if(GameManager.instance.RespawnPoint != Vector3.zero && !GameManager.instance.IsGameWon) {
             this.player.Respawn();
             this.CloseMenu();
         } else {

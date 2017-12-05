@@ -1399,7 +1399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3112f958c9ebf47b61ef271a2afc8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 6
+  maxSpeed: 8
   maxRotationSpeed: 10
   angleDistance: 0.01
   maxPickups: 10
