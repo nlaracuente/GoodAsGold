@@ -33,7 +33,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1648375614903702}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -83,7 +83,7 @@ MonoBehaviour:
     volume: 0.5
     clip: {fileID: 8300000, guid: a3c25f8b8313293418c46dae7bc85b36, type: 3}
   - soundName: CoinPickup
-    volume: 0.5
+    volume: 0.8
     clip: {fileID: 8300000, guid: 473a3cfe1172a2148880f9dbaa3226fd, type: 3}
   - soundName: TitleMusic
     volume: 1
@@ -91,3 +91,6 @@ MonoBehaviour:
   - soundName: LevelMusic
     volume: 0.8
     clip: {fileID: 8300000, guid: 5a836f5d22618a34cade4e1042053cac, type: 3}
+  - soundName: CoinSpawned
+    volume: 0.5
+    clip: {fileID: 8300000, guid: 54fce3938736a3948b17da001adff53b, type: 3}
