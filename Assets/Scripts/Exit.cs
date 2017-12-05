@@ -13,6 +13,11 @@ public class Exit : MonoBehaviour
     LevelMenu menu;
 
     /// <summary>
+    /// True when triggered 
+    /// </summary>
+    bool winStateTriggered = false;
+
+    /// <summary>
     /// Initialize
     /// </summary>
     private void Start()
@@ -22,14 +27,22 @@ public class Exit : MonoBehaviour
 
     /// <summary>
     /// Triggers a level won
+    /// Snaps the player on the center of the tile
     /// </summary>
     /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag != "Player" || this.menu.isMenuOpened) {
+        if(other.tag != "Player" || this.menu.isMenuOpened || this.winStateTriggered) {
             return;
         }
-        
-        this.menu.GameWonMenu();
+
+        this.winStateTriggered = true;
+        Player player = other.GetComponent<Player>();
+        player.PlayerVictory();
+        player.transform.position = new Vector3(
+            this.transform.position.x,
+            player.transform.position.y,
+            this.transform.position.z
+        );
     }
 }

@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1648375614903702}
+  m_IsPrefabParent: 1
+--- !u!1 &1648375614903702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4423880836552820}
+  - component: {fileID: 114079224171288450}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4423880836552820
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1648375614903702}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114079224171288450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1648375614903702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c07f5816a6f41c4e9cab2046059fe55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clips:
+  - soundName: RightNormalStep
+    volume: 0.25
+    clip: {fileID: 8300000, guid: 2a50aa8d5929f8e41a52625cc82128c1, type: 3}
+  - soundName: LeftNormalStep
+    volume: 0.25
+    clip: {fileID: 8300000, guid: 4012e85dd847be549969a7aa18b06d2b, type: 3}
+  - soundName: RightHeavyStep
+    volume: 0.5
+    clip: {fileID: 8300000, guid: 7701833701970304fb266b6ca434685b, type: 3}
+  - soundName: LeftHeavyStep
+    volume: 0.5
+    clip: {fileID: 8300000, guid: 6cb4d05392646314a95db8f12c067887, type: 3}
+  - soundName: RightGoldStep
+    volume: 1
+    clip: {fileID: 8300000, guid: 635d8d77f7e0b034eb6d3acdb7f56912, type: 3}
+  - soundName: LeftGoldStep
+    volume: 1
+    clip: {fileID: 8300000, guid: d8eb5f72df05a694591fd18ac50935ee, type: 3}
+  - soundName: DragStatue
+    volume: 0.5
+    clip: {fileID: 8300000, guid: e60ed8c1071c0b54d9452728a6b442b0, type: 3}
+  - soundName: GameOver
+    volume: 0.75
+    clip: {fileID: 8300000, guid: 1714579c511c624498967455850b7d93, type: 3}
+  - soundName: Victory
+    volume: 0.75
+    clip: {fileID: 8300000, guid: 52cdda0d2e2520b4d88f665b12efbbe9, type: 3}
+  - soundName: ButtonPressed
+    volume: 0.5
+    clip: {fileID: 8300000, guid: a3c25f8b8313293418c46dae7bc85b36, type: 3}
+  - soundName: CoinPickup
+    volume: 0.8
+    clip: {fileID: 8300000, guid: 473a3cfe1172a2148880f9dbaa3226fd, type: 3}
+  - soundName: TitleMusic
+    volume: 1
+    clip: {fileID: 8300000, guid: 8e2b8a424b5d9e547a4b087883e71304, type: 3}
+  - soundName: LevelMusic
+    volume: 0.8
+    clip: {fileID: 8300000, guid: 5a836f5d22618a34cade4e1042053cac, type: 3}
+  - soundName: CoinSpawned
+    volume: 0.5
+    clip: {fileID: 8300000, guid: 54fce3938736a3948b17da001adff53b, type: 3}

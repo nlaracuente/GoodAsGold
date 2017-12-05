@@ -29,6 +29,12 @@ public class LevelCamera : MonoBehaviour
     Transform targertTransform;
 
     /// <summary>
+    /// How fast to track
+    /// </summary>
+    [SerializeField]
+    float followSpeed = 5f;
+
+    /// <summary>
     /// Angles in degree to rotate when a direciton is triggered 
     /// </summary>
     [SerializeField]
@@ -55,6 +61,15 @@ public class LevelCamera : MonoBehaviour
     /// A reference to the level menu
     /// </summary>
     LevelMenu menu;
+
+    /// <summary>
+    /// Enables/Disables the level camera
+    /// This is use when we want to turn on the player camera
+    /// </summary>
+    public bool CameraEnabled
+    {
+        set { this.MainCamera.gameObject.SetActive(value); }
+    }
 
     /// <summary>
     /// Initialize
@@ -88,6 +103,18 @@ public class LevelCamera : MonoBehaviour
             this.targetAngle = angle;
             StartCoroutine(this.SmoothRotate());
         }        
+    }
+
+    /// <summary>
+    /// Smooths follows the target
+    /// A "look at is not done here because of how we handle camera rotations"
+    /// </summary>
+    void LateUpdate()
+    {
+        Vector3 targetPosition = this.targertTransform.position;
+        this.transform.position = Vector3.Lerp(this.transform.position,
+                                               targetPosition,
+                                               this.followSpeed * Time.deltaTime);
     }
 
     /// <summary>

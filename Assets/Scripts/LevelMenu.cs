@@ -85,12 +85,9 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        if (this.disableMenu || this.player.IsDead || this.player.Disabled) {
+        AudioManager.instance.PlayMusic("LevelMusic");
 
-            if (this.player.IsDead) {
-                this.GameOverMenu();
-            }
-
+        if (this.disableMenu || this.player.IsDead || this.player.IsDisabled) {
             return;
         }
 
@@ -111,15 +108,6 @@ public class LevelMenu : MonoBehaviour
     {
         this.cursedPercent.text = "Cursed is at: " + this.player.CursePercent + "%";
     }
-    
-    /// <summary>
-    /// Updates the text on the menu button
-    /// </summary>
-    /// <param name="buttonText"></param>
-    void SetMenuButtonText(string buttonText)
-    {
-        this.menuButton.GetComponentInChildren<Text>().text = buttonText;
-    }
 
     /// <summary>
     /// Opens the level menu displaying current status
@@ -129,7 +117,6 @@ public class LevelMenu : MonoBehaviour
     {
         this.isMenuOpened = true;
         this.description.text = this.levelText;
-        this.SetMenuButtonText("Restart");
         this.UpdateCursedText();
         this.menuContainer.SetActive(true);
     }
@@ -139,9 +126,10 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void GameOverMenu()
     {
+        GameManager.instance.IsGameWon = false;
         this.isMenuOpened = true;
+        this.player.IsDisabled = true;
         this.description.text = this.gameOverText;
-        this.SetMenuButtonText("Retry");
         this.UpdateCursedText();
         this.menuContainer.SetActive(true);
     }
@@ -151,10 +139,10 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void GameWonMenu()
     {
-        this.player.Disabled = true;
+        GameManager.instance.IsGameWon = true;
+        this.player.IsDisabled = true;
         this.isMenuOpened = true;
         this.description.text = this.gameWonText;
-        this.SetMenuButtonText("Again!");
         this.UpdateCursedText();
         this.menuContainer.SetActive(true);
     }
@@ -177,6 +165,21 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void OnReloadButtonPressed()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // Spawn the player at the last checkpoint
+        if(GameManager.instance.RespawnPoint != Vector3.zero && !GameManager.instance.IsGameWon) {
+            this.player.Respawn();
+            this.CloseMenu();
+        } else {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
+    }
+
+    /// <summary>
+    /// Loads the main menu scene
+    /// </summary>
+    public void QuitToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
