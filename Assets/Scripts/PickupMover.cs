@@ -44,6 +44,12 @@ public class PickupMover : MonoBehaviour, ITriggerable
     bool isRoutineRunning = false;
 
     /// <summary>
+    /// Holds a reference to the button that triggers this
+    /// </summary>
+    [SerializeField]
+    protected TriggerButton triggerButton;
+
+    /// <summary>
     /// Initialize
     /// Registers itself with a Trigger Button
     /// </summary>
@@ -51,10 +57,9 @@ public class PickupMover : MonoBehaviour, ITriggerable
     {
         this.startingPos = this.transform.position;
         this.targetPos = this.startingPos;
-
-        TriggerButton button = FindObjectOfType<TriggerButton>();
-        if (button != null) {
-            button.RegisterButtonEvents(this);
+        
+        if (this.triggerButton != null) {
+            this.triggerButton.RegisterButtonEvents(this);
         }
     }
 
