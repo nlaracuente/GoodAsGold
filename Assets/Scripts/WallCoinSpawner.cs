@@ -73,6 +73,11 @@ public class WallCoinSpawner : MonoBehaviour
     }
 
     /// <summary>
+    /// True when routines are stopped
+    /// </summary>
+    bool routinesStopped = true;
+
+    /// <summary>
     /// Gets point references
     /// </summary>
     void Start()
@@ -81,12 +86,19 @@ public class WallCoinSpawner : MonoBehaviour
         this.menu = FindObjectOfType<LevelMenu>();
         this.spawnPoint = this.transform.Find("SpawnPoint");
         this.targetPoint = this.transform.Find("TargetPoint");
+
+        this.StartRoutine();
+    }
+
+    public void StartRoutine()
+    {
+        StartCoroutine(this.Spawn());
     }
 
     /// <summary>
     /// Only when it view trigger the coroutine
     /// </summary>
-    IEnumerator OnBecameVisible()
+    IEnumerator Spawn()
     {
         // Spawn first then wait
         while (!this.DisableSpawner) {

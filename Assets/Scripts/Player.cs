@@ -549,12 +549,16 @@ public class Player : MonoBehaviour, IMoveable
     /// Removes the effects of being cursed
     /// Resets speed/rotation back to max
     /// </summary>
-    void LiftCurse()
+    public void LiftCurse()
     {
         this.pickups = 0;
         this.moveSpeed = this.maxSpeed;
         this.rotationSpeed = this.maxRotationSpeed;
-        StartCoroutine(this.ChangeMaterialPerCurse());
+
+        // Hide the gold texture
+        Color newColor = this.renderer.materials[1].color;
+        newColor.a = 0f;
+        this.renderer.materials[1].color = newColor;
     }
 
     /// <summary>
@@ -606,6 +610,24 @@ public class Player : MonoBehaviour, IMoveable
             this.menu.GameOverMenu();
         } else {
             this.menu.GameWonMenu();
+        }
+    }
+
+    /// <summary>
+    /// Triggers the player to respawn at the last respawn point
+    /// </summary>
+    public void Respawn()
+    {
+        this.transform.position = GameManager.instance.RespawnPoint;
+        this.LiftCurse();
+        this.IsDisabled = false;
+        this.UpdateAnimator("Respawn");
+        this.levelCamera.CameraEnabled = true;
+        this.playerCamera.gameObject.SetActive(false);
+
+        // Running out of time so putting this here but it should be in GameManager
+        foreach(WallCoinSpawner spawner in FindObjectsOfType<WallCoinSpawner>()) {
+            spawner.StartRoutine();
         }
     }
 }

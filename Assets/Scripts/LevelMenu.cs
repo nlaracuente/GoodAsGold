@@ -165,7 +165,14 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void OnReloadButtonPressed()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // Spawn the player at the last checkpoint
+        if(GameManager.instance.RespawnPoint != Vector3.zero) {
+            this.player.Respawn();
+            this.CloseMenu();
+        } else {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
     }
 
     /// <summary>
