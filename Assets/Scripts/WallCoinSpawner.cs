@@ -87,11 +87,6 @@ public class WallCoinSpawner : MonoBehaviour
         this.spawnPoint = this.transform.Find("SpawnPoint");
         this.targetPoint = this.transform.Find("TargetPoint");
 
-        this.StartRoutine();
-    }
-
-    public void StartRoutine()
-    {
         StartCoroutine(this.Spawn());
     }
 
@@ -101,19 +96,9 @@ public class WallCoinSpawner : MonoBehaviour
     IEnumerator Spawn()
     {
         // Spawn first then wait
-        while (!this.DisableSpawner) {
-
-            // Wait until the player is enabled
-            if (this.DisableSpawner) {
-                continue;
-            }
+        while (true) {
 
             for (int i = 0; i < this.total; i++) {
-
-                // Wait until the player is enabled
-                if (this.DisableSpawner) {
-                    continue;
-                }
 
                 // Spawn the coins with no rotation
                 GameObject coin = Instantiate(this.coinPrafab, this.spawnPoint.position, Quaternion.identity, this.transform);
@@ -135,12 +120,7 @@ public class WallCoinSpawner : MonoBehaviour
     /// <returns></returns>
     IEnumerator MoveCoinToTarget(GameObject coin)
     {
-        while (!this.DisableSpawner && coin != null && Vector3.Distance(coin.transform.position, this.targetPoint.position) > this.distancePad) {
-
-            // Wait until the player is enabled
-            if (this.DisableSpawner) {
-                continue;
-            }
+        while (coin != null && Vector3.Distance(coin.transform.position, this.targetPoint.position) > this.distancePad) {
 
             coin.transform.position = Vector3.MoveTowards(
                 coin.transform.position,

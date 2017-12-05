@@ -243,7 +243,7 @@ public class Player : MonoBehaviour, IMoveable
             this.inputVector.Normalize();
         }
 
-        bool isActionButton = Input.GetButton("Jump");
+        bool isActionButton = Input.GetButton("Jump") || Input.GetButton("Fire1");
 
         // Currently not enaged
         // Trigger animation to engage
@@ -631,9 +631,9 @@ public class Player : MonoBehaviour, IMoveable
         this.levelCamera.CameraEnabled = true;
         this.playerCamera.gameObject.SetActive(false);
 
-        // Running out of time so putting this here but it should be in GameManager
-        foreach(WallCoinSpawner spawner in FindObjectsOfType<WallCoinSpawner>()) {
-            spawner.StartRoutine();
-        }
+        //// Running out of time so putting this here but it should be in GameManager
+        //foreach(WallCoinSpawner spawner in FindObjectsOfType<WallCoinSpawner>()) {
+        //    spawner.StartRoutine();
+        //}
     }
 }
