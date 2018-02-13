@@ -46,16 +46,6 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Stores player input
-    /// </summary>
-    void Update ()
-    {
-        UpdateInputVector();
-        // NormalizeInputVector();
-        // Debug.LogFormat("Input Vector {0}", m_inputVector);
-	}
-
-    /// <summary>
     /// Resets the input vector to zero and updates if the player is touching the screen
     /// and their 
     /// </summary>

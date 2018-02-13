@@ -23,41 +23,22 @@ public class PlayerMover : MonoBehaviour
     /// <summary>
     /// A reference to the character controller
     /// </summary>
-    CharacterController m_controller;
-
-    /// <summary>
-    /// A reference to the input manager object
-    /// </summary>
-    InputManager m_inputManager;
+    CharacterController m_charController;
 
     /// <summary>
     /// Sets references to components
     /// </summary>
     void Awake()
     {
-        m_controller = GetComponent<CharacterController>();
-        m_inputManager = FindObjectOfType<InputManager>();
+        m_charController = GetComponent<CharacterController>();
     }
-
-    /// <summary>
-    /// Triggers movement when input vector is not zero
-    /// The input vector represents the point in worldspace to move to
-    /// </summary>
-	void Update ()
-    {
-        if (m_inputManager != null && m_inputManager.InputVector != Vector3.zero) {
-            Vector3 targetPosition = m_inputManager.InputVector;
-            Move(targetPosition);
-            Rotate(targetPosition);
-        }
-	}
 
     /// <summary>
     /// Moves the player towards the targetPosition using the character controller
     /// Movement only occurs when the current position is beyond the deadzone
     /// </summary>
     /// <param name="targetPosition"></param>
-    void Move(Vector3 targetPosition)
+    public void Move(Vector3 targetPosition)
     {
         float distanceToTarget = Vector3.Distance(targetPosition, transform.position);
         
@@ -74,14 +55,14 @@ public class PlayerMover : MonoBehaviour
         // However, the speed must be capped at the current max speed
         float speed = Mathf.Clamp(distanceToTarget * m_moveSpeed, -m_moveSpeed, m_moveSpeed);
 
-        m_controller.Move(direction * speed * Time.deltaTime);
+        m_charController.Move(direction * speed * Time.deltaTime);
     }
 
     /// <summary>
     /// Rotates the player model to face the target position
     /// </summary>
     /// <param name="targetPosition"></param>
-    void Rotate(Vector3 targetPosition)
+    public void Rotate(Vector3 targetPosition)
     {
         Vector3 direction = targetPosition - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
