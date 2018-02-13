@@ -46,7 +46,9 @@ public class PlayerMover : MonoBehaviour
 	void Update ()
     {
         if (m_inputManager != null && m_inputManager.InputVector != Vector3.zero) {
-            Move(m_inputManager.InputVector);
+            Vector3 targetPosition = m_inputManager.InputVector;
+            Move(targetPosition);
+            Rotate(targetPosition);
         }
 	}
 
@@ -73,5 +75,16 @@ public class PlayerMover : MonoBehaviour
         float speed = Mathf.Clamp(distanceToTarget * m_moveSpeed, -m_moveSpeed, m_moveSpeed);
 
         m_controller.Move(direction * speed * Time.deltaTime);
+    }
+
+    /// <summary>
+    /// Rotates the player model to face the target position
+    /// </summary>
+    /// <param name="targetPosition"></param>
+    void Rotate(Vector3 targetPosition)
+    {
+        Vector3 direction = targetPosition - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = targetRotation;
     }
 }
