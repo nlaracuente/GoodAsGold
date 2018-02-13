@@ -51,11 +51,13 @@ public class InputManager : MonoBehaviour
     void Update ()
     {
         UpdateInputVector();
+        // NormalizeInputVector();
         // Debug.LogFormat("Input Vector {0}", m_inputVector);
 	}
 
     /// <summary>
     /// Resets the input vector to zero and updates if the player is touching the screen
+    /// and their 
     /// </summary>
     public void UpdateInputVector()
     {
@@ -63,8 +65,7 @@ public class InputManager : MonoBehaviour
 
         // Only update it when the input is not disabled
         if (!m_inputDisabled && Input.touchCount == 1) {
-            Vector2 screenPoint = Input.GetTouch(0).position;
-            m_inputVector = OrtographicScreenPointToWorldSpace(screenPoint);
+            m_inputVector = OrtographicScreenPointToWorldSpace(Input.GetTouch(0).position);
         }
     }
 
@@ -88,5 +89,19 @@ public class InputManager : MonoBehaviour
         }
 
         return worldSpace;
-    } 
+    }
+
+    /// <summary>
+    /// Sets the X,Z axis to 1 or -1 if the input is beyond those values
+    /// </summary>
+    void NormalizeInputVector()
+    {
+        m_inputVector.x = Mathf.Clamp(m_inputVector.x, -1, 1);
+        m_inputVector.y = 0f;
+        m_inputVector.z = Mathf.Clamp(m_inputVector.z, -1, 1);
+        
+        if(m_inputVector.magnitude > 1) {
+            m_inputVector.Normalize();
+        }
+    }
 }
