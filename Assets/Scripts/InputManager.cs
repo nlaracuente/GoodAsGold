@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
-/// Handles receiving, interpreting, and storing user innput
+/// Handles receiving, interpreting, and storing user input
 /// </summary>
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     /// <summary>
     /// A reference to the main camera to use when converting screen positions to world space
@@ -32,6 +34,11 @@ public class InputManager : MonoBehaviour
     public bool DisableInput { get { return m_inputDisabled; } set { m_inputDisabled = value; } }
 
     /// <summary>
+    /// A reference to the last IClickable object the player clicked on
+    /// </summary>
+    IClickable m_clickable;
+
+    /// <summary>
     /// Finds the main camera if one was not given
     /// </summary>
     void Awake()
@@ -49,14 +56,9 @@ public class InputManager : MonoBehaviour
     /// Resets the input vector to zero and updates if the player is touching the screen
     /// and their 
     /// </summary>
-    public void UpdateInputVector()
+    void UpdateInputVector(Vector3 inputPosition)
     {
-        m_inputVector = Vector3.zero;
-
-        // Only update it when the input is not disabled
-        if (!m_inputDisabled && Input.touchCount == 1) {
-            m_inputVector = OrtographicScreenPointToWorldSpace(Input.GetTouch(0).position);
-        }
+        m_inputVector = OrtographicScreenPointToWorldSpace(inputPosition);
     }
 
     /// <summary>
@@ -93,5 +95,57 @@ public class InputManager : MonoBehaviour
         if(m_inputVector.magnitude > 1) {
             m_inputVector.Normalize();
         }
+    }
+
+    /// <summary>
+    /// Returns the IClickable object located at screen point if one is found
+    /// </summary>
+    /// <param name="screenPoint"></param>
+    /// <returns></returns>
+    IClickable GetClickableObjectAt(Vector2 screenPoint)
+    {
+        IClickable clickable = null;
+
+        Ray ray = m_camera.ScreenPointToRay(screenPoint);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit)) {
+            clickable = hit.collider.GetComponent<IClickable>();
+        }
+
+        return clickable;
+    }
+
+    /// <summary>
+    /// Gives priority to IInteractable objects before interpreting the requests an input vector update
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        IClickable clickable = GetClickableObjectAt(eventData.position);
+
+        if(clickable != null) {
+            clickable.OnClick();
+        } else {
+            UpdateInputVector(eventData.position);
+        }
+    }
+
+    /// <summary>
+    /// Resets the input vector
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        m_inputVector = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Updates the input vector
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnDrag(PointerEventData eventData)
+    {
+        UpdateInputVector(eventData.position);
     }
 }

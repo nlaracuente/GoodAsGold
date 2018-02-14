@@ -52,7 +52,6 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         float moveSpeed = 0;
-        m_inputManager.UpdateInputVector();
 
         // Process movement/rotations
         if (m_inputManager.InputVector != Vector3.zero) {            
