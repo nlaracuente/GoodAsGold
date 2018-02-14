@@ -21,6 +21,16 @@ public class PlayerMover : MonoBehaviour
     float m_moveSpeed = 5f;
 
     /// <summary>
+    /// Keeps track of the current speed the player is moving at
+    /// </summary>
+    [SerializeField]
+    float m_currentSpeed = 0f;
+    /// <summary>
+    /// Current speed the player is moving at
+    /// </summary>
+    public float CurrentSpeed { get { return Mathf.Abs(m_currentSpeed); } }
+
+    /// <summary>
     /// A reference to the character controller
     /// </summary>
     CharacterController m_charController;
@@ -53,9 +63,9 @@ public class PlayerMover : MonoBehaviour
         // Speed is affected by the distance to the target
         // The greater the distance the greater the speed
         // However, the speed must be capped at the current max speed
-        float speed = Mathf.Clamp(distanceToTarget * m_moveSpeed, -m_moveSpeed, m_moveSpeed);
+        m_currentSpeed = Mathf.Clamp(distanceToTarget * m_moveSpeed, -m_moveSpeed, m_moveSpeed);
 
-        m_charController.Move(direction * speed * Time.deltaTime);
+        m_charController.Move(direction * m_currentSpeed * Time.deltaTime);
     }
 
     /// <summary>
