@@ -37,6 +37,10 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// A reference to the last IClickable object the player clicked on
     /// </summary>
     IClickable m_clickable;
+    public IClickable MoveableObject
+    {
+        get { return m_clickable; }
+    }
 
     /// <summary>
     /// A reference to the UI Manager
@@ -126,7 +130,6 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// <param name="eventData"></param>
     public void OnPointerUp(PointerEventData eventData)
     {
-        m_clickable = null;
         m_inputVector = Vector3.zero;
     }
 

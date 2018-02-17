@@ -15,11 +15,24 @@ public class PlayerAnimator : MonoBehaviour
     Animator m_animator;
 
     /// <summary>
+    /// The name of the movement blend
+    /// </summary>
+    [SerializeField]
+    string m_movementBlendTag = "Movement";
+
+    /// <summary>
     /// The name of the animator float for movement speed
     /// </summary>
     [Tooltip("Animator movement speed parameter name")]
     [SerializeField]
     string m_moveSpeedTag = "MoveSpeed";
+
+    /// <summary>
+    /// The name of the animator float for movement speed
+    /// </summary>
+    [Tooltip("Animator movement speed parameter name")]
+    [SerializeField]
+    string m_leanBoolTag = "IsLeaning";
 
     /// <summary>
     /// Sets component references
@@ -43,6 +56,16 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns true when the current animation is part of the Movement animation blend
+    /// </summary>
+    /// <returns></returns>
+    public bool IsInMovementBlend()
+    {
+        AnimatorStateInfo state = m_animator.GetCurrentAnimatorStateInfo(0);
+        return state.IsName(m_movementBlendTag);
+    }
+
+    /// <summary>
     /// Sets the movement speed parameter in the animator controller
     /// to show the character idle, walking, or running
     /// </summary>
@@ -50,5 +73,14 @@ public class PlayerAnimator : MonoBehaviour
     public void UpdateMoveSpeed(float speed)
     {
         m_animator.SetFloat(m_moveSpeedTag, speed);
+    }
+
+    /// <summary>
+    /// Sets the state of the isLeaning bool
+    /// </summary>
+    /// <param name="state"></param>
+    public void SetLeaningBool(bool state)
+    {
+        m_animator.SetBool(m_leanBoolTag, state);
     }
 }

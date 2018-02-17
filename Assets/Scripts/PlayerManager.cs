@@ -31,6 +31,11 @@ public class PlayerManager : MonoBehaviour
     Transform m_moveArrowSpawnPoint;
 
     /// <summary>
+    /// True while the player is engaging with a moveable object and the animation to lean has been triggered
+    /// </summary>
+    bool m_isLeaning = false;
+
+    /// <summary>
     /// The world space position to spawn the move arrow ui that sits behind the player
     /// </summary>
     public Vector3 MoveArrowSpawnPoint
@@ -83,10 +88,26 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     void Update()
     {
+        if (m_inputManager.MoveableObject != null && !m_isLeaning) {
+            m_isLeaning = true;            
+        } else if (m_inputManager.MoveableObject == null && m_isLeaning) {
+            m_isLeaning = false;
+        } else if(m_playerAnimator.IsInMovementBlend()) {
+            RotateAndMove();
+        }
+
+        m_playerAnimator.SetLeaningBool(m_isLeaning);
+    }
+
+    /// <summary>
+    /// Handles applying rotation and movement based on player input
+    /// </summary>
+    void RotateAndMove()
+    {
         float moveSpeed = 0;
 
         // Process movement/rotations
-        if (m_inputManager.InputVector != Vector3.zero) {            
+        if (m_inputManager.InputVector != Vector3.zero) {
             Vector3 targetPosition = m_inputManager.InputVector;
 
             // Face direction before moving 
