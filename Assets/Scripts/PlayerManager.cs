@@ -22,7 +22,39 @@ public class PlayerManager : MonoBehaviour
     /// <summary>
     /// A reference to the player animator component
     /// </summary>
-    PlayerAnimator m_playerAnimator;   
+    PlayerAnimator m_playerAnimator;
+
+    /// <summary>
+    /// The spawn point for the move arrow ui that sits behind the player
+    /// </summary>
+    [SerializeField]
+    Transform m_moveArrowSpawnPoint;
+
+    /// <summary>
+    /// The world space position to spawn the move arrow ui that sits behind the player
+    /// </summary>
+    public Vector3 MoveArrowSpawnPoint
+    {
+        get {
+            // Default to the player's posistion so that the arrow is at least
+            // close to where it is supposed to be at
+            Vector3 spawnPoint = transform.position;
+            if(m_moveArrowSpawnPoint != null) {
+                spawnPoint = m_moveArrowSpawnPoint.position;
+            }
+            return spawnPoint;
+        }
+    }
+
+    /// <summary>
+    /// Returns the direction the player is facing
+    /// </summary>
+    public FacingDirection LookingAtDirection
+    {
+        get {
+            return Utility.GetFacingDirection(transform);
+        }
+    }
 
     /// <summary>
     /// Sets all references
@@ -56,11 +88,26 @@ public class PlayerManager : MonoBehaviour
         // Process movement/rotations
         if (m_inputManager.InputVector != Vector3.zero) {            
             Vector3 targetPosition = m_inputManager.InputVector;
-            m_playerMover.Move(targetPosition);
-            m_playerMover.Rotate(targetPosition);
+
+            // Face direction before moving 
+            if (m_playerMover.Rotate(targetPosition)) {
+                m_playerMover.Move(targetPosition);
+            }
+
             moveSpeed = m_playerMover.CurrentSpeed;
         }
 
         m_playerAnimator.UpdateMoveSpeed(moveSpeed);
+    }
+
+    /// <summary>
+    /// Turns the player to look the given object
+    /// </summary>
+    /// <param name="targetPos"></param>
+    public void LookAtObject(Vector3 targetPos)
+    {
+        Vector3 direction = targetPos - transform.position;
+        direction.y = 0f;
+        transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
     }
 }

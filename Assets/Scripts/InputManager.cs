@@ -39,6 +39,11 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     IClickable m_clickable;
 
     /// <summary>
+    /// A reference to the UI Manager
+    /// </summary>
+    LevelUIManager m_uiManager;
+
+    /// <summary>
     /// Finds the main camera if one was not given
     /// </summary>
     void Awake()
@@ -50,6 +55,8 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         if(m_playerTransform == null) {
             m_playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
+
+        m_uiManager = FindObjectOfType<LevelUIManager>();
     }
 
     /// <summary>
@@ -98,6 +105,45 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     /// <summary>
+    /// Gives priority to IInteractable objects before interpreting the requests an input vector update
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        m_clickable = GetClickableObjectAt(eventData.position);
+
+        if(m_clickable != null && m_clickable.IsClickable()) {
+            m_clickable.OnClick();
+        } else {
+            m_uiManager.HideArrows();
+            UpdateInputVector(eventData.position);
+        }
+    }
+
+    /// <summary>
+    /// Resets the input vector and unlinks clickable item
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        m_clickable = null;
+        m_inputVector = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Updates the input vector when not interacting with a clickable object
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnDrag(PointerEventData eventData)
+    {
+        if(m_clickable != null) {
+            return;
+        }
+
+        UpdateInputVector(eventData.position);
+    }
+
+    /// <summary>
     /// Returns the IClickable object located at screen point if one is found
     /// </summary>
     /// <param name="screenPoint"></param>
@@ -114,38 +160,5 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
 
         return clickable;
-    }
-
-    /// <summary>
-    /// Gives priority to IInteractable objects before interpreting the requests an input vector update
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        IClickable clickable = GetClickableObjectAt(eventData.position);
-
-        if(clickable != null) {
-            clickable.OnClick();
-        } else {
-            UpdateInputVector(eventData.position);
-        }
-    }
-
-    /// <summary>
-    /// Resets the input vector
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        m_inputVector = Vector3.zero;
-    }
-
-    /// <summary>
-    /// Updates the input vector
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnDrag(PointerEventData eventData)
-    {
-        UpdateInputVector(eventData.position);
     }
 }

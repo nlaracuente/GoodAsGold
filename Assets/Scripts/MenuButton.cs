@@ -12,7 +12,7 @@ public class MenuButton : MonoBehaviour
     /// <summary>
     /// A reference to the level menu manager object
     /// </summary>
-    LevelMenuManager m_menuManager;
+    LevelUIManager m_menuManager;
 
     /// <summary>
     /// A reference to the image component for this button
@@ -37,7 +37,7 @@ public class MenuButton : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        m_menuManager = FindObjectOfType<LevelMenuManager>();
+        m_menuManager = FindObjectOfType<LevelUIManager>();
 
         if (m_menuManager == null || m_buttonImage == null || m_openMenuSprite == null || m_closeMenuSprite == null) {
             Debug.LogErrorFormat("MenuButton Error: Missing Component: " +

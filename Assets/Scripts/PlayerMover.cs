@@ -25,6 +25,19 @@ public class PlayerMover : MonoBehaviour
     /// </summary>
     [SerializeField]
     float m_currentSpeed = 0f;
+
+    /// <summary>
+    /// How fast to rotate
+    /// </summary>
+    [SerializeField]
+    float m_rotationSpeed = 12f;
+
+    /// <summary>
+    /// How close to the angle of rotation must the transform be before considering the transform as complete
+    /// </summary>
+    [SerializeField]
+    float m_rotationAngleProximity = .01f;
+
     /// <summary>
     /// Current speed the player is moving at
     /// </summary>
@@ -69,13 +82,20 @@ public class PlayerMover : MonoBehaviour
     }
 
     /// <summary>
-    /// Rotates the player model to face the target position
+    /// Leprs the player's rotation to match the given position
+    /// Returns true when the current rotation's angle is close to <see cref="m_rotationAngleProximity"/>
     /// </summary>
     /// <param name="targetPosition"></param>
-    public void Rotate(Vector3 targetPosition)
+    public bool Rotate(Vector3 targetPosition)
     {
         Vector3 direction = targetPosition - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = targetRotation;
+        transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            targetRotation,
+            m_rotationSpeed * Time.deltaTime
+        );
+
+        return Quaternion.Angle(transform.rotation, targetRotation) <= m_rotationAngleProximity;
     }
 }

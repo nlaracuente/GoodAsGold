@@ -5,7 +5,13 @@
 public interface IClickable
 {
     /// <summary>
-    /// Called when the object is clicked on
+    /// Returns TRUE if the object is in a state where it can be clicked
+    /// </summary>
+    /// <returns></returns>
+    bool IsClickable();
+
+    /// <summary>
+    /// Executes on click logic
     /// </summary>
     void OnClick();
 }
