@@ -511,6 +511,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1782973420946422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4271446108272042}
+  m_Layer: 0
+  m_Name: MoveRaycastOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: -6431860639581277017, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1786722375307296
 GameObject:
   m_ObjectHideFlags: 1
@@ -842,6 +857,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4285631284163276}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4271446108272042
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1782973420946422}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: -2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4852910631231564}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4285631284163276
 Transform:
@@ -1195,6 +1223,7 @@ Transform:
   m_Children:
   - {fileID: 4670110921653830}
   - {fileID: 4950107115951222}
+  - {fileID: 4271446108272042}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -1321,10 +1350,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_deadzone: 0.25
-  m_moveSpeed: 1
-  m_currentSpeed: 1
-  m_rotationTime: 12
-  m_rotationAngleProximity: 10
+  m_moveSpeed: 25
+  m_pushSpeed: 8
+  m_destinationProximity: 0.01
+  m_rotationSpeed: 12
+  m_rotationAngleProximity: 25
 --- !u!114 &114373226426654354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1337,7 +1367,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_animator: {fileID: 95820609760792566}
+  m_movementBlendTag: Movement
   m_moveSpeedTag: MoveSpeed
+  m_leanBoolTag: IsLeaning
 --- !u!114 &114938669968475420
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1350,6 +1382,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_moveArrowSpawnPoint: {fileID: 4950107115951222}
+  m_oneTileUnits: 3
+  m_maxCoins: 10
 --- !u!137 &137813476648397526
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

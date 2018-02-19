@@ -1,0 +1,246 @@
+fileFormatVersion: 2
+guid: 4554a359cf93b5d46b1f0be95d10a17d
+timeCreated: 1519080072
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Bone_001
+    100004: Bone_005
+    100006: chest
+    100008: Cone_008
+    100010: Cube
+    100012: Cube_001
+    100014: Cube_002
+    100016: Cube_003
+    100018: Cube_005
+    100020: Cylinder
+    100022: Cylinder_002
+    100024: //RootNode
+    100026: foot_L
+    100028: foot_R
+    100030: hand_L
+    100032: hand_R
+    100034: head
+    100036: leg_control_L
+    100038: leg_control_R
+    100040: lowerArm_L
+    100042: lowerArm_R
+    100044: lowerLeg_L
+    100046: lowerLeg_R
+    100048: neck
+    100050: thumb_L
+    100052: thumb_R
+    100054: torso
+    100056: upperArm_L
+    100058: upperArm_R
+    100060: upperLeg_L
+    100062: upperLeg_R
+    400000: Armature
+    400002: Bone_001
+    400004: Bone_005
+    400006: chest
+    400008: Cone_008
+    400010: Cube
+    400012: Cube_001
+    400014: Cube_002
+    400016: Cube_003
+    400018: Cube_005
+    400020: Cylinder
+    400022: Cylinder_002
+    400024: //RootNode
+    400026: foot_L
+    400028: foot_R
+    400030: hand_L
+    400032: hand_R
+    400034: head
+    400036: leg_control_L
+    400038: leg_control_R
+    400040: lowerArm_L
+    400042: lowerArm_R
+    400044: lowerLeg_L
+    400046: lowerLeg_R
+    400048: neck
+    400050: thumb_L
+    400052: thumb_R
+    400054: torso
+    400056: upperArm_L
+    400058: upperArm_R
+    400060: upperLeg_L
+    400062: upperLeg_R
+    2300000: Cone_008
+    2300002: Cube
+    2300004: Cube_001
+    2300006: Cube_002
+    2300008: Cube_003
+    2300010: Cube_005
+    2300012: Cylinder_002
+    3300000: Cone_008
+    3300002: Cube
+    3300004: Cube_001
+    3300006: Cube_002
+    3300008: Cube_003
+    3300010: Cube_005
+    3300012: Cylinder_002
+    4300000: Cube_005
+    4300002: Cone_008
+    4300004: Cube_003
+    4300006: Cube_002
+    4300008: Cylinder_002
+    4300010: Cube_001
+    4300012: Cube
+    4300014: Cylinder
+    7400000: Default Take
+    7400002: celebrate
+    7400004: death
+    7400006: lean
+    7400008: pull
+    7400010: push
+    7400012: push_001
+    7400014: walk
+    9500000: //RootNode
+    13700000: Cylinder
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_001
+    second: {fileID: 2100000, guid: e01ac320ebdbe044694eac0ebd434e6c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_002
+    second: {fileID: 2100000, guid: 6a4465e716c2d8a4d88d705519527cd1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_003
+    second: {fileID: 2100000, guid: 065fd4914352b1f4596c0131c874402b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_004
+    second: {fileID: 2100000, guid: f4d926506c5bb9d4698973203bac12ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_006
+    second: {fileID: 2100000, guid: 4fa356694fd64a84fb0e2a949deb2ea7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_007
+    second: {fileID: 2100000, guid: e04286fbe0e31504199260aa9ba0faac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_008
+    second: {fileID: 2100000, guid: d411ffbc7ec737345911bad870da446c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_009
+    second: {fileID: 2100000, guid: f3f27fbc63d5454499075bc30e281b15, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_011
+    second: {fileID: 2100000, guid: 14c22b2fa7919fb449c89eb951b2948a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_012
+    second: {fileID: 2100000, guid: 049f4aff99ae8964f9547b8bf962e60c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__Jones_UVs_png
+    second: {fileID: 2100000, guid: fb0dbb2fb13f05e48bff2f4137c5df89, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: accent
+    second: {fileID: 2100000, guid: 85f552d31aa3ba84498700891a3e9d65, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hat__Jones_UVs_png
+    second: {fileID: 2100000, guid: fb0dbb2fb13f05e48bff2f4137c5df89, type: 2}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

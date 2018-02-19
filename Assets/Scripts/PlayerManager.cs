@@ -42,6 +42,41 @@ public class PlayerManager : MonoBehaviour
     bool m_isLeaning = false;
 
     /// <summary>
+    /// The total coins the player is allowed to collected before losing
+    /// </summary>
+    [SerializeField, Tooltip("Total coins to collected before gameover")]
+    float m_maxCoins = 10;
+
+    /// <summary>
+    /// A counter for the total coins collected
+    /// </summary>
+    float m_coinsCollected = 0;
+    public float CoinsCollected
+    {
+        get { return m_coinsCollected; }
+        set {
+            m_coinsCollected = value;
+
+            float decrement = 1f;
+            float percent = m_coinsCollected * 100 / m_maxCoins;
+
+            // Clamp percentage in quater increments
+            if (percent >= 25f && percent < 50f) {
+                decrement = .75f;
+            } else if (percent >= 50f && percent < 75f) {
+                decrement = .50f;
+            } else if (percent >= 75f && percent < 100f) {
+                decrement = .25f;
+            } else if(percent >= 100) {
+                decrement = 0;
+                // @TODO trigger game over
+            }
+
+            m_playerMover.SpeedDecrement = decrement;
+        }
+    }
+
+    /// <summary>
     /// The world space position to spawn the move arrow ui that sits behind the player
     /// </summary>
     public Vector3 MoveArrowSpawnPoint
@@ -119,14 +154,16 @@ public class PlayerManager : MonoBehaviour
 
         // Process movement/rotations
         if (m_inputManager.InputVector != Vector3.zero) {
-            Vector3 targetPosition = m_inputManager.InputVector;
+            Vector3 inputVector = m_inputManager.InputVector;
 
             // Face direction before moving 
-            if (m_playerMover.Rotate(targetPosition)) {
-                m_playerMover.Move(targetPosition);
+            if (m_playerMover.Rotate(inputVector)) {
+                m_playerMover.Move(inputVector);
             }
 
-            moveSpeed = m_playerMover.CurrentSpeed;
+            // Because the speed decrement clamps between 0 and 1
+            // and it represents how fast the player can move we use it to update the animator
+            moveSpeed = m_playerMover.SpeedDecrement;
         }
 
         m_playerAnimator.UpdateMoveSpeed(moveSpeed);

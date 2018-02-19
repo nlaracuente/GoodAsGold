@@ -23,7 +23,6 @@ public class PlayerMover : MonoBehaviour
     /// <summary>
     /// Keeps track of the current speed the player is moving at
     /// </summary>
-    [SerializeField]
     float m_currentSpeed = 0f;
 
     /// <summary>
@@ -52,14 +51,14 @@ public class PlayerMover : MonoBehaviour
     float m_rotationAngleProximity = .01f;
 
     /// <summary>
-    /// Current speed the player is moving at
-    /// </summary>
-    public float CurrentSpeed { get { return Mathf.Abs(m_currentSpeed); } }
-
-    /// <summary>
     /// A reference to the character controller
     /// </summary>
     CharacterController m_charController;
+
+    /// <summary>
+    /// A reference to the ui manager
+    /// </summary>
+    LevelUIManager m_uiManager;
 
     /// <summary>
     /// True while the action to push/pull is running
@@ -72,51 +71,63 @@ public class PlayerMover : MonoBehaviour
     public bool IsPushingOrPulling { get { return m_isPushingOrPulling; } }
 
     /// <summary>
+    /// Based on the player's curse percentag, determined by the total coins collected vs maximum allowed,
+    /// this value is updated to affect how fast the player can move/turn/push/pull/etc.
+    /// </summary>
+    float m_speedDecrement = 1f;
+    public float SpeedDecrement { get { return m_speedDecrement; } set { m_speedDecrement = Mathf.Clamp01(value); } }
+
+    /// <summary>
     /// Sets references to components
     /// </summary>
     void Awake()
     {
         m_charController = GetComponent<CharacterController>();
+        m_uiManager = FindObjectOfType<LevelUIManager>();
+
+        if(m_uiManager == null) {
+            Debug.LogErrorFormat("PlayerMover Error: Missing Component! UI Manager = {0}", m_uiManager);
+        }
     }
 
     /// <summary>
     /// Moves the player towards the targetPosition using the character controller
     /// Movement only occurs when the current position is beyond the deadzone
     /// </summary>
-    /// <param name="targetPosition"></param>
-    public void Move(Vector3 targetPosition)
+    /// <param name="inputVector"></param>
+    public void Move(Vector3 inputVector)
     {
-        float distanceToTarget = Vector3.Distance(targetPosition, transform.position);
+        float distanceToTarget = Vector3.Distance(inputVector, transform.position);
         
         // Distance to target is not beyond deadzone
         if (distanceToTarget < m_deadzone) {
             return;
         }
 
-        Vector3 direction = targetPosition - transform.position;
+        // Direction to move the player towards
+        Vector3 direction = inputVector - transform.position;
         direction.y = 0f;
 
-        // Speed is affected by the distance to the target
-        // The greater the distance the greater the speed
-        // However, the speed must be capped at the current max speed
-        m_currentSpeed = Mathf.Clamp(distanceToTarget * m_moveSpeed, -m_moveSpeed, m_moveSpeed);
+        // Update speed to match current decrement
+        m_currentSpeed = m_moveSpeed * m_speedDecrement;
 
-        m_charController.Move(direction * m_currentSpeed * Time.deltaTime);
+        m_charController.SimpleMove(direction * m_currentSpeed * Time.deltaTime);
     }
 
     /// <summary>
     /// Leprs the player's rotation to match the given position
     /// Returns true when the current rotation's angle is close to <see cref="m_rotationAngleProximity"/>
     /// </summary>
-    /// <param name="targetPosition"></param>
-    public bool Rotate(Vector3 targetPosition)
+    /// <param name="inputVector"></param>
+    public bool Rotate(Vector3 inputVector)
     {
-        Vector3 direction = targetPosition - transform.position;
+        Vector3 direction = inputVector - transform.position;
+
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
             targetRotation,
-            m_rotationSpeed * Time.deltaTime
+            m_rotationSpeed * m_speedDecrement * Time.deltaTime
         );
 
         return Quaternion.Angle(transform.rotation, targetRotation) <= m_rotationAngleProximity;
@@ -124,6 +135,7 @@ public class PlayerMover : MonoBehaviour
 
     /// <summary>
     /// Handles moving the player and the object it is "pushing or pulling" towards the intended destination
+    /// Hides/Shows the ui move arrows
     /// </summary>
     /// <param name="action"></param>
     /// <param name="playerDestination"></param>
@@ -131,12 +143,16 @@ public class PlayerMover : MonoBehaviour
     /// <returns></returns>
     public IEnumerator PushPullRoutine(Vector3 playerDestination, Vector3 objectDestination, Transform objectTransform)
     {
+        m_uiManager.HideArrows();
         m_isPushingOrPulling = true;
+
+        // Decrease the push/pull speed to match curse status
+        float moveSpeed = m_pushSpeed * m_speedDecrement;
 
         while (Vector3.Distance(playerDestination, transform.position) > m_destinationProximity) {
 
-            Vector3 playerPos = Vector3.MoveTowards(transform.position, playerDestination, m_pushSpeed * Time.deltaTime);
-            Vector3 objectPos = Vector3.MoveTowards(objectTransform.position, objectDestination, m_pushSpeed * Time.deltaTime);
+            Vector3 playerPos = Vector3.MoveTowards(transform.position, playerDestination, moveSpeed * Time.deltaTime);
+            Vector3 objectPos = Vector3.MoveTowards(objectTransform.position, objectDestination, moveSpeed * Time.deltaTime);
 
             // Always move the object first to prevent the character controller from colliding with it and stopping
             objectTransform.transform.position = objectPos;
@@ -145,5 +161,6 @@ public class PlayerMover : MonoBehaviour
         }
 
         m_isPushingOrPulling = false;
+        m_uiManager.ShowMoveArrow();
     }
 }
