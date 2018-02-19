@@ -31,6 +31,18 @@ public class PlayerManager : MonoBehaviour
     Transform m_moveArrowSpawnPoint;
 
     /// <summary>
+    /// Where to start the ray cast when pullig an object
+    /// </summary>
+    [SerializeField]
+    Transform m_pullRaycastOrigin;
+
+    /// <summary>
+    /// How many unit to move to another tile
+    /// </summary>
+    [SerializeField]
+    float m_oneTileUnits = 3f;
+
+    /// <summary>
     /// True while the player is engaging with a moveable object and the animation to lean has been triggered
     /// </summary>
     bool m_isLeaning = false;
@@ -88,6 +100,11 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     void Update()
     {
+        // Wait unitl this action is completed
+        if (m_playerMover.IsPushingOrPulling) {
+            return;
+        }
+
         if (m_inputManager.MoveableObject != null && !m_isLeaning) {
             m_isLeaning = true;            
         } else if (m_inputManager.MoveableObject == null && m_isLeaning) {
@@ -130,5 +147,64 @@ public class PlayerManager : MonoBehaviour
         Vector3 direction = targetPos - transform.position;
         direction.y = 0f;
         transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+    }
+
+    /// <summary>
+    /// Triggers the routine to push an object in the direction the player is moving
+    /// </summary>
+    /// <param name="objectTransform"></param>
+    public void PushObject(Transform objectTransform)
+    {
+        Vector3 directionVector = Utility.GetDirectionVectorByName(LookingAtDirection);
+        Vector3 playerDestination = transform.position + (directionVector * m_oneTileUnits);
+        Vector3 objectDestination = objectTransform.position + (directionVector * m_oneTileUnits);
+
+        // Verify that the destination is available (where the object will be)
+        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector)) {
+            m_playerAnimator.TriggerPushAction();
+            StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
+        }
+    }
+
+    /// <summary>
+    /// Triggers the routine to push an object in the direction the player is moving
+    /// </summary>
+    /// <param name="objectTransform"></param>
+    public void PullObject(Transform objectTransform)
+    {
+        Vector3 directionVector = Utility.GetDirectionVectorByName(LookingAtDirection);
+        Vector3 playerDestination = transform.position - (directionVector * m_oneTileUnits);
+        Vector3 objectDestination = objectTransform.position - (directionVector * m_oneTileUnits);
+
+        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector)) {
+            m_playerAnimator.TriggerPullAction();
+            StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
+        }        
+    }
+
+    /// <summary>
+    /// Cast a ray in the direction of the push/pull returning true when nothing blocking it
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    bool IsPushPullDestinationAvailable(Vector3 origin, Vector3 direction)
+    {
+        bool isAvailable = true;
+
+        // Raise the origin to avoid collision with the floor
+        origin.y += .5f;
+        Debug.DrawRay(origin, direction, Color.red, 1f);
+        Ray ray = new Ray(origin, direction);
+        RaycastHit[] hits = Physics.RaycastAll(ray, m_oneTileUnits);
+
+        foreach (RaycastHit hit in hits) {
+            if (hit.collider.gameObject != gameObject) {
+                isAvailable = false;
+                break;
+            }
+        }
+
+        return isAvailable;
     }
 }

@@ -114,11 +114,25 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// <param name="eventData"></param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        m_clickable = GetClickableObjectAt(eventData.position);
+        IClickable clickable = GetClickableObjectAt(eventData.position);
 
-        if(m_clickable != null && m_clickable.IsClickable()) {
+        if(clickable != null && clickable.IsClickable()) {
+            // Lose the reference to the previous clickable
+            if (m_clickable != null && m_clickable != clickable) {
+                m_clickable.OnLoseFocus();
+                m_clickable = null;
+            }
+
+            m_clickable = clickable;
             m_clickable.OnClick();
+
         } else {
+            // No longer referencing the clickable object
+            if (m_clickable != null) {
+                m_clickable.OnLoseFocus();
+                m_clickable = null;
+            }
+ 
             m_uiManager.HideArrows();
             UpdateInputVector(eventData.position);
         }

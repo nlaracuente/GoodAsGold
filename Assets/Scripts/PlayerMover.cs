@@ -27,6 +27,19 @@ public class PlayerMover : MonoBehaviour
     float m_currentSpeed = 0f;
 
     /// <summary>
+    /// How fast to push
+    /// </summary>
+    [SerializeField]
+    float m_pushSpeed = 8f;
+
+    /// <summary>
+    /// How close to the destination vector when moving is allowed
+    /// before considering the movement to be done
+    /// </summary>
+    [SerializeField]
+    float m_destinationProximity = .01f;
+
+    /// <summary>
     /// How fast to rotate
     /// </summary>
     [SerializeField]
@@ -47,6 +60,16 @@ public class PlayerMover : MonoBehaviour
     /// A reference to the character controller
     /// </summary>
     CharacterController m_charController;
+
+    /// <summary>
+    /// True while the action to push/pull is running
+    /// </summary>
+    bool m_isPushingOrPulling = false;
+
+    /// <summary>
+    /// True while the player is pushing/pulling an object
+    /// </summary>
+    public bool IsPushingOrPulling { get { return m_isPushingOrPulling; } }
 
     /// <summary>
     /// Sets references to components
@@ -97,5 +120,30 @@ public class PlayerMover : MonoBehaviour
         );
 
         return Quaternion.Angle(transform.rotation, targetRotation) <= m_rotationAngleProximity;
+    }
+
+    /// <summary>
+    /// Handles moving the player and the object it is "pushing or pulling" towards the intended destination
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="playerDestination"></param>
+    /// <param name="objectTransform"></param>
+    /// <returns></returns>
+    public IEnumerator PushPullRoutine(Vector3 playerDestination, Vector3 objectDestination, Transform objectTransform)
+    {
+        m_isPushingOrPulling = true;
+
+        while (Vector3.Distance(playerDestination, transform.position) > m_destinationProximity) {
+
+            Vector3 playerPos = Vector3.MoveTowards(transform.position, playerDestination, m_pushSpeed * Time.deltaTime);
+            Vector3 objectPos = Vector3.MoveTowards(objectTransform.position, objectDestination, m_pushSpeed * Time.deltaTime);
+
+            // Always move the object first to prevent the character controller from colliding with it and stopping
+            objectTransform.transform.position = objectPos;
+            transform.position = playerPos;
+            yield return new WaitForEndOfFrame();
+        }
+
+        m_isPushingOrPulling = false;
     }
 }

@@ -14,4 +14,9 @@ public interface IClickable
     /// Executes on click logic
     /// </summary>
     void OnClick();
+
+    /// <summary>
+    /// Triggered when the object is not longer being interacted by the player
+    /// </summary>
+    void OnLoseFocus();
 }

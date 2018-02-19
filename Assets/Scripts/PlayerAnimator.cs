@@ -83,4 +83,20 @@ public class PlayerAnimator : MonoBehaviour
     {
         m_animator.SetBool(m_leanBoolTag, state);
     }
+
+    /// <summary>
+    /// Triggers the push animation's trigger
+    /// </summary>
+    public void TriggerPushAction()
+    {
+        m_animator.SetTrigger("Push");
+    }
+
+    /// <summary>
+    /// Triggers the pull animation's trigger
+    /// </summary>
+    public void TriggerPullAction()
+    {
+        m_animator.SetTrigger("Pull");
+    }
 }

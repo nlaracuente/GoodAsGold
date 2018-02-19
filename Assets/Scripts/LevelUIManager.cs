@@ -29,6 +29,12 @@ public class LevelUIManager : MonoBehaviour
     [SerializeField]
     GameObject m_moveArrowPrefab;
 
+    [SerializeField]
+    GameObject m_moveArrowOne;
+
+    [SerializeField]
+    GameObject m_moveArrowTwo;
+
     /// <summary>
     /// A list of all the move arrows
     /// Arrows are added as we loop through the directions therefore they represent each direction accordingly
@@ -80,6 +86,18 @@ public class LevelUIManager : MonoBehaviour
     };
 
     /// <summary>
+    /// Allows binding to the move arrow ui clicks
+    /// </summary>
+    public delegate void MoveArrowClicked();
+
+    /// <summary>
+    /// Arrow One is for Up/Left arrow
+    /// Arrow Two is for Down/Right arrow
+    /// </summary>
+    public event MoveArrowClicked OnMoveArrowOneClicked;
+    public event MoveArrowClicked OnMoveArrowTwoClicked;
+
+    /// <summary>
     /// Sets references
     /// </summary>
     void Awake()
@@ -105,7 +123,8 @@ public class LevelUIManager : MonoBehaviour
             );
         }
 
-        SetupMoveArrows();
+        HideArrows();
+        // SetupMoveArrows();
     }
 
     /// <summary>
@@ -171,9 +190,8 @@ public class LevelUIManager : MonoBehaviour
     /// </summary>
     public void ShowMoveArrow()
     {
-        foreach (GameObject arrow in m_arrows) {
-            arrow.SetActive(true);
-        }
+        m_moveArrowOne.SetActive(true);
+        m_moveArrowTwo.SetActive(true);
     }
 
     /// <summary>
@@ -181,9 +199,8 @@ public class LevelUIManager : MonoBehaviour
     /// </summary>
     public void HideArrows()
     {
-        foreach(GameObject arrow in m_arrows) {
-            arrow.SetActive(false);
-        }
+        m_moveArrowOne.SetActive(false);
+        m_moveArrowTwo.SetActive(false);
     }
 
     /// <summary>
@@ -212,11 +229,11 @@ public class LevelUIManager : MonoBehaviour
     /// <param name="arrowTwoDegrees"></param>
     void RotateMoveArrowsInDegrees(float arrowOneDegrees, float arrowTwoDegrees)
     {
-        GameObject arrowOne = m_arrows[0];
-        GameObject arrowTwo = m_arrows[1];
+        //GameObject arrowOne = m_arrows[0];
+        //GameObject arrowTwo = m_arrows[1];
 
-        arrowOne.transform.rotation = Quaternion.Euler(Vector3.forward * arrowOneDegrees);
-        arrowTwo.transform.rotation = Quaternion.Euler(Vector3.forward * arrowTwoDegrees);
+        m_moveArrowOne.transform.rotation = Quaternion.Euler(Vector3.forward * arrowOneDegrees);
+        m_moveArrowTwo.transform.rotation = Quaternion.Euler(Vector3.forward * arrowTwoDegrees);
     }
 
     /// <summary>
@@ -227,13 +244,33 @@ public class LevelUIManager : MonoBehaviour
     /// <param name="arrowTwoWorldPos"></param>
     void SetMoveArrowsPosition(Vector3 arrowOneWorldPos, Vector3 arrowTwoWorldPos)
     {
-        GameObject arrowOne = m_arrows[0];
-        GameObject arrowTwo = m_arrows[1];
+        //GameObject arrowOne = m_arrows[0];
+        //GameObject arrowTwo = m_arrows[1];
 
-        RectTransform rectTransformOne = arrowOne.GetComponent<RectTransform>();
-        RectTransform rectTransformTwo = arrowTwo.GetComponent<RectTransform>();
+        RectTransform rectTransformOne = m_moveArrowOne.GetComponent<RectTransform>();
+        RectTransform rectTransformTwo = m_moveArrowTwo.GetComponent<RectTransform>();
 
         rectTransformOne.position = m_mainCamera.WorldToScreenPoint(arrowOneWorldPos);
         rectTransformTwo.position = m_mainCamera.WorldToScreenPoint(arrowTwoWorldPos);
+    }
+
+    /// <summary>
+    /// Called by the Move Arrow One ui button when clicked
+    /// </summary>
+    public void OnArrowOneClick()
+    {
+        if(OnMoveArrowOneClicked != null) {
+            OnMoveArrowOneClicked();
+        }
+    }
+
+    // <summary>
+    /// Called by the Move Arrow One ui button when clicked
+    /// </summary>
+    public void OnArrowTwoClick()
+    {
+        if (OnMoveArrowTwoClicked != null) {
+            OnMoveArrowTwoClicked();
+        }
     }
 }

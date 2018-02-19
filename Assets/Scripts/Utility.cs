@@ -42,4 +42,14 @@ public class Utility
 
         return m_directionVector.FirstOrDefault(d => d.Value == directionVector).Key;
     }
+
+    /// <summary>
+    /// Returns the Vector3 value associated with the given direction name
+    /// </summary>
+    /// <param name="dirName"></param>
+    /// <returns></returns>
+    public static Vector3 GetDirectionVectorByName(FacingDirection dirName)
+    {
+        return m_directionVector.FirstOrDefault(d => d.Key == dirName).Value;
+    }
 }

@@ -265,6 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b10a5ff74baac543ac3e57a981c28d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentTransform: {fileID: 4118290697070420}
   m_arrowOffset: 50
   m_upMoveArrowTransform: {fileID: 4264279743440858}
   m_leftMoveArrowTransform: {fileID: 4905986694464756}

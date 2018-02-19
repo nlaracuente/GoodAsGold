@@ -20,6 +20,12 @@ public class PlayerMoveable : MonoBehaviour, IClickable
     PlayerManager m_playerManager;
 
     /// <summary>
+    /// The transform for the parent object
+    /// </summary>
+    [SerializeField]
+    Transform parentTransform;
+
+    /// <summary>
     /// How much to offset the ui arrows when object is engaged
     /// </summary>
     [SerializeField]
@@ -104,6 +110,15 @@ public class PlayerMoveable : MonoBehaviour, IClickable
 
                 m_playerManager.transform.position = horizontalAlignment;
                 m_uiManager.ShowVerticalMoveArrows(arrowOnePosition, arrowTwoPosition);
+
+                // Bind the clicks
+                if(m_playerManager.LookingAtDirection == FacingDirection.Up) {
+                    m_uiManager.OnMoveArrowOneClicked += Push;
+                    m_uiManager.OnMoveArrowTwoClicked += Pull;
+                } else {
+                    m_uiManager.OnMoveArrowOneClicked += Pull;
+                    m_uiManager.OnMoveArrowTwoClicked += Push;
+                }
                 break;
 
             // Player is on the right side of this object looking left
@@ -114,6 +129,15 @@ public class PlayerMoveable : MonoBehaviour, IClickable
 
                 m_playerManager.transform.position = verticalAlignment;
                 m_uiManager.ShowHorizontalMoveArrows(arrowOnePosition, arrowTwoPosition);
+
+                // Bind the clicks
+                if (m_playerManager.LookingAtDirection == FacingDirection.Left) {
+                    m_uiManager.OnMoveArrowOneClicked += Push;
+                    m_uiManager.OnMoveArrowTwoClicked += Pull;
+                } else {
+                    m_uiManager.OnMoveArrowOneClicked += Pull;
+                    m_uiManager.OnMoveArrowTwoClicked += Push;
+                }
                 break;
         }
     }
@@ -143,5 +167,33 @@ public class PlayerMoveable : MonoBehaviour, IClickable
         }
 
         return isClickable;
+    }
+
+    /// <summary>
+    /// Triggers the player to push this object
+    /// </summary>
+    void Push()
+    {
+        m_playerManager.PushObject(parentTransform);
+    }
+
+    /// <summary>
+    /// Triggers the player to pull this object
+    /// </summary>
+    void Pull()
+    {
+        m_playerManager.PullObject(parentTransform);
+    }
+
+    /// <summary>
+    /// Removes all bindings with the move arrows
+    /// </summary>
+    public void OnLoseFocus()
+    {
+        m_uiManager.OnMoveArrowOneClicked -= Push;
+        m_uiManager.OnMoveArrowTwoClicked -= Push;
+
+        m_uiManager.OnMoveArrowOneClicked -= Pull;
+        m_uiManager.OnMoveArrowTwoClicked -= Pull;
     }
 }
