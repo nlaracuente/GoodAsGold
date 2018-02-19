@@ -31,12 +31,6 @@ public class PlayerManager : MonoBehaviour
     Transform m_moveArrowSpawnPoint;
 
     /// <summary>
-    /// Where to start the ray cast when pullig an object
-    /// </summary>
-    [SerializeField]
-    Transform m_pullRaycastOrigin;
-
-    /// <summary>
     /// How many unit to move to another tile
     /// </summary>
     [SerializeField]
@@ -160,7 +154,7 @@ public class PlayerManager : MonoBehaviour
         Vector3 objectDestination = objectTransform.position + (directionVector * m_oneTileUnits);
 
         // Verify that the destination is available (where the object will be)
-        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector)) {
+        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector, objectTransform)) {
             m_playerAnimator.TriggerPushAction();
             StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
         }
@@ -176,7 +170,7 @@ public class PlayerManager : MonoBehaviour
         Vector3 playerDestination = transform.position - (directionVector * m_oneTileUnits);
         Vector3 objectDestination = objectTransform.position - (directionVector * m_oneTileUnits);
 
-        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector)) {
+        if (IsPushPullDestinationAvailable(transform.position, -directionVector, objectTransform)) {
             m_playerAnimator.TriggerPullAction();
             StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
         }        
@@ -188,18 +182,29 @@ public class PlayerManager : MonoBehaviour
     /// <param name="origin"></param>
     /// <param name="direction"></param>
     /// <returns></returns>
-    bool IsPushPullDestinationAvailable(Vector3 origin, Vector3 direction)
+    bool IsPushPullDestinationAvailable(Vector3 origin, Vector3 direction, Transform objectTransform)
     {
         bool isAvailable = true;
 
         // Raise the origin to avoid collision with the floor
         origin.y += .5f;
-        Debug.DrawRay(origin, direction, Color.red, 1f);
+
+        Debug.DrawLine(origin, origin + direction * m_oneTileUnits, Color.red, .25f);
         Ray ray = new Ray(origin, direction);
-        RaycastHit[] hits = Physics.RaycastAll(ray, m_oneTileUnits);
+        RaycastHit[] hits = Physics.RaycastAll(ray, m_oneTileUnits + .25f);
 
         foreach (RaycastHit hit in hits) {
-            if (hit.collider.gameObject != gameObject) {
+            GameObject other = hit.collider.gameObject;
+            Transform objectParent = other.transform.parent;
+
+            // Avoid collision with the player and the object being moved
+            if (other != gameObject && other != objectTransform.gameObject) {
+
+                // It may be a child of the object we are moving, skip it if it is
+                if(objectParent != null && objectParent.gameObject == objectTransform.gameObject) {
+                    continue;
+                }
+
                 isAvailable = false;
                 break;
             }
