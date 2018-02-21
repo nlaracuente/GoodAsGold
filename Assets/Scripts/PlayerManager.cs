@@ -15,6 +15,12 @@ public class PlayerManager : MonoBehaviour
     InputManager m_inputManager;
 
     /// <summary>
+    /// A reference to the mesh renderer component
+    /// </summary>
+    [SerializeField]
+    Renderer m_meshRenderer;
+
+    /// <summary>
     /// A reference to the player mover component
     /// </summary>
     PlayerMover m_playerMover;
@@ -29,6 +35,12 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     Transform m_moveArrowSpawnPoint;
+
+    /// <summary>
+    /// The inder of the gold material as found in the materials array of the renderer component
+    /// </summary>
+    [SerializeField]
+    int m_goldMaterialIndex = 1;
 
     /// <summary>
     /// How many unit to move to another tile
@@ -48,6 +60,40 @@ public class PlayerManager : MonoBehaviour
     float m_maxCoins = 10;
 
     /// <summary>
+    /// How fast to change the material when cursed/cured
+    /// </summary>
+    [SerializeField, Tooltip("How fast to turn into gold/recover")]
+    float m_alphaChangeDelay = 3f;
+
+    /// <summary>
+    /// Keeps track of how cursed the player is in percentage
+    /// </summary>
+    float m_currentCursePercent = 0f;
+    public float CursePercent
+    {
+        get { return m_currentCursePercent; }
+        set {
+            m_currentCursePercent = value;
+            float decrement = 1f;
+
+            // Clamp percentage in quater increments
+            if (m_currentCursePercent >= 25f && m_currentCursePercent < 50f) {
+                decrement = .75f;
+            } else if (m_currentCursePercent >= 50f && m_currentCursePercent < 75f) {
+                decrement = .50f;
+            } else if (m_currentCursePercent >= 75f && m_currentCursePercent < 100f) {
+                decrement = .25f;
+            } else if (m_currentCursePercent >= 100) {
+                decrement = 0;
+                // @TODO trigger game over
+            }
+
+            ChangeMaterialAlpha();
+            m_playerMover.SpeedDecrement = decrement;
+        }
+    }
+
+    /// <summary>
     /// A counter for the total coins collected
     /// </summary>
     float m_coinsCollected = 0;
@@ -56,23 +102,7 @@ public class PlayerManager : MonoBehaviour
         get { return m_coinsCollected; }
         set {
             m_coinsCollected = value;
-
-            float decrement = 1f;
-            float percent = m_coinsCollected * 100 / m_maxCoins;
-
-            // Clamp percentage in quater increments
-            if (percent >= 25f && percent < 50f) {
-                decrement = .75f;
-            } else if (percent >= 50f && percent < 75f) {
-                decrement = .50f;
-            } else if (percent >= 75f && percent < 100f) {
-                decrement = .25f;
-            } else if(percent >= 100) {
-                decrement = 0;
-                // @TODO trigger game over
-            }
-
-            m_playerMover.SpeedDecrement = decrement;
+            this.CursePercent = m_coinsCollected * 100 / m_maxCoins;
         }
     }
 
@@ -103,6 +133,11 @@ public class PlayerManager : MonoBehaviour
     }
 
     /// <summary>
+    /// True while the coroutine to change the material's alpha is running
+    /// </summary>
+    bool m_isChangingAlpha = false;
+
+    /// <summary>
     /// Sets all references
     /// </summary>
     void Awake()
@@ -111,11 +146,16 @@ public class PlayerManager : MonoBehaviour
         m_playerMover = GetComponent<PlayerMover>();
         m_playerAnimator = GetComponent<PlayerAnimator>();
 
+        if(m_meshRenderer == null) {
+            m_meshRenderer = GetComponentInChildren<MeshRenderer>();
+        }
+
         if (m_inputManager == null || m_playerMover == null || m_playerAnimator == null) {
             Debug.LogErrorFormat(
                 "PlayerManager Error: A required component is null. " +
-                "InputManager = {0}, PlayerMover = {1}, PlayerAnimator = {2}",
+                "InputManager = {0}, MeshRenderer = {1}, PlayerMover = {2}, PlayerAnimator = {3}",
                 m_playerMover,
+                m_meshRenderer,
                 m_inputManager,
                 m_playerAnimator
             );
@@ -248,5 +288,48 @@ public class PlayerManager : MonoBehaviour
         }
 
         return isAvailable;
+    }
+
+    /// <summary>
+    /// Triggers the animation of the player turning gold or being healed
+    /// </summary>
+    /// <param name="percent"></param>
+    void ChangeMaterialAlpha()
+    {
+        if (!m_isChangingAlpha) {
+            StartCoroutine(ChangeMaterialAlphaRoutine());
+        }
+    }
+
+    /// <summary>
+    /// Animates the player turning into gold or being restored
+    /// The renderer has a "gold material" with the alpha set to 0
+    /// We increase this number to slowly reveal the gold color
+    /// </summary>
+    /// <param name="percent"></param>
+    /// <returns></returns>
+    IEnumerator ChangeMaterialAlphaRoutine()
+    {
+        m_isChangingAlpha = true;
+
+        // Alpha is clamp between 0 and 1 therefore we convert our 100 based number into a double
+        float targetAlpha = m_currentCursePercent * .01f;
+        Color materialColor = m_meshRenderer.materials[m_goldMaterialIndex].color;
+
+        while (!Mathf.Approximately(materialColor.a, targetAlpha)) {
+            materialColor.a = Mathf.Lerp(
+                materialColor.a,
+                targetAlpha,
+                m_alphaChangeDelay * Time.deltaTime
+            );
+            
+            m_meshRenderer.materials[m_goldMaterialIndex].color = materialColor;
+
+            // Curse percent may have changed
+            targetAlpha = m_currentCursePercent * .01f;
+            yield return new WaitForEndOfFrame();
+        }
+
+        m_isChangingAlpha = false;
     }
 }

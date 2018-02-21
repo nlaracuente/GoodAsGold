@@ -1381,9 +1381,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5fe761f365229146b42eef627704140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_meshRenderer: {fileID: 137813476648397526}
   m_moveArrowSpawnPoint: {fileID: 4950107115951222}
+  m_goldMaterialIndex: 1
   m_oneTileUnits: 3
   m_maxCoins: 10
+  m_alphaChangeDelay: 8
 --- !u!137 &137813476648397526
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
