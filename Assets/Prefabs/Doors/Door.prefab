@@ -39,7 +39,6 @@ GameObject:
   - component: {fileID: 4271200043718250}
   - component: {fileID: 95753323197824420}
   - component: {fileID: 114090953754875828}
-  - component: {fileID: 114627218103225428}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -157,16 +156,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_isOpened: 0
   m_isOpenedTag: IsOpened
---- !u!114 &114627218103225428
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1729156682759464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86e6d7621525960498556e9011963497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_buttons:
-  - {fileID: 0}
