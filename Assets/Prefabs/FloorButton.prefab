@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4321084400015326}
-  - component: {fileID: 114990813091281670}
   - component: {fileID: 65055315633696052}
+  - component: {fileID: 114054872687720090}
   m_Layer: 0
   m_Name: FloorButton
   m_TagString: Untagged
@@ -69,7 +69,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1110013534740584}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -6}
+  m_LocalPosition: {x: 0.24, y: -0.2, z: -6}
   m_LocalScale: {x: 1.5, y: 1, z: 1.5}
   m_Children:
   - {fileID: 4374660624816656}
@@ -199,7 +199,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 3, z: 1.5}
   m_Center: {x: 0, y: 1.5, z: 0}
---- !u!114 &114990813091281670
+--- !u!114 &114054872687720090
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -207,9 +207,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1110013534740584}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e28544c9ab3e621429746770fe2fc14a, type: 3}
+  m_Script: {fileID: 11500000, guid: 694116176cd50174fb347716fbe5dbcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_activeButton: {fileID: 1870147382686046}
   m_inactiveButton: {fileID: 1489888580431320}
-  m_isSingleUse: 0

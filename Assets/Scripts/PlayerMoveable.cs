@@ -7,7 +7,7 @@ using UnityEngine;
 /// Objects that are moveable by the player
 /// These objects can be pushed or pulled
 /// </summary>
-public class PlayerMoveable : MonoBehaviour, IClickable
+public class PlayerMoveable : MonoBehaviour, IClickable, IButtonInteractible
 {
     /// <summary>
     /// A reference to the UI Manager

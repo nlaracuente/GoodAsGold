@@ -7,7 +7,7 @@ using UnityEngine;
 /// to animate, move, and update player status
 /// </summary>
 [RequireComponent(typeof(PlayerMover), typeof(PlayerAnimator))]
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour, IButtonInteractible
 {
     /// <summary>
     /// A reference to the input manager object
