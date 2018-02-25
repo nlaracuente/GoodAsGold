@@ -88,6 +88,16 @@ public class Coin : MonoBehaviour
     /// A reference to the rotate transform component
     /// </summary>
     RotateTransform m_rotateTransform;
+    RotateTransform RotateTransformComponent {
+        get {
+            if(m_rotateTransform == null) {
+                m_rotateTransform = GetComponent<RotateTransform>();
+            }
+
+            return m_rotateTransform;
+        }
+    }
+
 
     /// <summary>
     /// Triggers rotation when true
@@ -104,12 +114,12 @@ public class Coin : MonoBehaviour
         set {
             m_hasRotation = value;
 
-            // Prevents the editor script from triggering the routines
-            if (m_rotateTransform != null) {
+            // This is to help editor scripts to find the component
+            if (this.RotateTransformComponent != null) {
                 if (value) {
-                    m_rotateTransform.StartRotation();
+                    this.RotateTransformComponent.StartRotation();
                 } else {
-                    m_rotateTransform.StopRotation();
+                    this.RotateTransformComponent.StopRotation();
                 }
             }
         }

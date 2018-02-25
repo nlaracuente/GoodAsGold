@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Base class for all button subscriber 
@@ -31,6 +32,16 @@ public abstract class ButtonSubscriber : MonoBehaviour
     /// Triggered when all the buttons no longer meet the conditions for this subscriber to be considered "active"
     /// </summary>
     public event ButtonSubscriberEvent OnDeactivate;
+
+    /// <summary>
+    /// Unity events that expose the OnActive trigger to easily assign more subscriber via the editor
+    /// </summary>
+    public UnityEvent OnActivateUnityEvent;
+
+    /// <summary>
+    /// Unity events that expose the OnActive trigger to easily assign more subscriber via the editor
+    /// </summary>
+    public UnityEvent OnDeactivateUnityEvent;
 
     /// <summary>
     /// Subscribe to all the buttons
@@ -93,16 +104,6 @@ public abstract class ButtonSubscriber : MonoBehaviour
     protected abstract void OnButtonReleased(Button button, GameObject other);
 
     /// <summary>
-    /// Triggers the OnActivate subscriber event when all the buttons in the list are active
-    /// </summary>
-    protected virtual void Activate()
-    {
-        if (OnActivate != null && AllButtonsAreActive()) {
-            OnActivate();
-        }
-    }
-
-    /// <summary>
     /// Returns true if all the buttons in <see cref="m_buttons"/> are in an active status
     /// </summary>
     /// <returns></returns>
@@ -121,12 +122,33 @@ public abstract class ButtonSubscriber : MonoBehaviour
     }
 
     /// <summary>
-    /// Triggers the OnDeactivate subscriber event
+    /// Triggers the OnActivate subscriber and unity event 
+    /// when all the buttons in the list are active
+    /// </summary>
+    protected virtual void Activate()
+    {
+        if (AllButtonsAreActive()) {
+            if(OnActivate != null) {
+                OnActivate();
+            }
+
+            if(OnActivateUnityEvent != null) {
+                OnActivateUnityEvent.Invoke();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Triggers the OnDeactivate subscriber and unity event event
     /// </summary>
     protected virtual void Deactivate()
     {
         if (OnDeactivate != null) {
             OnDeactivate();
         }
+
+        if (OnDeactivateUnityEvent != null) {
+            OnDeactivateUnityEvent.Invoke();
+        }        
     }
 }

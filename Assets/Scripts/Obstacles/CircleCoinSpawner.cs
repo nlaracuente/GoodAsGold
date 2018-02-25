@@ -44,11 +44,15 @@ public class CircleCoinSpawner : MonoBehaviour
     /// </summary>
     public void SpawnCoins()
     {
+        // For some reason not all the coins get cleaned up (possibly due to how the editor script is calling
+        // this spawn coins too many times in one update hence calling the RemoveCoins this many times
         RemoveCoins();
+        RemoveCoins();
+        RemoveCoins();
+
         Vector3 center = transform.position;
 
         for (int i = 1; i < m_total; i++) {
-
             string instanceName = string.Format("Coin_{0}", i);
 
             // Already exist
@@ -79,7 +83,9 @@ public class CircleCoinSpawner : MonoBehaviour
     public void RemoveCoins()
     {
         foreach (Transform child in transform) {
-            DestroyImmediate(child.gameObject);
+            if (child.CompareTag("Coin")) {
+                DestroyImmediate(child.gameObject, true);
+            }
         }
     }
 }

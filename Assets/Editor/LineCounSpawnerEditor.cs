@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-/// <summary>
-/// Invokes the creations of the coins
-/// </summary>
-[CustomEditor(typeof(CircleCoinSpawner))]
-public class CircleCoinSpawnerEditor : Editor
+[CustomEditor(typeof(LineCoinSpawner))]
+public class LineCounSpawnerEditor : Editor
 {
-    CircleCoinSpawner m_spawner;
+    LineCoinSpawner m_spawner;
 
     #if (UNITY_EDITOR)
     void OnEnable()
     {
-        m_spawner = (CircleCoinSpawner)target;
+        m_spawner = (LineCoinSpawner)target;
     }
 
     /// <summary>

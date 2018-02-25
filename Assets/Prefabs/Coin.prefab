@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114965823425260990}
   m_Layer: 0
   m_Name: Coin
-  m_TagString: Untagged
+  m_TagString: Coin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_rate: 150
-  m_rotate: 1
+  m_rotate: 0
 --- !u!114 &114971333216601870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -156,4 +156,4 @@ MonoBehaviour:
   m_hiddenStateMaterial: {fileID: 2100000, guid: e47db907806add749a535067ee33b6e5,
     type: 2}
   m_coinModel: {fileID: 1442123956438484}
-  m_hasRotation: 1
+  m_hasRotation: 0
