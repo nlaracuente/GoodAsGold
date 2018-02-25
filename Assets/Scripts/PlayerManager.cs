@@ -90,6 +90,10 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
 
             ChangeMaterialAlpha();
             m_playerMover.SpeedDecrement = decrement;
+
+            if(m_currentCursePercent >= 100f) {
+                StartCoroutine(DeathRoutine());
+            }
         }
     }
 
@@ -138,6 +142,13 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     bool m_isChangingAlpha = false;
 
     /// <summary>
+    /// Flag used to trigger game over
+    /// Set after the player's death sequence is completed
+    /// </summary>
+    bool m_isDead = false;
+    public bool IsDead { get { return m_isDead; } }
+
+    /// <summary>
     /// Sets all references
     /// </summary>
     void Awake()
@@ -169,8 +180,9 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     /// </summary>
     void Update()
     {
+        // Level is not done loading
         // Wait unitl this action is completed
-        if (m_playerMover.IsPushingOrPulling) {
+        if (m_currentCursePercent == 100f || !GameManager.instance.HasLevelLoaded || GameManager.instance.IsGameOver || m_playerMover.IsPushingOrPulling) {
             return;
         }
 
@@ -191,10 +203,10 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     void RotateAndMove()
     {
         float moveSpeed = 0;
+        Vector3 inputVector = m_inputManager.InputVector;
 
         // Process movement/rotations
-        if (m_inputManager.InputVector != Vector3.zero) {
-            Vector3 inputVector = m_inputManager.InputVector;
+        if (inputVector != Vector3.zero) {
 
             // Face direction before moving 
             if (m_playerMover.Rotate(inputVector)) {
@@ -331,5 +343,24 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
         }
 
         m_isChangingAlpha = false;
+    }
+
+    /// <summary>
+    /// Triggers the death animations
+    /// Waits for the animation to complete before marking the player as dead
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DeathRoutine()
+    {
+        m_playerAnimator.TriggerDeath();
+
+        // Wait for the animation to trigger
+        yield return new WaitForSeconds(1f);
+
+        while (!m_playerAnimator.IsDeathAnimationCompleted()) {
+            yield return null;
+        }
+
+        m_isDead = true;
     }
 }

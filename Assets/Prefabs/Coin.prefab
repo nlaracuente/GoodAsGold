@@ -36,8 +36,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4558554281767116}
-  - component: {fileID: 114971333216601870}
   - component: {fileID: 65598910519874562}
+  - component: {fileID: 114971333216601870}
+  - component: {fileID: 114965823425260990}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -51,8 +52,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1853165763661226}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 1.91, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3, y: 1.91, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4973847295951858}
@@ -125,6 +126,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 0.25}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114965823425260990
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1853165763661226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e913f101c01bbf478e16069907ad8c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_rate: 150
+  m_rotate: 1
 --- !u!114 &114971333216601870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -137,5 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_state: 0
+  m_visibleStateMaterial: {fileID: 2100000, guid: 60df7b1a665e215448f458b5dbcc39ee,
+    type: 2}
+  m_hiddenStateMaterial: {fileID: 2100000, guid: e47db907806add749a535067ee33b6e5,
+    type: 2}
   m_coinModel: {fileID: 1442123956438484}
-  m_rotationSpeed: 150
+  m_hasRotation: 1

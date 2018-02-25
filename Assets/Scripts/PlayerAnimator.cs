@@ -35,6 +35,20 @@ public class PlayerAnimator : MonoBehaviour
     string m_leanBoolTag = "IsLeaning";
 
     /// <summary>
+    /// The name of the animator trigger for death animation
+    /// </summary>
+    [Tooltip("Animator death trigger parameter name")]
+    [SerializeField]
+    string m_deathTriggerTag = "Death";
+
+    /// <summary>
+    /// The name of the animator trigger for victory animation
+    /// </summary>
+    [Tooltip("Animator victory trigger parameter name")]
+    [SerializeField]
+    string m_victoryTag = "Victory";
+
+    /// <summary>
     /// Sets component references
     /// </summary>
     void Awake()
@@ -98,5 +112,31 @@ public class PlayerAnimator : MonoBehaviour
     public void TriggerPullAction()
     {
         m_animator.SetTrigger("Pull");
+    }
+
+    /// <summary>
+    /// Triggers death animation
+    /// </summary>
+    public void TriggerDeath()
+    {
+        m_animator.SetTrigger(m_deathTriggerTag);
+    }
+
+    /// <summary>
+    /// Triggers victory animation
+    /// </summary>
+    public void TriggerVictory()
+    {
+        m_animator.SetTrigger(m_victoryTag);
+    }
+
+    /// <summary>
+    /// Returns true when the current animation is part of the Movement animation blend
+    /// </summary>
+    /// <returns></returns>
+    public bool IsDeathAnimationCompleted()
+    {
+        AnimatorStateInfo state = m_animator.GetCurrentAnimatorStateInfo(0);
+        return !state.IsName("PlayerDeath");
     }
 }
