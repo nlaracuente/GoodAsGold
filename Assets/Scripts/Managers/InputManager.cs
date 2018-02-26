@@ -89,12 +89,20 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     /// <summary>
-    /// Resets the input vector to zero and updates if the player is touching the screen
-    /// and their 
+    /// Updates the input vector to store the direction and distance from the player avatar
+    /// the player is pressing on the screen which represent the direction to move
+    /// Values is clamped between -1 and 1 to emulate Input.GetAxis()
     /// </summary>
     void UpdateInputVector(Vector3 inputPosition)
     {
-        m_inputVector = OrtographicScreenPointToWorldSpace(inputPosition);
+        Vector3 screenPoint = OrtographicScreenPointToWorldSpace(inputPosition);
+        Vector3 direction = screenPoint - m_playerTransform.position;
+
+        m_inputVector = new Vector3(
+            Mathf.Clamp(direction.x, -1, 1),
+            0f,
+            Mathf.Clamp(direction.z, -1, 1)
+        );
     }
 
     /// <summary>
@@ -115,7 +123,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         if (plane.Raycast(ray, out distance)) {
             worldSpace = ray.GetPoint(distance);
         }
-
+        
         return worldSpace;
     }
 

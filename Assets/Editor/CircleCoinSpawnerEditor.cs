@@ -7,6 +7,7 @@ using UnityEditor;
 /// Invokes the creations of the coins
 /// </summary>
 [CustomEditor(typeof(CircleCoinSpawner))]
+[CanEditMultipleObjects]
 public class CircleCoinSpawnerEditor : Editor
 {
     CircleCoinSpawner m_spawner;

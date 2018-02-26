@@ -98,32 +98,22 @@ public class PlayerMover : MonoBehaviour
     public void Move(Vector3 inputVector)
     {
         float distanceToTarget = Vector3.Distance(inputVector, transform.position);
-        
-        // Distance to target is not beyond deadzone
-        if (distanceToTarget < m_deadzone) {
-            return;
-        }
-
-        // Direction to move the player towards
-        Vector3 direction = inputVector - transform.position;
-        direction.y = 0f;
 
         // Update speed to match current decrement
         m_currentSpeed = m_moveSpeed * m_speedDecrement;
 
-        m_charController.SimpleMove(direction * m_currentSpeed * Time.deltaTime);
+        m_charController.SimpleMove(inputVector * m_currentSpeed * Time.deltaTime);
     }
 
     /// <summary>
-    /// Leprs the player's rotation to match the given position
+    /// Lerps the player's rotation to match the given position
     /// Returns true when the current rotation's angle is close to <see cref="m_rotationAngleProximity"/>
     /// </summary>
     /// <param name="inputVector"></param>
     public bool Rotate(Vector3 inputVector)
     {
-        Vector3 direction = inputVector - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(inputVector);
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
             targetRotation,

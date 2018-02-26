@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(LineCoinSpawner))]
+[CanEditMultipleObjects]
 public class LineCounSpawnerEditor : Editor
 {
     LineCoinSpawner m_spawner;

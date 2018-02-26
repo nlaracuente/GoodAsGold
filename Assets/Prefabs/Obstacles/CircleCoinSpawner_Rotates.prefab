@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 114436324401833508}
   - component: {fileID: 114117880303887364}
   m_Layer: 0
-  m_Name: CircleCoinSpawner
+  m_Name: CircleCoinSpawner_Rotates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
