@@ -34,26 +34,16 @@ public class MapGenerator : MonoBehaviour
     Dictionary<Color32, GameObject> m_definitionTable = new Dictionary<Color32, GameObject>();
 
     /// <summary>
-    /// A reference to all instantiated tile prefabs
-    /// </summary>
-    List<GameObject> m_tiles = new List<GameObject>();
-
-    /// <summary>
-    /// Trigger map generation
-    /// </summary>
-    void Start()
-    {
-        GenerateMap();
-    }
-
-    /// <summary>
     /// Clears all existing tiles and re-creates the map
     /// </summary>
-    public void GenerateMap()
+    public void GenerateMap(bool clearMap = false)
     {
-        ClearMap();
-        ClearMap();
-        ClearMap();
+        if (clearMap) {
+            ClearMap();
+            ClearMap();
+            ClearMap();
+        }
+        
         CreateDefinitionTable();
         SpawnTiles();
     }
@@ -63,19 +53,10 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     void ClearMap()
     {
-        foreach(GameObject tile in m_tiles) {
-            if(tile != null) {
-                DestroyImmediate(tile.gameObject);
-
-            }
-        }
-
         // Pickup stragglers or anything we lost reference to
         foreach(Transform child in transform) {
             DestroyImmediate(child.gameObject);
         }
-
-        m_tiles.Clear();
     }
 
     /// <summary>
@@ -112,28 +93,49 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     void SpawnTiles()
     {
-        for (int column = 0; column < m_mapImage.width; column++) {
-            for (int row = 0; row < m_mapImage.height; row++) {
-                Color32 colorId = m_mapImage.GetPixel(column, row);
+        for (int x = 0; x < m_mapImage.width; x++) {
+            for (int z = 0; z < m_mapImage.height; z++) {
+                Color32 colorId = m_mapImage.GetPixel(x, z);
                 GameObject prefab = GetPrefabByColorId(colorId);
 
                 if(prefab == null) {
                     continue;
                 }
 
-                string name = string.Format("{0}_{1}_{2}", prefab.name, row, column);
+                string instanceName = string.Format("{0}_{1}_{2}", prefab.name, z, x);
+                
+                Vector3 position = new Vector3(x * m_tileWidth, 0f, z * m_tileHeight);
+                GameObject instance = Instantiate(prefab, position, Quaternion.identity);
 
-                // Avoid duplicates
-                if (transform.Find(name) != null) {
-                    continue;
+                instance.name = instanceName;
+                string parentName = string.Format("_{0}", instance.tag);
+
+                // Remove duplicates
+                if (transform.Find(parentName) && transform.Find(parentName).Find(instanceName) != null) {
+                    DestroyImmediate(instance);
+                } else {
+                    SetInstanceParent(instance, parentName);
                 }
-
-                Vector3 position = new Vector3(row * m_tileWidth, 0f, column * m_tileHeight);
-                GameObject instance = Instantiate(prefab, position, Quaternion.identity, transform);
-                instance.name = name;
-
-                m_tiles.Add(instance);
             }
         }
+    }
+
+    /// <summary>
+    /// Parents the instance based on its tag
+    /// </summary>
+    /// <param name="instance"></param>
+    void SetInstanceParent(GameObject instance, string parentName)
+    {
+        GameObject parent = null;
+
+        // use existing or create it
+        if (transform.Find(parentName)) {
+            parent = transform.Find(parentName).gameObject;
+        } else {
+            parent = new GameObject(parentName);
+            parent.transform.SetParent(transform);
+        }
+
+        instance.transform.SetParent(parent.transform);
     }
 }

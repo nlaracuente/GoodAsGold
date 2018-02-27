@@ -97,8 +97,6 @@ public class PlayerMover : MonoBehaviour
     /// <param name="inputVector"></param>
     public void Move(Vector3 inputVector)
     {
-        float distanceToTarget = Vector3.Distance(inputVector, transform.position);
-
         // Update speed to match current decrement
         m_currentSpeed = m_moveSpeed * m_speedDecrement;
 

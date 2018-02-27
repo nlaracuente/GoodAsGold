@@ -16,7 +16,7 @@ public class CircleCoinSpawner : MonoBehaviour
     /// <summary>
     /// How far from the center of this object to spawn the coins at
     /// </summary>
-    [SerializeField, Tooltip("Distance from the center"), Range(5f, 20f)]
+    [SerializeField, Tooltip("Distance from the center"), Range(1f, 10f)]
     float m_radius = 5f;
 
     /// <summary>

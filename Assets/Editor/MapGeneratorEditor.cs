@@ -19,7 +19,9 @@ public class MapGeneratorEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if (GUILayout.Button("Generate")) {
+        if (GUILayout.Button("Create")) {
+            m_mapGenerator.GenerateMap(true);
+        } else if (GUILayout.Button("Update")) {
             m_mapGenerator.GenerateMap();
         }
     }

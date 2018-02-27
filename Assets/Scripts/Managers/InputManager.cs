@@ -28,31 +28,6 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public Vector3 InputVector { get { return m_inputVector; } }
 
     /// <summary>
-    /// Returns the input vector with its value being either -1, 0, or 1
-    /// </summary>
-    public Vector3 RawInputVector
-    {
-        get {
-            Vector3 inputVector = m_inputVector;
-            inputVector.y = 0f;
-
-            if (inputVector.x < 0f) {
-                inputVector.x = -1f;
-            } else if (inputVector.x > 0f) {
-                inputVector.x = 1f;
-            }
-
-            if (inputVector.z < 0f) {
-                inputVector.z = -1f;
-            } else if (inputVector.z > 0f) {
-                inputVector.z = 1f;
-            }
-            
-            return inputVector;
-        }
-    }
-
-    /// <summary>
     /// Sets the input vector to Vector.zero when true
     /// </summary>
     bool m_inputDisabled = false;
@@ -98,11 +73,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         Vector3 screenPoint = OrtographicScreenPointToWorldSpace(inputPosition);
         Vector3 direction = screenPoint - m_playerTransform.position;
 
-        m_inputVector = new Vector3(
-            Mathf.Clamp(direction.x, -1, 1),
-            0f,
-            Mathf.Clamp(direction.z, -1, 1)
-        );
+        m_inputVector = direction;
     }
 
     /// <summary>

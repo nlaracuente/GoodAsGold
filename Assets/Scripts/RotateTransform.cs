@@ -32,7 +32,7 @@ public class RotateTransform : MonoBehaviour
     public void StartRotation()
     {
         m_rotate = true;
-        StartCoroutine(RotateRoutine());
+        StartCoroutine("RotateRoutine");
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class RotateTransform : MonoBehaviour
     public void StopRotation()
     {
         m_rotate = false;
-        StopCoroutine(RotateRoutine());
+        StopCoroutine("RotateRoutine");
     }
 
     /// <summary>

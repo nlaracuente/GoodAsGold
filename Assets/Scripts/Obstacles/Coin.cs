@@ -196,4 +196,34 @@ public class Coin : MonoBehaviour
     {
         this.CoinState = State.Visible;
     }
+
+    /// <summary>
+    /// Triggers the coin to move towards the destination
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <param name="speed"></param>
+    /// <param name="destroyWhenDone"></param>
+    public void MoveTowards(Vector3 destination, float speed, bool destroyWhenDone = true)
+    {
+        StartCoroutine(MoveTowardsRoutine(destination, speed, destroyWhenDone));
+    }
+
+    /// <summary>
+    /// Moves the coin towards the destination destroying when it arrives if told to
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <param name="speed"></param>
+    /// <param name="destroyWhenDone"></param>
+    /// <returns></returns>
+    IEnumerator MoveTowardsRoutine(Vector3 destination, float speed, bool destroyWhenDone)
+    {
+        while(transform.position != destination) {
+            transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (destroyWhenDone) {
+            Destroy(gameObject);
+        }
+    }
 }

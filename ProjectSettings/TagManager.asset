@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Menu
   - Coin
+  - Button
+  - Door
+  - Floor
+  - Wall
+  - Moveable
   layers:
   - Default
   - TransparentFX

@@ -205,6 +205,10 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
         float moveSpeed = 0;
         Vector3 inputVector = m_inputManager.InputVector;
 
+        if(inputVector.magnitude > 1) {
+            inputVector.Normalize();
+        }
+
         // Process movement/rotations
         if (inputVector != Vector3.zero) {
 
@@ -284,10 +288,11 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
 
         foreach (RaycastHit hit in hits) {
             GameObject other = hit.collider.gameObject;
+            Collider collider = other.GetComponent<Collider>();
             Transform objectParent = other.transform.parent;
 
-            // Avoid collision with the player and the object being moved
-            if (other != gameObject && other != objectTransform.gameObject) {
+            // Avoid collision with the player, the object being moved, and any trigger collider
+            if (!collider.isTrigger && other != gameObject && other != objectTransform.gameObject) {
 
                 // It may be a child of the object we are moving, skip it if it is
                 if(objectParent != null && objectParent.gameObject == objectTransform.gameObject) {
