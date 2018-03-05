@@ -109,7 +109,7 @@ public class DoorTile : BaseTile
     {
         GameObject door = Instantiate(m_doorPrefab, transform);
 
-        // Search for the first instance of a surrounding floor
+        // Search for the first instance of a surrounding floor tile
         // This dictates which direction to look at and which type of
         // floor to create underneath of the door
         foreach(Vector3 point in GameManager.cardinalPoints) {
@@ -136,31 +136,5 @@ public class DoorTile : BaseTile
                 break;
             }
         }
-
-        //GameObject tileAbove  = m_generator.GetTileAt(m_index + GameManager.directions["up"]);
-        //GameObject tileBellow = m_generator.GetTileAt(m_index + GameManager.directions["down"]);
-        //GameObject tileLeft = m_generator.GetTileAt(m_index + GameManager.directions["left"]);
-        //GameObject tileRight = m_generator.GetTileAt(m_index + GameManager.directions["left"]);
-
-        //if (tileAbove.CompareTag("Wall") || tileBellow.CompareTag("Wall")) {
-        //    door.transform.rotation = Quaternion.LookRotation(GameManager.directions["left"]);
-        //} else {
-        //    door.transform.rotation = Quaternion.LookRotation(GameManager.directions["up"]);
-        //}
-
-        //// Raise this object if we are on a raised floor
-        //if(tileAbove.CompareTag("RaisedFloor") || 
-        //    tileLeft.CompareTag("RaisedFloor") ||
-        //    tileBellow.CompareTag("RaisedFloor") ||
-        //    tileRight.CompareTag("RaisedFloor")) {
-
-        //    door.transform.position += Vector3.up * m_raisedDistance;
-
-        //    GameObject floor = Instantiate(m_raisedFloorPrefab, transform);
-        //    floor.GetComponent<BaseTile>().Setup();
-
-        //} else {
-        //    Instantiate(m_floorPrefab, transform);
-        //}
     }
 }

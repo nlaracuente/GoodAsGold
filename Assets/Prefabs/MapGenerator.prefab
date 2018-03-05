@@ -72,6 +72,10 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 4278190335
     prefab: {fileID: 1139067150219280, guid: 29482e73b113b144080f58e965d5a826, type: 2}
+  - color:
+      serializedVersion: 2
+      rgba: 4294901760
+    prefab: {fileID: 1719563839478378, guid: f63ef1f179947b645a6e1c9754173b13, type: 2}
   m_resourcePath: Levels
   m_textureMap: {fileID: 2800000, guid: 1afa8a4c4624697438089f50a83d9d0a, type: 3}
   m_setupOrder:
@@ -79,3 +83,4 @@ MonoBehaviour:
   - Wall
   - RaisedFloor
   - Door
+  - Button
