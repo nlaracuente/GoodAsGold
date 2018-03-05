@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Manages camera movements, zooms, and tracking
 /// </summary>
+[ExecuteInEditMode]
 public class CameraManager : MonoBehaviour
 {
     /// <summary>

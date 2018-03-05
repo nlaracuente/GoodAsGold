@@ -12,7 +12,7 @@ public class MoveableObject : MonoBehaviour, IClickable, IButtonInteractible
     /// <summary>
     /// A reference to the UI Manager
     /// </summary>
-    LevelUIManager m_uiManager;
+    UIManager m_uiManager;
 
     /// <summary>
     /// A reference to the playe manager object
@@ -61,7 +61,7 @@ public class MoveableObject : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     void Awake()
     {
-        m_uiManager = FindObjectOfType<LevelUIManager>();
+        m_uiManager = FindObjectOfType<UIManager>();
         m_playerManager = FindObjectOfType<PlayerManager>();
 
         if(m_uiManager == null || m_playerManager == null) {

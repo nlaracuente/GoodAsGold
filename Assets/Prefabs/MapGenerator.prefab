@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1810377837937512}
+  m_IsPrefabParent: 1
+--- !u!1 &1810377837937512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4662531819661530}
+  - component: {fileID: 114621431106297886}
+  m_Layer: 0
+  m_Name: MapGenerator
+  m_TagString: Door
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4662531819661530
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1810377837937512}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114621431106297886
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1810377837937512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d48fc045035e9841bb4b568d174230b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tileDefinitions:
+  - color:
+      serializedVersion: 2
+      rgba: 4278190080
+    prefab: {fileID: 1373377668926368, guid: 8a06ee6181d6a0f41822e3a8020cd80f, type: 2}
+  - color:
+      serializedVersion: 2
+      rgba: 4294365037
+    prefab: {fileID: 1384027920243182, guid: f4d00db7c4e249e42a9bab80ebc6c2c6, type: 2}
+  - color:
+      serializedVersion: 2
+      rgba: 4290230199
+    prefab: {fileID: 1363958455670952, guid: 4adf493f711d02744bca2ea331b9e0c4, type: 2}
+  - color:
+      serializedVersion: 2
+      rgba: 4278255360
+    prefab: {fileID: 1713767592182086, guid: 20af52f45b071644392f58693a603a0c, type: 2}
+  - color:
+      serializedVersion: 2
+      rgba: 4279449952
+    prefab: {fileID: 1096067053969836, guid: 0ea8cecba4e90c443ae611c397d22459, type: 2}
+  m_resourcePath: Levels
+  m_textureMap: {fileID: 2800000, guid: 1afa8a4c4624697438089f50a83d9d0a, type: 3}
+  m_setupOrder:
+  - Ramp
+  - Wall

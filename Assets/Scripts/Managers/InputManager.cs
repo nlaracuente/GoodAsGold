@@ -45,7 +45,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// <summary>
     /// A reference to the UI Manager
     /// </summary>
-    LevelUIManager m_uiManager;
+    UIManager m_uiManager;
 
     /// <summary>
     /// Finds the main camera if one was not given
@@ -60,7 +60,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             m_playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
 
-        m_uiManager = FindObjectOfType<LevelUIManager>();
+        m_uiManager = FindObjectOfType<UIManager>();
     }
 
     /// <summary>
@@ -68,10 +68,20 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// the player is pressing on the screen which represent the direction to move
     /// Values is clamped between -1 and 1 to emulate Input.GetAxis()
     /// </summary>
-    void UpdateInputVector(Vector3 inputPosition)
+    void SetInputVector(Vector3 screenPoint)
     {
-        Vector3 screenPoint = OrtographicScreenPointToWorldSpace(inputPosition);
-        Vector3 direction = screenPoint - m_playerTransform.position;
+        // No input detected
+        if(screenPoint == Vector3.zero) {
+            m_inputVector = screenPoint;
+            return;
+        }
+
+        // Translate the input
+        Vector3 worldSpace = OrtographicScreenPointToWorldSpace(screenPoint);
+
+        // Get the direction of the input ignoring the y axis
+        Vector3 direction = worldSpace - m_playerTransform.position;
+        direction.y = 0f;
 
         m_inputVector = direction;
     }
@@ -124,7 +134,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             }
  
             m_uiManager.HideArrows();
-            UpdateInputVector(eventData.position);
+            SetInputVector(eventData.position);
         }
     }
 
@@ -147,7 +157,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             return;
         }
 
-        UpdateInputVector(eventData.position);
+        SetInputVector(eventData.position);
     }
 
     /// <summary>

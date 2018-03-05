@@ -47,6 +47,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player")) {
             m_playerManager.CursePercent = 0f;
+            m_playerManager.CoinsCollected = 0f;
             m_particles.Play();
         }
     }

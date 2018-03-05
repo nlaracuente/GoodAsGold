@@ -20,6 +20,29 @@ public class GameManager : MonoBehaviour
     PlayerManager m_player;
 
     /// <summary>
+    /// How many units in the X axis a tile is
+    /// </summary>
+    [SerializeField]
+    public static int tileXSize = 3;
+
+    /// <summary>
+    /// How many units in the Z axis a tile is
+    /// </summary>
+    [SerializeField]
+    public static int tileZSize = 3;
+
+    /// <summary>
+    /// A list of all the cardinal points when checking surrounding tiles
+    /// </summary>
+    [SerializeField]
+    public static List<Vector3> cardinalPoints = new List<Vector3>() {
+        Vector3.forward,
+        Vector3.left,
+        Vector3.back,
+        Vector3.right,
+    };
+
+    /// <summary>
     /// A reference to the canvas image used for fading in/out
     /// </summary>
     [SerializeField]
@@ -138,6 +161,9 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator LoadLevelRoutine()
     {
+        // Ensure the screen fading image is active
+        m_faderImage.gameObject.SetActive(true);
+
         while (!m_hasLevelLoaded) {
             yield return StartCoroutine(FadeScreenRoutine(m_fadeOutAlpha));
             m_hasLevelLoaded = true;
@@ -169,5 +195,13 @@ public class GameManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    /// <summary>
+    /// Closes the app
+    /// </summary>
+    public void Quit()
+    {
+        Application.Quit();
     }
 }

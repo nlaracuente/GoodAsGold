@@ -58,7 +58,7 @@ public class PlayerMover : MonoBehaviour
     /// <summary>
     /// A reference to the ui manager
     /// </summary>
-    LevelUIManager m_uiManager;
+    UIManager m_uiManager;
 
     /// <summary>
     /// True while the action to push/pull is running
@@ -83,7 +83,7 @@ public class PlayerMover : MonoBehaviour
     void Awake()
     {
         m_charController = GetComponent<CharacterController>();
-        m_uiManager = FindObjectOfType<LevelUIManager>();
+        m_uiManager = FindObjectOfType<UIManager>();
 
         if(m_uiManager == null) {
             Debug.LogErrorFormat("PlayerMover Error: Missing Component! UI Manager = {0}", m_uiManager);
