@@ -37,7 +37,7 @@ public class Door : MonoBehaviour
 	void Awake ()
     {
         m_buttonSubscriber = GetComponent<ButtonSubscriber>();
-        m_animator = GetComponent<Animator>();
+        m_animator = GetComponentInChildren<Animator>();
 
         if(m_buttonSubscriber == null || m_animator == null) {
             Debug.LogErrorFormat("Door Error: Missing Component! " +

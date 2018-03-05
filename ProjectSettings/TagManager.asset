@@ -12,6 +12,8 @@ TagManager:
   - Wall
   - Moveable
   - Ramp
+  - HalfWall
+  - RaisedFloor
   layers:
   - Default
   - TransparentFX

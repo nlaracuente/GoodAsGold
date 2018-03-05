@@ -43,6 +43,16 @@ public class GameManager : MonoBehaviour
     };
 
     /// <summary>
+    /// Translates string direction into vector3
+    /// </summary>
+    public static Dictionary<string, Vector3> directions = new Dictionary<string, Vector3>() {
+        { "up", Vector3.forward },
+        { "left", Vector3.left },
+        { "down", Vector3.back },
+        { "right", Vector3.right },
+    };
+
+    /// <summary>
     /// A reference to the canvas image used for fading in/out
     /// </summary>
     [SerializeField]

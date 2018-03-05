@@ -70,10 +70,12 @@ MonoBehaviour:
     prefab: {fileID: 1713767592182086, guid: 20af52f45b071644392f58693a603a0c, type: 2}
   - color:
       serializedVersion: 2
-      rgba: 4279449952
-    prefab: {fileID: 1096067053969836, guid: 0ea8cecba4e90c443ae611c397d22459, type: 2}
+      rgba: 4278190335
+    prefab: {fileID: 1139067150219280, guid: 29482e73b113b144080f58e965d5a826, type: 2}
   m_resourcePath: Levels
   m_textureMap: {fileID: 2800000, guid: 1afa8a4c4624697438089f50a83d9d0a, type: 3}
   m_setupOrder:
   - Ramp
   - Wall
+  - RaisedFloor
+  - Door
