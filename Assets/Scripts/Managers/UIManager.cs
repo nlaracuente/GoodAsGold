@@ -29,24 +29,6 @@ public class UIManager : MonoBehaviour
     GameObject m_moveArrowTwo;
 
     /// <summary>
-    /// A list of all the move arrows
-    /// Arrows are added as we loop through the directions therefore they represent each direction accordingly
-    /// </summary>
-    List<GameObject> m_arrows = new List<GameObject>();
-
-    /// <summary>
-    /// How many arrows to spawn to represent the directions an object can be moved to
-    /// </summary>
-    [SerializeField]
-    int m_totalArrows = 2;
-
-    /// <summary>
-    /// The offset to align the move arrow behind the player
-    /// </summary>
-    [SerializeField]
-    float m_playerArrowOffset = 100f;
-
-    /// <summary>
     /// A reference to the input manager object
     /// </summary>
     InputManager m_inputManager;
@@ -67,16 +49,6 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     MenuState m_state = MenuState.Closed;
     public MenuState State { get { return m_state; } }
-
-    /// <summary>
-    /// A list of all directions a moveable object can be moved
-    /// </summary>
-    List<Vector2> m_directions = new List<Vector2>() {
-        Vector2.up,
-        Vector2.left,
-        Vector2.down,
-        Vector2.right
-    };
 
     /// <summary>
     /// Allows binding to the move arrow ui clicks

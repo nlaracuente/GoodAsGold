@@ -28,15 +28,16 @@ public class RaisedFloor : BaseTile
         foreach(Vector3 point in GameManager.cardinalPoints) {
             GameObject tile = m_generator.GetTileAt(m_index + point);
 
-            if(tile != null && (tile.CompareTag("Floor") || tile.CompareTag("Ramp"))) {
-                Vector3 localForward = transform.InverseTransformDirection(transform.forward);
-                Vector3 localTileForward = transform.InverseTransformDirection(tile.transform.forward);
-
-                float dot = Vector3.Dot(localForward, localTileForward);
-
-                // Ramp is facing the same or opposite direction as this tile
-                if (tile.CompareTag("Ramp") && dot != 0) {
-                    continue;
+            if(tile != null && (tile.CompareTag("Floor") || tile.CompareTag("Ramp"))) {                
+                Vector3 tileForwardVector = transform.InverseTransformDirection(tile.transform.forward);
+                
+                // We want to avoid blocking off ramps that are rotated to align with this tile
+                // This means that if the ramp's forward is in the same direction or opposite to the
+                // current cardinal point, then the ramp is connecting with this tile so we skip it
+                if (tile.CompareTag("Ramp")) {
+                    if (tileForwardVector == point || tileForwardVector == -point) {
+                        continue;
+                    }
                 }
 
                 GameObject barrier = Instantiate(m_barrierPrefab, transform);

@@ -26,12 +26,6 @@ public class MoveableObject : MonoBehaviour, IClickable, IButtonInteractible
     Transform parentTransform;
 
     /// <summary>
-    /// How much to offset the ui arrows when object is engaged
-    /// </summary>
-    [SerializeField]
-    float m_arrowOffset = 200f;
-
-    /// <summary>
     /// Where the move (up) arrow ui above this object will be placed
     /// </summary>
     [SerializeField]
