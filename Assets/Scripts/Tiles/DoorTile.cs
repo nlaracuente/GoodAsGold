@@ -11,18 +11,6 @@ using UnityEngine;
 public class DoorTile : BaseTile
 {
     /// <summary>
-    /// A reference to the floor prefab
-    /// </summary>
-    [SerializeField]
-    GameObject m_floorPrefab;
-
-    /// <summary>
-    /// A reference to the raised floor prefab
-    /// </summary>
-    [SerializeField]
-    GameObject m_raisedFloorPrefab;
-
-    /// <summary>
     /// A reference to the actual door model prefab
     /// </summary>
     [SerializeField]
@@ -102,37 +90,29 @@ public class DoorTile : BaseTile
     }
 
     /// <summary>
-    /// Instantiates the floor that goes under the door
-    /// Orients itself as to have a wall tile on each side
+    /// Instantiates the door at a high that matches the floor type it is standing on
+    /// Looks for the first tile of similar type than the one it is standing on to face it
+    /// so long as there isn't another object on that tile
     /// </summary>
     protected override void SpawnComponent()
     {
+        // Tile the door sits on
+        GameObject onTile = m_generator.GetTileAt(m_index);
         GameObject door = Instantiate(m_doorPrefab, transform);
 
-        // Search for the first instance of a surrounding floor tile
-        // This dictates which direction to look at and which type of
-        // floor to create underneath of the door
-        foreach(Vector3 point in GameManager.cardinalPoints) {
+        // Raise the tile to match the floor
+        if (onTile.CompareTag("RaisedFloor")) {
+            door.transform.position += Vector3.up * m_raisedDistance;
+        }
+
+        // Look for the first neighbor tile of the same type the door is on
+        // This is used to rotate the door to face that tile as it must be a connecting tile
+        foreach (Vector3 point in GameManager.cardinalPoints) {
             GameObject tile = m_generator.GetTileAt(m_index + point);
+            GameObject objectOnTile = m_generator.GetObjectAt(m_index + point);
 
-            if (tile.CompareTag("Floor") || tile.CompareTag("RaisedFloor")) {
+            if (tile != null && tile.CompareTag(onTile.tag) && objectOnTile == null) {
                 transform.LookAt(tile.transform);
-
-                // Raise the door and spawn the proper floor tile
-                if (tile.CompareTag("RaisedFloor")) {
-                    door.transform.position += Vector3.up * m_raisedDistance;
-                    GameObject floor = Instantiate(m_raisedFloorPrefab, transform);
-                    BaseTile floorTile = floor.GetComponent<BaseTile>();
-
-                    // Have to run the update so that the tile creates itself
-                    floorTile.Init(m_generator, (int)m_index.x, (int)m_index.z);
-                    floorTile.Setup();
-
-                // Regular floor
-                } else {
-                    Instantiate(m_floorPrefab, transform);
-                }
-
                 break;
             }
         }

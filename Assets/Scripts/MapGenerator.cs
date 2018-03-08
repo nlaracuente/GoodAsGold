@@ -18,10 +18,20 @@ public class MapGenerator : MonoBehaviour
     string m_resourcePath = "Levels";
 
     /// <summary>
-    /// A reference to the image resource that represents this map
+    /// A reference to the image resource that contains all the static tiles:
+    /// i.e. walls, floors
+    /// for the current level
     /// </summary>
     [SerializeField]
-    Texture2D m_textureMap;
+    Texture2D m_tileTextureMap;
+
+    /// <summary>
+    /// A reference to the image resource that contains all the objects that sit on tiles:
+    /// i.e ramps, doors, buttons, coins
+    /// for the current level
+    /// </summary>
+    [SerializeField]
+    Texture2D m_objectsTextureMap;
 
     /// <summary>
     /// Stores the tile definitions in a hash table for quick reference
@@ -29,9 +39,14 @@ public class MapGenerator : MonoBehaviour
     Dictionary<Color32, GameObject> m_definitionTable = new Dictionary<Color32, GameObject>();
 
     /// <summary>
-    /// A collection of all the spawn tiles based on their x,z position
+    /// A collection of all the spawned tiles based on their x,z position
     /// </summary>
     GameObject[,] m_tiles;
+
+    /// <summary>
+    /// A collection of all the spawned objects based on their x,z position
+    /// </summary>
+    GameObject[,] m_objects;
 
     /// <summary>
     /// A list of all the tile tags to run the setup logic for in the order required
@@ -52,19 +67,13 @@ public class MapGenerator : MonoBehaviour
 
         SetTextureMap();
         CreateDefinitionTable();
-        SpawnTiles();
-        SetupTiles();
-    }
+        SetupContainers();
 
-    /// <summary>
-    /// Stores the texture map data from the resources folder when one is not already set
-    /// </summary>
-    void SetTextureMap()
-    {
-        if (m_textureMap == null) {
-            string path = string.Format("{0}/{1}", m_resourcePath, SceneManager.GetActiveScene().name);
-            m_textureMap = Resources.Load<Texture2D>(path);
-        }
+        // Spawn first all the tiles followed by all the objects
+        SpawnTiles(m_tileTextureMap);
+        SpawnTiles(m_objectsTextureMap, true);
+
+        SetupTiles();
     }
 
     /// <summary>
@@ -72,11 +81,30 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     void ClearMap()
     {
+        m_tiles = null;
+        m_objects = null;
+
         // Pickup stragglers or anything we lost reference to
-        foreach(Transform child in transform) {
+        foreach (Transform child in transform) {
             DestroyImmediate(child.gameObject);
         }
     }
+
+    /// <summary>
+    /// Stores the texture map data from the resources folder when one is not already set
+    /// </summary>
+    void SetTextureMap()
+    {
+        if (m_tileTextureMap == null) {
+            string tilesPath = string.Format("{0}/{1}", m_resourcePath, SceneManager.GetActiveScene().name + "_tiles");
+            m_tileTextureMap = Resources.Load<Texture2D>(tilesPath);
+        }
+
+        if (m_objectsTextureMap == null) {
+            string objectsPath = string.Format("{0}/{1}", m_resourcePath, SceneManager.GetActiveScene().name + "_objects");
+            m_objectsTextureMap = Resources.Load<Texture2D>(objectsPath);
+        }
+    }    
 
     /// <summary>
     /// Creates the definition table
@@ -88,6 +116,15 @@ public class MapGenerator : MonoBehaviour
                 m_definitionTable.Add(definition.color, definition.prefab);
             }
         }
+    }
+
+    /// <summary>
+    /// Creates the array containers for the tiles and the objects that are on the tiles
+    /// </summary>
+    void SetupContainers()
+    {
+        m_tiles = new GameObject[m_tileTextureMap.width, m_tileTextureMap.height];
+        m_objects = new GameObject[m_objectsTextureMap.width, m_objectsTextureMap.height];
     }
 
     /// <summary>
@@ -108,18 +145,17 @@ public class MapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Spawns all the recognize tiles from the <see cref="m_textureMap"/>
+    /// Spawns all the recognized tiles/objects from the given texture map
     /// </summary>
-    void SpawnTiles()
+    /// <param name="textureMap"></param>
+    void SpawnTiles(Texture2D textureMap, bool isForObjects = false)
     {
-        m_tiles = new GameObject[m_textureMap.width, m_textureMap.height];
+        float x_offset = (textureMap.width * GameManager.tileXSize) / 2;
+        float z_offset = (textureMap.height * GameManager.tileZSize) / 2;
 
-        float x_offset = (m_textureMap.width * GameManager.tileXSize) / 2;
-        float z_offset = (m_textureMap.height * GameManager.tileZSize) / 2;
-
-        for (int x = 0; x < m_textureMap.width; x++) {
-            for (int z = 0; z < m_textureMap.height; z++) {
-                Color32 colorId = m_textureMap.GetPixel(x, z);
+        for (int x = 0; x < textureMap.width; x++) {
+            for (int z = 0; z < textureMap.height; z++) {
+                Color32 colorId = textureMap.GetPixel(x, z);
                 GameObject prefab = GetPrefabByColorId(colorId);
 
                 if(prefab == null) {
@@ -143,8 +179,12 @@ public class MapGenerator : MonoBehaviour
                     SetInstanceParent(instance, parentName);
                 }
 
-                // Store the new tile
-                m_tiles[x, z] = instance;
+                // Save the spawned prefab on the approiate array
+                if (isForObjects) {
+                    m_objects[x, z] = instance;
+                } else {
+                    m_tiles[x, z] = instance;
+                }
 
                 // Initialize the tile
                 BaseTile tile = instance.GetComponent<BaseTile>();
@@ -173,20 +213,6 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
-
-        //for (int x = 0; x < m_tiles.GetLength(0); x++) {
-        //    for (int z = 0; z < m_tiles.GetLength(1); z++) {
-        //        GameObject go = m_tiles[x, z];
-        //        if(go == null) {
-        //            continue;
-        //        }
-
-        //        BaseTile tile = go.GetComponent<BaseTile>();
-        //        if(tile != null) {
-        //            tile.Setup();
-        //        }
-        //    }
-        //}
     }
 
     /// <summary>
@@ -209,22 +235,44 @@ public class MapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the tile gameobject located at the given position should one exist
+    /// Returns the Tile located at the given position should one exist
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
     public GameObject GetTileAt(Vector3 position)
     {
-        GameObject tile = null;
+        return GetGameObjectAt(position, m_tiles);
+    }
+
+    /// <summary>
+    /// Returns the Object located at the given position should one exist
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public GameObject GetObjectAt(Vector3 position)
+    {
+        return GetGameObjectAt(position, m_objects);
+    }
+
+    /// <summary>
+    /// Returns the gameobject located at the give position within the given container
+    /// making sure the given position is within bounds
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="container"></param>
+    /// <returns></returns>
+    GameObject GetGameObjectAt(Vector3 position, GameObject[,] container)
+    {
+        GameObject go = null;
         int x = (int)position.x;
         int z = (int)position.z;
 
         // Within bounds
-        if (x >= 0 && x < m_tiles.GetLength(0) &&
-            z >= 0 && z < m_tiles.GetLength(1)) {
-            tile = m_tiles[x, z];
+        if (x >= 0 && x < container.GetLength(0) &&
+            z >= 0 && z < container.GetLength(1)) {
+            go = container[x, z];
         }
 
-        return tile;
+        return go;
     }
 }

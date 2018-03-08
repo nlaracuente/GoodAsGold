@@ -17,17 +17,19 @@ public class RampTile : BaseTile
     GameObject m_rampModel;
 
     /// <summary>
-    /// Spawns the floor and ramp models
-    /// Rotates the ramp to face the first floor tile it finds around the 4 cardinal points
+    /// Spawns ramp and rotates to face for first instance of a tile of the same type as 
+    /// the tile the ramp is on thus linking that bottom of the ramp with a connecting floor of the same height
     /// </summary>
     protected override void SpawnComponent()
     {
         Instantiate(m_floorPrefab, transform);
+        GameObject onTile = m_generator.GetTileAt(m_index);
 
         foreach (Vector3 point in GameManager.cardinalPoints) {
             GameObject tile = m_generator.GetTileAt(m_index + point);
+            GameObject objectOnTile = m_generator.GetObjectAt(m_index + point);
 
-            if(tile != null && tile.CompareTag("Floor")) {
+            if (tile != null && tile.CompareTag(onTile.tag) && objectOnTile == null) {
                 transform.LookAt(tile.transform);
                 break;
             }
