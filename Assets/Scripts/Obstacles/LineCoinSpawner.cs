@@ -22,26 +22,32 @@ public class LineCoinSpawner : MonoBehaviour
     /// <summary>
     /// How much space in between columns to add
     /// </summary>
-    [SerializeField, Tooltip("Space between columns"), Range(2f, 5f)]
+    [SerializeField, Tooltip("Space between columns"), Range(0f, 5f)]
     float m_columPadding = 1f;
 
     /// <summary>
     /// How much space in between rows to add
     /// </summary>
-    [SerializeField, Tooltip("Space between rows"), Range(1f, 5f)]
+    [SerializeField, Tooltip("Space between rows"), Range(0f, 5f)]
     float m_rowPadding = 1f;
 
     /// <summary>
     /// How many units is the coin's width
     /// </summary>
-    [SerializeField, Tooltip("Width in units"), Range(1f, 5f)]
+    [SerializeField, Tooltip("Width in units"), Range(0f, 5f)]
     float m_coinWidth = 3f;
 
     /// <summary>
     /// How many units is the coin's height
     /// </summary>
-    [SerializeField, Tooltip("Height in units"), Range(1f, 5f)]
+    [SerializeField, Tooltip("Height in units"), Range(0f, 5f)]
     float m_coinHeight = 3f;
+
+    /// <summary>
+    /// How from the ground to spawn the coin
+    /// </summary>
+    [SerializeField, Range(0f, 100f)]
+    float m_distanceToGround = 1f;
 
     /// <summary>
     /// The coin prefab
@@ -81,7 +87,12 @@ public class LineCoinSpawner : MonoBehaviour
                     continue;
                 }
 
-                Vector3 position = new Vector3(column + (m_columPadding * column), 0f, row + (m_rowPadding * row));
+                Vector3 position = new Vector3(
+                    column + (m_columPadding * column),
+                    m_distanceToGround, 
+                    row + (m_rowPadding * row)
+                );
+
                 position.x -= columnOffset;
                 position.z -= rowOffset;
 

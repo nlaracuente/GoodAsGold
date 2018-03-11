@@ -6,12 +6,6 @@ using UnityEngine;
 public class RampTile : BaseTile
 {
     /// <summary>
-    /// A reference to the floor prefab
-    /// </summary>
-    [SerializeField]
-    GameObject m_floorPrefab;
-
-    /// <summary>
     /// A reference to the ramp model
     /// </summary>
     GameObject m_rampModel;
@@ -22,7 +16,6 @@ public class RampTile : BaseTile
     /// </summary>
     protected override void SpawnComponent()
     {
-        Instantiate(m_floorPrefab, transform);
         GameObject onTile = m_generator.GetTileAt(m_index);
 
         foreach (Vector3 point in GameManager.cardinalPoints) {

@@ -206,11 +206,15 @@ public class MapGenerator : MonoBehaviour
         // First we need all the ramps to be setup as certain rely on their orientation
         // to know how to setup 
         foreach (string tag in m_setupOrder) {
-            foreach(GameObject go in GameObject.FindGameObjectsWithTag(tag)) {
-                BaseTile tile = go.GetComponent<BaseTile>();
-                if(tile != null) {
-                    tile.Setup();
+            try {
+                foreach (GameObject go in GameObject.FindGameObjectsWithTag(tag)) {
+                    BaseTile tile = go.GetComponent<BaseTile>();
+                    if (tile != null) {
+                        tile.Setup();
+                    }
                 }
+            } catch (UnityException exception) {
+                Debug.LogWarningFormat("MapGenerator::SetupTiles() Error! Exception Message = '{0}'", exception.Message);
             }
         }
     }
