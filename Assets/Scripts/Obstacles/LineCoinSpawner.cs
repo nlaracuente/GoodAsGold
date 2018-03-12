@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 /// <summary>
 /// Creates coins in columns and rows based on the total lengths for each
@@ -12,42 +13,49 @@ public class LineCoinSpawner : MonoBehaviour
     /// </summary>
     [SerializeField, Tooltip("Total columns to create"), Range(1, 100)]
     int m_columns = 1;
+    public int Colums { get { return m_columns; } }
 
     /// <summary>
     /// Total rows
     /// </summary>
     [SerializeField, Tooltip("Total rows to create"), Range(1, 100)]
     int m_rows = 1;
+    public int Rows { get { return m_columns; } }
 
     /// <summary>
     /// How much space in between columns to add
     /// </summary>
     [SerializeField, Tooltip("Space between columns"), Range(0f, 5f)]
-    float m_columPadding = 1f;
+    float m_columnPadding = 1f;
+    public float ColumnPadding { get { return m_columnPadding; } }
 
     /// <summary>
     /// How much space in between rows to add
     /// </summary>
     [SerializeField, Tooltip("Space between rows"), Range(0f, 5f)]
     float m_rowPadding = 1f;
+    public float RowPadding { get { return m_rowPadding; } }
 
     /// <summary>
     /// How many units is the coin's width
     /// </summary>
     [SerializeField, Tooltip("Width in units"), Range(0f, 5f)]
     float m_coinWidth = 3f;
+    public float CoinWidth { get { return m_coinWidth; } }
 
     /// <summary>
     /// How many units is the coin's height
     /// </summary>
     [SerializeField, Tooltip("Height in units"), Range(0f, 5f)]
     float m_coinHeight = 3f;
+    public float CoinHeight { get { return m_coinHeight; } }
 
     /// <summary>
     /// How from the ground to spawn the coin
     /// </summary>
     [SerializeField, Range(0f, 100f)]
     float m_distanceToGround = 1f;
+    public float DistanceToGround { get { return m_distanceToGround; } }
 
     /// <summary>
     /// The coin prefab
@@ -87,8 +95,10 @@ public class LineCoinSpawner : MonoBehaviour
                     continue;
                 }
 
+                GameObject instance = null;
+
                 Vector3 position = new Vector3(
-                    column + (m_columPadding * column),
+                    column + (m_columnPadding * column),
                     m_distanceToGround, 
                     row + (m_rowPadding * row)
                 );
@@ -96,9 +106,15 @@ public class LineCoinSpawner : MonoBehaviour
                 position.x -= columnOffset;
                 position.z -= rowOffset;
 
-                GameObject instant = Instantiate(m_coinPrefab, position, Quaternion.identity);
-                instant.name = instanceName;
-                instant.transform.SetParent(transform, false);
+                if (!Application.isEditor) {
+                    instance = Instantiate(m_coinPrefab, position, Quaternion.identity);
+                } else {
+                    instance = PrefabUtility.InstantiatePrefab(m_coinPrefab) as GameObject;
+                    instance.transform.position = position;
+                }
+                
+                instance.name = instanceName;
+                instance.transform.SetParent(transform, false);
             }
         }
     }
@@ -109,7 +125,7 @@ public class LineCoinSpawner : MonoBehaviour
     public void RemoveCoins()
     {
         foreach (Transform child in transform) {
-            if (child.CompareTag("Coin")) {
+            if (child.name == "CoinModel") {
                 DestroyImmediate(child.gameObject, true);
             }
         }

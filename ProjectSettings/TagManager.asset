@@ -14,6 +14,8 @@ TagManager:
   - Ramp
   - HalfWall
   - RaisedFloor
+  - CoinModel
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

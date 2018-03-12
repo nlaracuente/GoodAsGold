@@ -22,7 +22,13 @@ public class RampTile : BaseTile
             GameObject tile = m_generator.GetTileAt(m_index + point);
             GameObject objectOnTile = m_generator.GetObjectAt(m_index + point);
 
-            if (tile != null && tile.CompareTag(onTile.tag) && objectOnTile == null) {
+            if (tile != null && tile.CompareTag(onTile.tag) ) {
+
+                // Ignore tiles that have ramps on it
+                if(objectOnTile != null && objectOnTile.CompareTag(tag)) {
+                    continue;
+                }
+
                 transform.LookAt(tile.transform);
                 break;
             }

@@ -19,6 +19,11 @@ public class CoinTile : BaseTile
     /// </summary>
     protected override void SpawnComponent()
     {
+        if(m_generator == null) {
+            Debug.LogErrorFormat("CoinTile SpawnComponent Error! m_generator is missing for tile {0}", name);
+            return;
+        }
+
         GameObject tile = m_generator.GetTileAt(m_index);
         
         if (tile != null && tile.CompareTag("RaisedFloor")) {

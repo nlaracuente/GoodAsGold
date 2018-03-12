@@ -163,21 +163,32 @@ public class MapGenerator : MonoBehaviour
                 }
 
                 string instanceName = string.Format("{0}_{1}_{2}", prefab.name, z, x);
-                
+                string parentName = string.Format("_{0}s", prefab.name);
+
                 Vector3 position = new Vector3(x * GameManager.tileXSize, 0f, z * GameManager.tileZSize);
                 position.x -= x_offset;
                 position.z -= z_offset;
                 GameObject instance = Instantiate(prefab, position, Quaternion.identity);
 
-                instance.name = instanceName;
-                string parentName = string.Format("_{0}s", prefab.name);
+                // MAJOR ERROR!
+                if(instance == null) {
+                    Debug.LogErrorFormat("MapGenerator SpanwTiles Error!: Failed to retrieved spanwed prefab for '{0}'", prefab.name);
+                    continue;
+                }
 
-                // Remove duplicates
-                if (transform.Find(parentName) && transform.Find(parentName).Find(instanceName) != null) {
+                // If this is a duplicate we need to remove the newly created instance
+                // and update the existing instance as the tiles around it may have changed
+                // in addition to re-establishing a reference to the existing
+                GameObject duplicate = GameObject.Find(instanceName);
+                if (duplicate != null) {
                     DestroyImmediate(instance);
+                    instance = duplicate;
                 } else {
                     SetInstanceParent(instance, parentName);
                 }
+
+                // Update the instance's name
+                instance.name = instanceName;
 
                 // Save the spawned prefab on the approiate array
                 if (isForObjects) {

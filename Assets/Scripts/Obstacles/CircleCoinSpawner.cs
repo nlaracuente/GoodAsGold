@@ -83,7 +83,7 @@ public class CircleCoinSpawner : MonoBehaviour
     public void RemoveCoins()
     {
         foreach (Transform child in transform) {
-            if (child.CompareTag("Coin")) {
+            if (child.name == "CoinModel") {
                 DestroyImmediate(child.gameObject, true);
             }
         }
