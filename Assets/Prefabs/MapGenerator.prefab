@@ -82,6 +82,10 @@ MonoBehaviour:
     prefab: {fileID: 1613829940503350, guid: 1a61eed2ee5b66045b72e172b2d5d49b, type: 2}
   - color:
       serializedVersion: 2
+      rgba: 4294902015
+    prefab: {fileID: 1570668420881048, guid: f0003b5e4cd8d3b42afa9d17184ef919, type: 2}
+  - color:
+      serializedVersion: 2
       rgba: 4278231211
     prefab: {fileID: 1113978975498780, guid: cabcc8aa56196e04b9fd1d70fb1401c9, type: 2}
   m_resourcePath: Levels
@@ -94,3 +98,4 @@ MonoBehaviour:
   - Door
   - Button
   - Coin
+  - Moveable

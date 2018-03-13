@@ -33,5 +33,7 @@ public class RampTile : BaseTile
                 break;
             }
         }
+
+        MatchFloorHeight();
     }
 }

@@ -9,25 +9,10 @@ using UnityEngine;
 public class CoinTile : BaseTile
 {
     /// <summary>
-    /// How far to raise the button by when on a raised floor
-    /// </summary>
-    [SerializeField, Tooltip("How much to raise this object when on an elevated floor")]
-    float m_raisedDistance = 2.45f;
-
-    /// <summary>
     /// Positions the coins based on the tile beneath it
     /// </summary>
     protected override void SpawnComponent()
     {
-        if(m_generator == null) {
-            Debug.LogErrorFormat("CoinTile SpawnComponent Error! m_generator is missing for tile {0}", name);
-            return;
-        }
-
-        GameObject tile = m_generator.GetTileAt(m_index);
-        
-        if (tile != null && tile.CompareTag("RaisedFloor")) {
-            transform.position += Vector3.up * m_raisedDistance;
-        }
+        MatchFloorHeight();
     }
 }

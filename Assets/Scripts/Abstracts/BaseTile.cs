@@ -21,6 +21,12 @@ public abstract class BaseTile : MonoBehaviour
     protected Vector3 m_index = Vector3.zero;
 
     /// <summary>
+    /// How much to raise the tile to place it above a raised floor
+    /// </summary>
+    [SerializeField, Tooltip("How much to raise this object when on an elevated floor")]
+    protected float m_raisedDistance = 2.49f;
+
+    /// <summary>
     /// Stores a ference to the map generator as well as this tile's index within the spawned tiles array
     /// </summary>
     /// <param name="generator"></param>
@@ -47,4 +53,21 @@ public abstract class BaseTile : MonoBehaviour
     /// Runs any additional logic to configure this tile
     /// </summary>
     protected abstract void SpawnComponent();
+
+    /// <summary>
+    /// Raises this object to be on top of the floor tile that is underneath
+    /// </summary>
+    protected void MatchFloorHeight()
+    {
+        if (m_generator == null) {
+            Debug.LogErrorFormat("CoinTile SpawnComponent Error! m_generator is missing for tile {0}", name);
+            return;
+        }
+
+        GameObject floorTile = m_generator.GetTileAt(m_index);
+
+        if (floorTile != null && floorTile.CompareTag("RaisedFloor")) {
+            transform.position += Vector3.up * m_raisedDistance;
+        }
+    }
 }

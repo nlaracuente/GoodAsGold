@@ -102,12 +102,6 @@ public class DoorTile : BaseTile
         // Tile the door sits on
         GameObject onTile = m_generator.GetTileAt(m_index);
         
-
-        // Raise the tile to match the floor
-        if (onTile.CompareTag("RaisedFloor")) {
-            door.transform.position += Vector3.up * m_raisedDistance;
-        }
-
         // Look for the first neighbor tile of the same type the door is on
         // This is used to rotate the door to face that tile as it must be a connecting tile
         foreach (Vector3 point in GameManager.cardinalPoints) {
@@ -119,5 +113,7 @@ public class DoorTile : BaseTile
                 break;
             }
         }
+
+        MatchFloorHeight();
     }
 }
