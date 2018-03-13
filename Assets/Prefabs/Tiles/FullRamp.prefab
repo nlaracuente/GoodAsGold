@@ -42,7 +42,7 @@ GameObject:
   m_TagString: Ramp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4309482099685998
 Transform:

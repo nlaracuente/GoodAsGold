@@ -31,6 +31,11 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     PlayerAnimator m_playerAnimator;
 
     /// <summary>
+    /// A reference to the virtual joystick object
+    /// </summary>
+    VirtualJoystick m_joystick;
+
+    /// <summary>
     /// The spawn point for the move arrow ui that sits behind the player
     /// </summary>
     [SerializeField]
@@ -156,8 +161,9 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
         m_inputManager = FindObjectOfType<InputManager>();
         m_playerMover = GetComponent<PlayerMover>();
         m_playerAnimator = GetComponent<PlayerAnimator>();
+        m_joystick = FindObjectOfType<VirtualJoystick>();
 
-        if(m_meshRenderer == null) {
+        if (m_meshRenderer == null) {
             m_meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
 
@@ -203,7 +209,8 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     void RotateAndMove()
     {
         float moveSpeed = 0;
-        Vector3 inputVector = m_inputManager.InputVector;
+
+        Vector3 inputVector = m_joystick.InputVector;// m_inputManager.InputVector;
 
         if(inputVector.magnitude > 1) {
             inputVector.Normalize();

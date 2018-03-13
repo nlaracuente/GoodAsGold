@@ -43,7 +43,7 @@ GameObject:
   m_TagString: Ramp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4119588054361748
 Transform:
@@ -138,5 +138,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c56c9d33e78fb2b49959e5f7cbdd2e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_floorPrefab: {fileID: 1384027920243182, guid: f4d00db7c4e249e42a9bab80ebc6c2c6,
-    type: 2}
