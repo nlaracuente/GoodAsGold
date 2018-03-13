@@ -96,9 +96,12 @@ public class DoorTile : BaseTile
     /// </summary>
     protected override void SpawnComponent()
     {
+        // Spawn the door
+        GameObject door = Instantiate(m_doorPrefab, transform);
+
         // Tile the door sits on
         GameObject onTile = m_generator.GetTileAt(m_index);
-        GameObject door = Instantiate(m_doorPrefab, transform);
+        
 
         // Raise the tile to match the floor
         if (onTile.CompareTag("RaisedFloor")) {

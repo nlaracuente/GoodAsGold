@@ -22,11 +22,15 @@ public class Button : MonoBehaviour
     /// <summary>
     /// True while the button is active
     /// </summary>
-    bool m_isOn = false;
-    /// <summary>
-    /// True if the button is active
-    /// </summary>
-    public bool IsActive { get { return m_isOn; } set { m_isOn = value; } }
+    bool m_isActive = false;
+    public bool IsActive
+    {
+        get { return m_isActive; }
+        set {
+            m_isActive = value;
+            // TODO: Play active/deactivate sound
+        }
+    }
 
     /// <summary>
     /// Button event delegattion
@@ -66,7 +70,7 @@ public class Button : MonoBehaviour
     {
         if (other.GetComponent<IButtonInteractible>() != null && OnButtonPressed != null) {
             // Ignore if already active
-            if (!m_isOn) {
+            if (!m_isActive) {
                 OnButtonPressed(this, other.gameObject);
             }
         }
@@ -88,7 +92,7 @@ public class Button : MonoBehaviour
     /// </summary>
     public void Activate()
     {
-        m_isOn = true;
+        m_isActive = true;
         m_inactiveButton.SetActive(false);
         m_activeButton.SetActive(true);
     }
@@ -98,7 +102,7 @@ public class Button : MonoBehaviour
     /// </summary>
     public void Deactivate()
     {
-        m_isOn = false;
+        m_isActive = false;
         m_inactiveButton.SetActive(true);
         m_activeButton.SetActive(false);
     }

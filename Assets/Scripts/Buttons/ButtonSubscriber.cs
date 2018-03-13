@@ -128,7 +128,7 @@ public abstract class ButtonSubscriber : MonoBehaviour
     protected virtual void Activate()
     {
         if (AllButtonsAreActive()) {
-            if(OnActivate != null) {
+            if (OnActivate != null) {
                 OnActivate();
             }
 

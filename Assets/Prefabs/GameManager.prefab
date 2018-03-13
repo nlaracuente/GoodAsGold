@@ -52,5 +52,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_faderImage: {fileID: 0}
-  m_fadeSpeed: 0.75
-  m_fadeTargetDiff: 0.1
+  m_fadeSpeed: 1
+  m_fadeTargetDiff: 0.25
