@@ -11,6 +11,20 @@ using UnityEngine;
 public abstract class BaseTile : MonoBehaviour
 {
     /// <summary>
+    /// True if this a place where the player or moveable tile can walk into
+    /// </summary>
+    [SerializeField]
+    protected bool m_isWalkable = true;
+    public bool IsWalkable { get { return m_isWalkable; } }
+
+    /// <summary>
+    /// True is this is a tile that contains an object
+    /// </summary>
+    [SerializeField]
+    protected bool m_isObject = true;
+    public bool IsObject { get { return IsObject; } }
+
+    /// <summary>
     /// A reference to the map generator that spawned this tile
     /// </summary>
     protected MapGenerator m_generator;
@@ -19,6 +33,10 @@ public abstract class BaseTile : MonoBehaviour
     /// Array index position this tile exist within the spanwed tiles
     /// </summary>
     protected Vector3 m_index = Vector3.zero;
+    /// <summary>
+    /// Position within the map's array where this is located at
+    /// </summary>
+    public Vector3 Index { get { return m_index; } }
 
     /// <summary>
     /// How much to raise the tile to place it above a raised floor

@@ -51,6 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d33d800e69f4e24dbc5a18d1d167f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_isWalkable: 0
+  m_isObject: 0
+  m_raisedDistance: 2.49
   m_wallPrefab: {fileID: 1096067053969836, guid: 0ea8cecba4e90c443ae611c397d22459,
     type: 2}
   m_barrierPrefab: {fileID: 1032897116855910, guid: 76e04fabe023ea049aa43c77b677b8bd,

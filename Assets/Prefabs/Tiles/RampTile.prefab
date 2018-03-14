@@ -138,3 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c56c9d33e78fb2b49959e5f7cbdd2e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_isWalkable: 0
+  m_isObject: 1
+  m_raisedDistance: 2.49

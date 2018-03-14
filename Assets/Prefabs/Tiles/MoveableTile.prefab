@@ -303,7 +303,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &65276539611783436
 BoxCollider:
@@ -340,6 +340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560f3fd7af3da3844be6ca80ad643b79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_isWalkable: 0
+  m_isObject: 1
   m_raisedDistance: 2.49
 --- !u!114 &114273819347298442
 MonoBehaviour:
@@ -352,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b10a5ff74baac543ac3e57a981c28d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentTransform: {fileID: 4888071764763864}
+  m_parentTransform: {fileID: 4910523255306060}
   m_upMoveArrowTransform: {fileID: 4700734370996756}
   m_leftMoveArrowTransform: {fileID: 4133106481882850}
   m_downMoveArrowTransform: {fileID: 4248535485043170}

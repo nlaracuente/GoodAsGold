@@ -154,6 +154,36 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     public bool IsDead { get { return m_isDead; } }
 
     /// <summary>
+    /// A reference to the map generator which contains a tile map of all the tiles/objects on the level
+    /// </summary>
+    MapGenerator m_map;
+    MapGenerator Map
+    {
+        get {
+            if(m_map == null) {
+                m_map = FindObjectOfType<MapGenerator>();
+            }
+            return m_map;
+        }
+    }
+
+    /// <summary>
+    /// Returns the GameObject for the tile the player is currently on
+    /// </summary>
+    public GameObject PlayerTile
+    {
+        get {
+            Vector3 position = new Vector3(
+                Mathf.Floor(transform.position.x),
+                0f,
+                Mathf.Floor(transform.position.z)
+            );
+
+            return Map.GetTileAt(position);
+        }
+    }
+
+    /// <summary>
     /// Sets all references
     /// </summary>
     void Awake()
@@ -253,11 +283,25 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
         Vector3 playerDestination = transform.position + (directionVector * m_oneTileUnits);
         Vector3 objectDestination = objectTransform.position + (directionVector * m_oneTileUnits);
 
-        // Verify that the destination is available (where the object will be)
-        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector, objectTransform)) {
+        // Because the map "centers" itself that means that the x,z coordinates on the transform will not
+        // match the map's array. We must instead get this value from the tile that the player/object is on
+        BaseTile objectTile = objectTransform.GetComponent<BaseTile>();
+        Vector3 targetIndex = objectTile.Index + directionVector;
+
+        // Only move if the object can move towards the desired destination
+        if (IsTargetTileAvailable(targetIndex)) {
+            // Update the map to reflect the object's new position
+            Map.UpdateObjectPosition(objectTile.Index, targetIndex);
+
             m_playerAnimator.TriggerPushAction();
             StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
         }
+
+        // Verify that the destination is available (where the object will be)
+        //if (IsPushPullDestinationAvailable(objectTransform.position, directionVector, objectTransform)) {
+        //    m_playerAnimator.TriggerPushAction();
+        //    StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
+        //}
     }
 
     /// <summary>
@@ -270,10 +314,68 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
         Vector3 playerDestination = transform.position - (directionVector * m_oneTileUnits);
         Vector3 objectDestination = objectTransform.position - (directionVector * m_oneTileUnits);
 
-        if (IsPushPullDestinationAvailable(transform.position, -directionVector, objectTransform)) {
-            m_playerAnimator.TriggerPullAction();
+        // Because the map "centers" itself that means that the x,z coordinates on the transform will not
+        // match the map's array. We must instead get this value from the tile that the player/object is on
+        BaseTile playerTile = PlayerTile.GetComponent<BaseTile>();
+        BaseTile objectTile = objectTransform.GetComponent<BaseTile>();
+        Vector3 targetIndex = playerTile.Index + directionVector;
+        
+        if (IsTargetTileAvailable(targetIndex)) {
+            // Update the map to reflect the object's new position
+            Map.UpdateObjectPosition(objectTile.Index, targetIndex);
+
+            m_playerAnimator.TriggerPushAction();
             StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
-        }        
+        }
+
+        //if (IsPushPullDestinationAvailable(transform.position, -directionVector, objectTransform)) {
+        //    m_playerAnimator.TriggerPullAction();
+        //    StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
+        //}        
+    }
+
+    /// <summary>
+    /// Returns true so long as at the destination contains a walkable tile and the tile contains
+    /// a walkable object or no object at all
+    /// </summary>
+    /// <param name="targetPosition"></param>
+    /// <returns></returns>
+    bool IsTargetTileAvailable(Vector3 targetPosition)
+    {
+        bool isAvailable = false;
+
+        targetPosition.Set(
+            Mathf.Floor(targetPosition.x),
+            0f,
+            Mathf.Floor(targetPosition.z)
+        );
+
+        MapGenerator map = FindObjectOfType<MapGenerator>();
+        GameObject tile = map.GetTileAt(targetPosition);
+        GameObject playerTile = map.GetTileAt(targetPosition);
+
+        if (tile != null) {
+            BaseTile tileScript = tile.GetComponent<BaseTile>();
+            
+            // Destination must be of the same floor type as the player is currently on
+            if (tileScript != null && tileScript.CompareTag(PlayerTile.tag)) {
+
+                // Make sure that any objects on the destination tile are walkable
+                GameObject objectOnTile = map.GetObjectAt(targetPosition);
+
+                if(objectOnTile == null) {
+                    isAvailable = true;
+
+                } else {
+                    BaseTile objectScript = objectOnTile.GetComponent<BaseTile>();
+                    if(objectScript != null && objectScript.IsWalkable) {
+                        isAvailable = true;
+                    }
+                }
+            }
+        }
+
+        return isAvailable;
     }
 
     /// <summary>

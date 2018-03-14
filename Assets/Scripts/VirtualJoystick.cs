@@ -28,7 +28,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     /// </summary>
     [SerializeField, Range(0f, 1f), Tooltip("How far from the edge of the background the handle can move")]
     float m_padding = 1f;
-
+    
     /// <summary>
     /// The current position of the virtual joystick
     /// </summary>
@@ -41,11 +41,22 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     public Vector3 InputVector { get { return new Vector3(m_inputVector.x, 0f, m_inputVector.y); } }
 
     /// <summary>
+    /// A reference to the action button instance
+    /// </summary>
+    ActionButton m_actionButton;
+    public bool IsActionButtonPressed { get { return m_actionButton.IsPressed; } }
+    
+    /// <summary>
     /// Stores the current joystick position
     /// </summary>
     void Start()
     {
+        m_actionButton = FindObjectOfType<ActionButton>();
         m_position = RectTransformUtility.WorldToScreenPoint(new Camera(), m_background.position);
+        
+        if(m_actionButton == null) {
+            Debug.LogErrorFormat("Virtual Joystick Error: Missing Component! ActionButon = {0}", m_actionButton);
+        }
     }
 
     /// <summary>
@@ -70,6 +81,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     /// <param name="eventData"></param>
     public void OnPointerDown(PointerEventData eventData)
     {
+        Debug.LogFormat("Pressed: {0}", eventData.button);
         OnDrag(eventData);
     }
 
@@ -81,5 +93,10 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     {
         m_inputVector = Vector2.zero;
         m_handle.anchoredPosition = Vector2.zero;
+    }
+
+    public void OnActionStateChange()
+    {
+
     }
 }

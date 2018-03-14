@@ -29,12 +29,6 @@ public class DoorTile : BaseTile
     string m_isOpenedTag = "IsOpened";
 
     /// <summary>
-    /// How far to raise the door by when on a raised floor
-    /// </summary>
-    [SerializeField, Tooltip("How far to raise the door when on a raised floor")]
-    float m_raisedDistance = 2.25f;
-
-    /// <summary>
     /// A reference to the animator component
     /// </summary>
     Animator m_animator;
@@ -79,6 +73,7 @@ public class DoorTile : BaseTile
     void Open()
     {
         m_isOpened = true;
+        m_isWalkable = true;
     }
 
     /// <summary>
@@ -87,6 +82,7 @@ public class DoorTile : BaseTile
     void Close()
     {
         m_isOpened = false;
+        m_isWalkable = false;
     }
 
     /// <summary>

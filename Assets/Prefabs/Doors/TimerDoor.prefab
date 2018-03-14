@@ -52,15 +52,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ad5ca2c9631e248af78a6a3f60a02d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_floorPrefab: {fileID: 1384027920243182, guid: f4d00db7c4e249e42a9bab80ebc6c2c6,
-    type: 2}
-  m_raisedFloorPrefab: {fileID: 1363958455670952, guid: 4adf493f711d02744bca2ea331b9e0c4,
-    type: 2}
+  m_isWalkable: 0
+  m_isObject: 1
+  m_raisedDistance: 2.25
   m_doorPrefab: {fileID: 1729156682759464, guid: 7630cfeaec29bfe42b58d26c6d32ee25,
     type: 2}
   m_isOpened: 0
   m_isOpenedTag: IsOpened
-  m_raisedDistance: 2.25
 --- !u!114 &114874513358037598
 MonoBehaviour:
   m_ObjectHideFlags: 1

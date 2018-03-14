@@ -53,7 +53,7 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     [SerializeField, Tooltip("Tag names in the order to process the setup logic")]
     List<string> m_setupOrder = new List<string>();
-
+    
     /// <summary>
     /// Clears all existing tiles and re-creates the map
     /// </summary>
@@ -289,5 +289,43 @@ public class MapGenerator : MonoBehaviour
         }
 
         return go;
+    }
+
+    /// <summary>
+    /// Updates the given position object reference with the new object given
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="newObject"></param>
+    bool SetObjectAt(Vector3 position, GameObject newObject)
+    {
+        bool wasUpdated = false;
+
+        int x = (int)position.x;
+        int z = (int)position.z;
+
+        if (x >= 0 && x < m_objects.GetLength(0) &&
+            z >= 0 && z < m_objects.GetLength(1)) {
+            m_objects[x, z] = newObject;
+            wasUpdated = true;
+        }
+
+        return wasUpdated;
+    }
+
+    /// <summary>
+    /// Attempts to updates the position of the object in the current position to the new position
+    /// If there is no object at the current position or the new position is invalid 
+    /// then the update fails and no changes are made
+    /// </summary>
+    /// <param name="currentPosition"></param>
+    /// <param name="newPosition"></param>
+    public void UpdateObjectPosition(Vector3 currentPosition, Vector3 newPosition)
+    {
+        GameObject objectGO = GetTileAt(currentPosition);
+
+        // If the new reference can be set then we can proceed
+        if(objectGO != null && SetObjectAt(newPosition, objectGO)) {
+            SetObjectAt(currentPosition, null);
+        }
     }
 }
