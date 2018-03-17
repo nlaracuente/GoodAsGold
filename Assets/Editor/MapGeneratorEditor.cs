@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(MapGenerator))]
+[CustomEditor(typeof(MapController))]
 public class MapGeneratorEditor : Editor
 {
-    MapGenerator m_mapGenerator;
+    MapController m_mapGenerator;
 
     #if (UNITY_EDITOR)
     void OnEnable()
     {
-        m_mapGenerator = (MapGenerator)target;
+        m_mapGenerator = (MapController)target;
     }
 
     /// <summary>
