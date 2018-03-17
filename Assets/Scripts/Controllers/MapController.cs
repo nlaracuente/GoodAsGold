@@ -264,12 +264,14 @@ public class MapController : MonoBehaviour
                     m_tileMap[x, z] = tile;
                     tile.Index = index;
 
-                    // Set a reference to the object on the tile should there be one
-                    BaseObject objectOnTile = objectInstance.GetComponent<BaseObject>();
+                    if(objectInstance != null) {
+                        // Set a reference to the object on the tile should there be one
+                        BaseObject objectOnTile = objectInstance.GetComponent<BaseObject>();
 
-                    if(objectOnTile != null) {
-                        objectOnTile.Index = index;
-                        tile.ObjectOnTile = objectOnTile;
+                        if (objectOnTile != null) {
+                            objectOnTile.Index = index;
+                            tile.ObjectOnTile = objectOnTile;
+                        }
                     }
 
                 } else {
@@ -300,10 +302,15 @@ public class MapController : MonoBehaviour
         string prefabName = string.Format("{0}_{1}_{2}", prefab.name, x, z);
         string parentName = string.Format("_{0}s", prefab.name);
 
+        GameObject go = null;
         Vector3 position = new Vector3(x * GameManager.tileXSize, 0f, z * GameManager.tileZSize);
-        //GameObject go = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
-        //go.transform.position = position;
-        GameObject go = Instantiate(prefab, position, Quaternion.identity);
+
+        if (Application.isEditor) {
+            go = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            go.transform.position = position;
+        } else {
+            go = Instantiate(prefab, position, Quaternion.identity);
+        }
 
         // If this is a duplicate we need to remove the newly created instance
         // and update the existing instance as the tiles around it may have changed
