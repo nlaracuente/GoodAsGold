@@ -24,6 +24,7 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     [SerializeField]
     Transform m_parentTransform;
+    public Transform ParentTransform { get { return m_parentTransform; } }
 
     /// <summary>
     /// Where the move (up) arrow ui above this object will be placed
@@ -48,7 +49,6 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     [SerializeField]
     Transform m_rightMoveArrowTransform;
-
 
     /// <summary>
     /// Set references
@@ -168,7 +168,7 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     void Push()
     {
-        m_playerManager.PushObject(m_parentTransform);
+        m_playerManager.PushObject(this);
     }
 
     /// <summary>
@@ -176,7 +176,7 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     void Pull()
     {
-        m_playerManager.PullObject(m_parentTransform);
+        m_playerManager.PullObject(this);
     }
 
     /// <summary>

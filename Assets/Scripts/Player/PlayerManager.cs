@@ -71,6 +71,12 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     float m_alphaChangeDelay = 3f;
 
     /// <summary>
+    /// The LayerMask for detecting moveable objects with raycasting
+    /// </summary>
+    [SerializeField]
+    LayerMask m_moveableLayerMask;
+
+    /// <summary>
     /// Keeps track of how cursed the player is in percentage
     /// </summary>
     float m_currentCursePercent = 0f;
@@ -160,9 +166,9 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     {
         get {
             Vector3 position = new Vector3(
-                Mathf.Floor(transform.position.x),
+                Mathf.Floor(transform.position.x / GameManager.tileXSize),
                 0f,
-                Mathf.Floor(transform.position.z)
+                Mathf.Floor(transform.position.z / GameManager.tileZSize)
             );
 
             return MapController.instance.GetTileAt(position);
@@ -220,6 +226,47 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     }
 
     /// <summary>
+    /// Checks if the player is within range of a moveable object to trigger action button to display as such
+    /// </summary>
+    void LateUpdate()
+    {
+        Moveable block = GetMoveableObjectInfrontOfPlayer();
+
+        if(block != null) {
+            UIManager.instance.ShowGrabButton();
+        } else {
+            UIManager.instance.HideGrabButton();
+        }
+    }
+
+    /// <summary>
+    /// Cast a ray in the direciton the player is facing to see if there's a moveable object within reach
+    /// returning said object is one is found
+    /// </summary>
+    /// <returns></returns>
+    Moveable GetMoveableObjectInfrontOfPlayer()
+    {
+        Moveable block = null;
+        
+        Vector3 origin = new Vector3(
+            transform.position.x,
+            transform.position.y + 1.5f,
+            transform.position.z
+        );
+
+        Ray ray = new Ray(origin, transform.forward);
+        RaycastHit hit;
+
+        Debug.DrawRay(origin, transform.forward, Color.magenta);
+
+        if (Physics.Raycast(ray, out hit, 5f, m_moveableLayerMask)) {
+            block = hit.collider.GetComponentInChildren<Moveable>();
+        }
+
+        return block;
+    }
+
+    /// <summary>
     /// Handles applying rotation and movement based on player input
     /// </summary>
     void RotateAndMove()
@@ -262,61 +309,63 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     /// <summary>
     /// Triggers the routine to push an object in the direction the player is moving
     /// </summary>
-    /// <param name="objectTransform"></param>
-    public void PushObject(Transform objectTransform)
+    /// <param name="moveableObject"></param>
+    public void PushObject(Moveable moveableObject)
     {
+        BaseObject tileObject = moveableObject.ParentTransform.GetComponent<BaseObject>();
+
         Vector3 directionVector = Utility.GetDirectionVectorByName(LookingAtDirection);
-        Vector3 playerDestination = transform.position + (directionVector * m_oneTileUnits);
-        Vector3 objectDestination = objectTransform.position + (directionVector * m_oneTileUnits);
+        Vector3 playerDestination = moveableObject.ParentTransform.position;
+        Vector3 objectDestination = MapController.instance.GetTileAt(tileObject.Index + directionVector).transform.position;
 
-        //// Because the map "centers" itself that means that the x,z coordinates on the transform will not
-        //// match the map's array. We must instead get this value from the tile that the player/object is on
-        //BaseTile objectTile = objectTransform.GetComponent<BaseTile>();
-        //Vector3 targetIndex = objectTile.Index + directionVector;
+        // The y axis shall remain as it is currently
+        playerDestination.y = transform.position.y;
+        objectDestination.y = moveableObject.ParentTransform.position.y;
 
-        //// Only move if the object can move towards the desired destination
-        //if (IsTargetTileAvailable(targetIndex)) {
-        //    // Update the map to reflect the object's new position
-        //    Map.UpdateObjectPosition(objectTile.Index, targetIndex);
+        // Get the tile in the direction our object will be moving
+        BaseTile tile = MapController.instance.GetTileAt(tileObject.Index);
+        Vector3 targetIndex = tile.Index + directionVector;
 
-        //    m_playerAnimator.TriggerPushAction();
-        //    StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
-        //}
-
-        // Verify that the destination is available (where the object will be)
-        if (IsPushPullDestinationAvailable(objectTransform.position, directionVector, objectTransform)) {
-            m_playerAnimator.TriggerPushAction();
-            StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
-        }
+        PushPullObject(targetIndex, tile, playerDestination, objectDestination, moveableObject.ParentTransform);
     }
 
     /// <summary>
     /// Triggers the routine to push an object in the direction the player is moving
     /// </summary>
-    /// <param name="objectTransform"></param>
-    public void PullObject(Transform objectTransform)
+    /// <param name="moveableObject"></param>
+    public void PullObject(Moveable moveableObject)
     {
+        BaseObject tile = moveableObject.ParentTransform.GetComponent<BaseObject>();
+
         Vector3 directionVector = Utility.GetDirectionVectorByName(LookingAtDirection);
-        Vector3 playerDestination = transform.position - (directionVector * m_oneTileUnits);
-        Vector3 objectDestination = objectTransform.position - (directionVector * m_oneTileUnits);
+        Vector3 playerDestination = MapController.instance.GetTileAt (PlayerTile.Index + directionVector).transform.position;
+        Vector3 objectDestination = PlayerTile.transform.position;
+
+        // The y axis shall remain as it is currently
+        playerDestination.y = transform.position.y;
+        objectDestination.y = moveableObject.ParentTransform.position.y;        
 
         // Because the map "centers" itself that means that the x,z coordinates on the transform will not
         // match the map's array. We must instead get this value from the tile that the player/object is on
-        //BaseTile playerTile = PlayerTile.GetComponent<BaseTile>();
-        //BaseTile objectTile = objectTransform.GetComponent<BaseTile>();
-        //Vector3 targetIndex = playerTile.Index + directionVector;
+        BaseTile objectTile = MapController.instance.GetTileAt(tile.Index);
+        Vector3 targetIndex = PlayerTile.Index + directionVector;
 
-        //if (IsTargetTileAvailable(targetIndex)) {
-        //    // Update the map to reflect the object's new position
-        //    Map.UpdateObjectPosition(objectTile.Index, targetIndex);
+        PushPullObject(targetIndex, objectTile, playerDestination, objectDestination, moveableObject.ParentTransform);
+    }
 
-        //    m_playerAnimator.TriggerPushAction();
-        //    StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
-        //}
+    /// <summary>
+    /// TODO: Refactor the Push and Pull methods as 
+    /// </summary>
+    void PushPullObject(Vector3 targetIndex, BaseTile objectTile, Vector3 playerDestination, Vector3 objectDestination, Transform objectTransform)
+    {
+        if (IsTargetTileAvailable(targetIndex)) {
+            // Update the map to reflect the object's new position
+            MapController.instance.UpdateObjectPosition(objectTile.Index, targetIndex);
 
-        if (IsPushPullDestinationAvailable(transform.position, -directionVector, objectTransform)) {
-            m_playerAnimator.TriggerPullAction();
+            m_playerAnimator.TriggerPushAction();
             StartCoroutine(m_playerMover.PushPullRoutine(playerDestination, objectDestination, objectTransform));
+        } else {
+            Debug.LogFormat("Target Index {0} is not available", targetIndex);
         }
     }
 
@@ -337,20 +386,14 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
         );
 
         BaseTile tile = MapController.instance.GetTileAt(targetPosition);
-        BaseTile playerTile = MapController.instance.GetTileAt(targetPosition);
 
-        // Destination must be of the same floor type as the player is currently on
-        if (tile != null && tile.CompareTag(PlayerTile.tag)) {
+        // Destination must be on a floor type of the same type as the player is currently on
+        if (tile != null && PlayerTile != null && tile.CompareTag(PlayerTile.tag)) {
             // Make sure that any objects on the destination tile are walkable
-            BaseObject objectOnTile = tile.ObjectOnTile;
-                
-            // TODO: update basetile with a walkable/not walkable flag
-            if (objectOnTile == null) {
+            BaseObject tileObject = tile.ObjectOnTile;
+
+            if (tileObject == null || (tileObject != null && tileObject.IsWalkable)) {
                 isAvailable = true;
-            } else {
-                if (objectOnTile != null && objectOnTile.IsWalkable) {
-                    isAvailable = true;
-                }
             }
         }
 

@@ -3,9 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    /// <summary>
+    /// A reference to the button's text
+    /// </summary>
+    [SerializeField]
+    Text m_buttonText;
+
+    /// <summary>
+    /// A reference to the button's image
+    /// </summary>
+    [SerializeField]
+    Image m_buttonImage;
+    
     /// <summary>
     /// True while the button is pressed
     /// </summary>
@@ -44,5 +57,23 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerUp(PointerEventData eventData)
     {
         IsPressed = false;
+    }
+
+    /// <summary>
+    /// Displays the button and updates the text to show a grab action option
+    /// </summary>
+    public void ShowGrabAction()
+    {
+        m_buttonText.text = "Grab";
+        m_buttonImage.enabled = true;
+    }
+
+    /// <summary>
+    /// Disables the button
+    /// </summary>
+    public void Hide()
+    {
+        m_buttonText.text = "";
+        m_buttonImage.enabled = false;
     }
 }

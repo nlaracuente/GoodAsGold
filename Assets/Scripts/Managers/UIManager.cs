@@ -16,6 +16,12 @@ public enum MenuState
 /// </summary>
 public class UIManager : MonoBehaviour
 {
+
+    /// <summary>
+    /// A reference to self
+    /// </summary>
+    public static UIManager instance;
+
     /// <summary>
     /// A reference to the game object that contains the level menu items
     /// </summary>
@@ -51,6 +57,11 @@ public class UIManager : MonoBehaviour
     public MenuState State { get { return m_state; } }
 
     /// <summary>
+    /// A reference to the action ui button which triggers request such as "grab or release"
+    /// </summary>
+    ActionButton m_actionButton;
+
+    /// <summary>
     /// Allows binding to the move arrow ui clicks
     /// </summary>
     public delegate void MoveArrowClicked();
@@ -67,10 +78,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        instance = this;
         m_inputManager = FindObjectOfType<InputManager>();
         m_playerGO = GameObject.FindGameObjectWithTag("Player");
+        m_actionButton = FindObjectOfType<ActionButton>();
 
-        if(m_menuGO == null) {
+        if (m_menuGO == null) {
             m_menuGO = GameObject.FindGameObjectWithTag("Menu");
         }
 
@@ -89,6 +102,23 @@ public class UIManager : MonoBehaviour
         }
 
         HideArrows();
+        HideGrabButton();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void ShowGrabButton()
+    {
+        m_actionButton.ShowGrabAction();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void HideGrabButton()
+    {
+        m_actionButton.Hide();
     }
 
     /// <summary>
