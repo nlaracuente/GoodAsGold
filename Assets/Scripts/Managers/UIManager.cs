@@ -28,11 +28,35 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     GameObject m_menuGO;
 
+    /// <summary>
+    /// A reference to the d-pad's up arrow
+    /// </summary>
     [SerializeField]
-    GameObject m_moveArrowOne;
+    GameObject m_dPadUpArrow;
 
+    /// <summary>
+    /// A reference to the d-pad's down arrow
+    /// </summary>
     [SerializeField]
-    GameObject m_moveArrowTwo;
+    GameObject m_dPadDownArrow;
+
+    /// <summary>
+    /// A reference to the d-pad's left arrow
+    /// </summary>
+    [SerializeField]
+    GameObject m_dPadLeftArrow;
+
+    /// <summary>
+    /// A reference to the d-pad's right arrow
+    /// </summary>
+    [SerializeField]
+    GameObject m_dPadRightArrow;
+
+    /// <summary>
+    /// The two current active arrows
+    /// </summary>
+    GameObject m_activeDPadArrowOne;
+    GameObject m_activeDPadArrowTwo;
 
     /// <summary>
     /// A reference to the input manager object
@@ -64,14 +88,14 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Allows binding to the move arrow ui clicks
     /// </summary>
-    public delegate void MoveArrowClicked();
+    public delegate void DPadArrowClicked();
 
     /// <summary>
     /// Arrow One is for Up/Left arrow
     /// Arrow Two is for Down/Right arrow
     /// </summary>
-    public event MoveArrowClicked OnMoveArrowOneClicked;
-    public event MoveArrowClicked OnMoveArrowTwoClicked;
+    public event DPadArrowClicked OnDPadArrowOneClicked;
+    public event DPadArrowClicked OnDPadArrowTwoClicked;
 
     /// <summary>
     /// Sets references
@@ -100,17 +124,16 @@ public class UIManager : MonoBehaviour
                 m_mainCamera
             );
         }
-
-        HideArrows();
+        
         HideGrabButton();
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public void ShowGrabButton()
+    public void ShowGrabButton(Moveable moveable)
     {
-        m_actionButton.ShowGrabAction();
+        m_actionButton.ShowGrabAction(moveable);
     }
 
     /// <summary>
@@ -118,7 +141,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void HideGrabButton()
     {
-        m_actionButton.Hide();
+        m_actionButton.HideButton();
     }
 
     /// <summary>
@@ -164,10 +187,10 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Enables the move arrows
     /// </summary>
-    public void ShowMoveArrow()
+    public void ShowActiveDPadArrows()
     {
-        m_moveArrowOne.SetActive(true);
-        m_moveArrowTwo.SetActive(true);
+        m_activeDPadArrowOne.SetActive(true);
+        m_activeDPadArrowTwo.SetActive(true);
     }
 
     /// <summary>
@@ -175,59 +198,32 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void HideArrows()
     {
-        m_moveArrowOne.SetActive(false);
-        m_moveArrowTwo.SetActive(false);
+        m_activeDPadArrowOne.SetActive(false);
+        m_activeDPadArrowTwo.SetActive(false);
     }
 
     /// <summary>
-    /// Sets the move arrows to display as looking "left" and "right"
+    /// /// Sets the current active dpad arrows to be the left/right arrows
     /// </summary>
     /// <param name="leftArrowPos"></param>
     /// <param name="rightArrowPos"></param>
-    public void ShowHorizontalMoveArrows(Vector3 leftArrowPos, Vector3 rightArrowPos)
+    public void ShowHorizontalMoveArrows()
     {
-        RotateMoveArrowsInDegrees(90f, -90f);
-        SetMoveArrowsPosition(leftArrowPos, rightArrowPos);
-        ShowMoveArrow();
-    }
-
-    public void ShowVerticalMoveArrows(Vector3 upArrowPos, Vector3 downArrowPos)
-    {
-        RotateMoveArrowsInDegrees(0, 180);
-        SetMoveArrowsPosition(upArrowPos, downArrowPos);
-        ShowMoveArrow();
+        m_activeDPadArrowOne = m_dPadLeftArrow;
+        m_activeDPadArrowTwo = m_dPadRightArrow;
+        ShowActiveDPadArrows();
     }
 
     /// <summary>
-    /// Rotates the move arrows in the degrees specified
+    /// Sets the current active dpad arrows to be the up/down arrows
     /// </summary>
-    /// <param name="arrowOneDegrees"></param>
-    /// <param name="arrowTwoDegrees"></param>
-    void RotateMoveArrowsInDegrees(float arrowOneDegrees, float arrowTwoDegrees)
+    /// <param name="upArrowPos"></param>
+    /// <param name="downArrowPos"></param>
+    public void ShowVerticalMoveArrows()
     {
-        //GameObject arrowOne = m_arrows[0];
-        //GameObject arrowTwo = m_arrows[1];
-
-        m_moveArrowOne.transform.rotation = Quaternion.Euler(Vector3.forward * arrowOneDegrees);
-        m_moveArrowTwo.transform.rotation = Quaternion.Euler(Vector3.forward * arrowTwoDegrees);
-    }
-
-    /// <summary>
-    /// Updates the move arrow position to the ones given
-    /// Coordinates are transformed from world space to screen point
-    /// </summary>
-    /// <param name="arrowOneWorldPos"></param>
-    /// <param name="arrowTwoWorldPos"></param>
-    void SetMoveArrowsPosition(Vector3 arrowOneWorldPos, Vector3 arrowTwoWorldPos)
-    {
-        //GameObject arrowOne = m_arrows[0];
-        //GameObject arrowTwo = m_arrows[1];
-
-        RectTransform rectTransformOne = m_moveArrowOne.GetComponent<RectTransform>();
-        RectTransform rectTransformTwo = m_moveArrowTwo.GetComponent<RectTransform>();
-
-        rectTransformOne.position = m_mainCamera.WorldToScreenPoint(arrowOneWorldPos);
-        rectTransformTwo.position = m_mainCamera.WorldToScreenPoint(arrowTwoWorldPos);
+        m_activeDPadArrowOne = m_dPadUpArrow;
+        m_activeDPadArrowTwo = m_dPadDownArrow;
+        ShowActiveDPadArrows();
     }
 
     /// <summary>
@@ -235,8 +231,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void OnArrowOneClick()
     {
-        if(OnMoveArrowOneClicked != null) {
-            OnMoveArrowOneClicked();
+        if(OnDPadArrowOneClicked != null) {
+            OnDPadArrowOneClicked();
         }
     }
 
@@ -245,8 +241,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void OnArrowTwoClick()
     {
-        if (OnMoveArrowTwoClicked != null) {
-            OnMoveArrowTwoClicked();
+        if (OnDPadArrowTwoClicked != null) {
+            OnDPadArrowTwoClicked();
         }
     }
 }

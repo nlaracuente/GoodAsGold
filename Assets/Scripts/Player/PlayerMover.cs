@@ -149,6 +149,6 @@ public class PlayerMover : MonoBehaviour
         }
 
         m_isPushingOrPulling = false;
-        m_uiManager.ShowMoveArrow();
+        m_uiManager.ShowActiveDPadArrows();
     }
 }

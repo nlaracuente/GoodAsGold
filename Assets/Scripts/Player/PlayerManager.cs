@@ -57,6 +57,7 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     /// True while the player is engaging with a moveable object and the animation to lean has been triggered
     /// </summary>
     bool m_isLeaning = false;
+    public bool Lean { set { m_isLeaning = value; } }
 
     /// <summary>
     /// The total coins the player is allowed to collected before losing
@@ -214,11 +215,7 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
             return;
         }
 
-        if (m_inputManager.MoveableObject != null && !m_isLeaning) {
-            m_isLeaning = true;            
-        } else if (m_inputManager.MoveableObject == null && m_isLeaning) {
-            m_isLeaning = false;
-        } else if(m_playerAnimator.IsInMovementBlend()) {
+        if(m_playerAnimator.IsInMovementBlend()) {
             RotateAndMove();
         }
 
@@ -230,10 +227,15 @@ public class PlayerManager : MonoBehaviour, IButtonInteractible
     /// </summary>
     void LateUpdate()
     {
+        // Already engaging a moveable object therefore we can skip the following
+        if (m_isLeaning) {
+            return;
+        }
+
         Moveable block = GetMoveableObjectInfrontOfPlayer();
 
         if(block != null) {
-            UIManager.instance.ShowGrabButton();
+            UIManager.instance.ShowGrabButton(block);
         } else {
             UIManager.instance.HideGrabButton();
         }

@@ -10,6 +10,11 @@ using UnityEngine.EventSystems;
 public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     /// <summary>
+    /// A reference to self
+    /// </summary>
+    public static InputManager instance;
+
+    /// <summary>
     /// A reference to the main camera to use when converting screen positions to world space
     /// </summary>
     [SerializeField]
@@ -28,10 +33,24 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public Vector3 InputVector { get { return m_inputVector; } }
 
     /// <summary>
+    /// A reference to the virtual hoystick
+    /// </summary>
+    VirtualJoystick m_joystick;
+
+    /// <summary>
     /// Sets the input vector to Vector.zero when true
     /// </summary>
     bool m_inputDisabled = false;
-    public bool DisableInput { get { return m_inputDisabled; } set { m_inputDisabled = value; } }
+    public bool DisableInput
+    {
+        get { return m_inputDisabled; }
+
+        // Disables/Enables the joystick
+        set {
+            m_inputDisabled = value;
+            m_joystick.ShowJoystick = !value; // invert to show/hide
+        }
+    }
 
     /// <summary>
     /// A reference to the last IClickable object the player clicked on
@@ -52,6 +71,8 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// </summary>
     void Awake()
     {
+        instance = this;
+
         if(m_camera == null) {
             m_camera = Camera.main;
         }
@@ -59,8 +80,9 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         if(m_playerTransform == null) {
             m_playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
-
+        
         m_uiManager = FindObjectOfType<UIManager>();
+        m_joystick = FindObjectOfType<VirtualJoystick>();
     }
 
     /// <summary>
@@ -132,8 +154,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                 m_clickable.OnLoseFocus();
                 m_clickable = null;
             }
- 
-            m_uiManager.HideArrows();
+            
             SetInputVector(eventData.position);
         }
     }

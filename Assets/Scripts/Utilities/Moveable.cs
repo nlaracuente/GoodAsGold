@@ -75,9 +75,8 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     public void OnClick()
     {
-        // Where to place the arrows to spawn
-        Vector3 arrowOnePosition = Vector3.zero; // Up or Left Arrow
-        Vector3 arrowTwoPosition = Vector3.zero; // Down or Right Arrow
+        // Disable movement
+        InputManager.instance.DisableInput = true;
 
         // Make the player face this object
         m_playerManager.LookAtObject(transform.position);
@@ -99,41 +98,57 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
         switch (m_playerManager.LookingAtDirection) {
             case FacingDirection.Up:
             case FacingDirection.Down:
-                arrowOnePosition = m_upMoveArrowTransform.position;
-                arrowTwoPosition = m_downMoveArrowTransform.position;
-
                 m_playerManager.transform.position = horizontalAlignment;
-                m_uiManager.ShowVerticalMoveArrows(arrowOnePosition, arrowTwoPosition);
+                m_uiManager.ShowVerticalMoveArrows();
 
                 // Bind the clicks
                 if(m_playerManager.LookingAtDirection == FacingDirection.Up) {
-                    m_uiManager.OnMoveArrowOneClicked += Push;
-                    m_uiManager.OnMoveArrowTwoClicked += Pull;
+                    m_uiManager.OnDPadArrowOneClicked += Push;
+                    m_uiManager.OnDPadArrowTwoClicked += Pull;
                 } else {
-                    m_uiManager.OnMoveArrowOneClicked += Pull;
-                    m_uiManager.OnMoveArrowTwoClicked += Push;
+                    m_uiManager.OnDPadArrowOneClicked += Pull;
+                    m_uiManager.OnDPadArrowTwoClicked += Push;
                 }
                 break;
 
             // Player is on the right side of this object looking left
             case FacingDirection.Left:
             case FacingDirection.Right:
-                arrowOnePosition = m_leftMoveArrowTransform.position;
-                arrowTwoPosition = m_rightMoveArrowTransform.position;
-
                 m_playerManager.transform.position = verticalAlignment;
-                m_uiManager.ShowHorizontalMoveArrows(arrowOnePosition, arrowTwoPosition);
+                m_uiManager.ShowHorizontalMoveArrows();
 
                 // Bind the clicks
                 if (m_playerManager.LookingAtDirection == FacingDirection.Left) {
-                    m_uiManager.OnMoveArrowOneClicked += Push;
-                    m_uiManager.OnMoveArrowTwoClicked += Pull;
+                    m_uiManager.OnDPadArrowOneClicked += Push;
+                    m_uiManager.OnDPadArrowTwoClicked += Pull;
                 } else {
-                    m_uiManager.OnMoveArrowOneClicked += Pull;
-                    m_uiManager.OnMoveArrowTwoClicked += Push;
+                    m_uiManager.OnDPadArrowOneClicked += Pull;
+                    m_uiManager.OnDPadArrowTwoClicked += Push;
                 }
                 break;
         }
+
+        // Trigger the lean animation
+        m_playerManager.Lean = true;
+    }
+
+    /// <summary>
+    /// Removes all bindings with the move arrows
+    /// </summary>
+    public void OnLoseFocus()
+    {
+        // Disable movement
+        InputManager.instance.DisableInput = false;
+        UIManager.instance.HideArrows();
+
+        m_uiManager.OnDPadArrowOneClicked -= Push;
+        m_uiManager.OnDPadArrowTwoClicked -= Push;
+
+        m_uiManager.OnDPadArrowOneClicked -= Pull;
+        m_uiManager.OnDPadArrowTwoClicked -= Pull;
+
+        // Stop Leaning
+        m_playerManager.Lean = false;
     }
 
     /// <summary>
@@ -177,17 +192,5 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     void Pull()
     {
         m_playerManager.PullObject(this);
-    }
-
-    /// <summary>
-    /// Removes all bindings with the move arrows
-    /// </summary>
-    public void OnLoseFocus()
-    {
-        m_uiManager.OnMoveArrowOneClicked -= Push;
-        m_uiManager.OnMoveArrowTwoClicked -= Push;
-
-        m_uiManager.OnMoveArrowOneClicked -= Pull;
-        m_uiManager.OnMoveArrowTwoClicked -= Pull;
     }
 }

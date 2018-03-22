@@ -5,8 +5,23 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ActionButton : MonoBehaviour, IPointerDownHandler
 {
+    /// <summary>
+    /// These states represent the action the button will invoke when pressed
+    /// </summary>
+    enum State
+    {
+        None,
+        Grab,
+        Release,
+    }
+
+    /// <summary>
+    /// Current state the button is in
+    /// </summary>
+    State m_state;
+    
     /// <summary>
     /// A reference to the button's text
     /// </summary>
@@ -18,61 +33,68 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// </summary>
     [SerializeField]
     Image m_buttonImage;
-    
-    /// <summary>
-    /// True while the button is pressed
-    /// </summary>
-    bool m_isPressed = false;
-    public bool IsPressed
-    {
-        get { return m_isPressed; }
-        set {
-            m_isPressed = value;
-            if(OnStateChange != null) {
-                OnStateChange(m_isPressed);
-            }
-        }
-    }
 
     /// <summary>
-    /// Notifies listener of a change of state for this button
+    /// A reference to the moveable object that triggered this button to be enabled
     /// </summary>
-    /// <param name="state"></param>
-    public delegate void StateChangeEvent(bool state);
-    public event StateChangeEvent OnStateChange;
-    
-    /// <summary>
-    /// Triggers a state change to show the button pressed
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnPointerDown(PointerEventData eventData)
+    Moveable m_moveable;
+    public Moveable MoveableObject { get { return m_moveable; } set { m_moveable = value; } }
+
+    public static ActionButton instance;
+
+    private void Awake()
     {
-        IsPressed = true;
+        instance = this;
     }
 
     /// <summary>
     ///  Triggers a state change to show the button released
     /// </summary>
     /// <param name="eventData"></param>
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
-        IsPressed = false;
+        if(m_moveable == null) {
+            return;
+        }
+
+        switch (m_state) {
+            case State.Grab:
+                m_moveable.OnClick();
+                ShowReleaseAction(m_moveable);
+                break;
+            case State.Release:
+                m_moveable.OnLoseFocus();
+                HideButton();
+                break;
+        }
     }
 
     /// <summary>
     /// Displays the button and updates the text to show a grab action option
     /// </summary>
-    public void ShowGrabAction()
+    public void ShowGrabAction(Moveable moveable)
     {
+        m_state = State.Grab;
+        m_moveable = moveable;
         m_buttonText.text = "Grab";
+        m_buttonImage.enabled = true;
+    }
+
+    public void ShowReleaseAction(Moveable moveable)
+    {
+        m_state = State.Release;
+        m_moveable = moveable;
+        m_buttonText.text = "Release";
         m_buttonImage.enabled = true;
     }
 
     /// <summary>
     /// Disables the button
     /// </summary>
-    public void Hide()
+    public void HideButton()
     {
+        m_moveable = null;
+        m_state = State.None;
         m_buttonText.text = "";
         m_buttonImage.enabled = false;
     }

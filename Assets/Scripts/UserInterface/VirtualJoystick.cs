@@ -41,22 +41,19 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     public Vector3 InputVector { get { return new Vector3(m_inputVector.x, 0f, m_inputVector.y); } }
 
     /// <summary>
-    /// A reference to the action button instance
+    /// Shows/Hides the joystick
     /// </summary>
-    ActionButton m_actionButton;
-    public bool IsActionButtonPressed { get { return m_actionButton.IsPressed; } }
+    public bool ShowJoystick
+    {
+        set { m_handle.gameObject.SetActive(value);}
+    }
     
     /// <summary>
     /// Stores the current joystick position
     /// </summary>
     void Start()
     {
-        m_actionButton = FindObjectOfType<ActionButton>();
         m_position = RectTransformUtility.WorldToScreenPoint(new Camera(), m_background.position);
-        
-        if(m_actionButton == null) {
-            Debug.LogErrorFormat("Virtual Joystick Error: Missing Component! ActionButon = {0}", m_actionButton);
-        }
     }
 
     /// <summary>
@@ -66,6 +63,11 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     /// <param name="eventData"></param>
     public void OnDrag(PointerEventData eventData)
     {
+        // Ignore inputs while the handle is disabled
+        if (!m_handle.gameObject.activeSelf) {
+            return;
+        }
+
         Vector2 direction = eventData.position - m_position;
 
         m_inputVector = (direction.magnitude > m_background.sizeDelta.x / 2f) ?
@@ -90,12 +92,12 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     /// <param name="eventData"></param>
     public void OnPointerUp(PointerEventData eventData)
     {
+        // Ignore inputs while the handle is disabled
+        if (!m_handle.gameObject.activeSelf) {
+            return;
+        }
+
         m_inputVector = Vector2.zero;
         m_handle.anchoredPosition = Vector2.zero;
-    }
-
-    public void OnActionStateChange()
-    {
-
     }
 }
