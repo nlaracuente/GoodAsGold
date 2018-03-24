@@ -101,6 +101,10 @@ public class MapController : MonoBehaviour
     void SaveObjectReferences()
     {
         foreach (BaseObject spawnedObject in FindObjectsOfType<BaseObject>()) {
+            if (!spawnedObject.CompareTag("Moveable")) {
+                continue;
+            }
+
             // Where on the array to place this tile
             Vector3 index = GetIndexByPosition(spawnedObject.gameObject);
 
@@ -264,7 +268,8 @@ public class MapController : MonoBehaviour
                     m_tileMap[x, z] = tile;
                     tile.Index = index;
 
-                    if(objectInstance != null) {
+                    // Right now we only want to store moveable objects
+                    if(objectInstance != null && objectInstance.CompareTag("Moveable")) {
                         // Set a reference to the object on the tile should there be one
                         BaseObject objectOnTile = objectInstance.GetComponent<BaseObject>();
 
@@ -432,42 +437,29 @@ public class MapController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the given position object reference with the new object given
-    /// </summary>
-    /// <param name="position"></param>
-    /// <param name="newObject"></param>
-    bool SetObjectAt(Vector3 position, BaseObject newObject)
-    {
-        bool wasUpdated = false;
-        BaseTile tile = GetTileAt(position);
-
-        // Make sure the tile doesn't already have an object 
-        // so that we don't lose a reference
-        if(tile != null && tile.ObjectOnTile == null) {
-            tile.ObjectOnTile = newObject;
-            wasUpdated = true;
-        }
-
-        return wasUpdated;
-    }
-
-    /// <summary>
     /// Attempts to updates the position of the object in the current position to the new position
     /// If there is no object at the current position or the new position is invalid 
     /// then the update fails and no changes are made
     /// </summary>
-    /// <param name="currentPosition"></param>
-    /// <param name="newPosition"></param>
-    public void UpdateObjectPosition(Vector3 currentPosition, Vector3 newPosition)
+    /// <param name="sourceTile"></param>
+    /// <param name="destinationTile"></param>
+    public bool ChangeTileObjectsTile(BaseTile sourceTile, BaseTile destinationTile)
     {
-        BaseTile tile = GetTileAt(currentPosition);
-
-        // If the new reference can be set then we can proceed
-        if(tile != null && tile.ObjectOnTile != null) {
-            SetObjectAt(newPosition, tile.ObjectOnTile);
-
-            // Remove the reference at the current tile
-            tile.ObjectOnTile = null;
+        // There's nothing we can do
+        if(sourceTile == null || destinationTile == null) {
+            return false;
         }
+
+        // We don't want to lose a reference to an object
+        // therefore we will not proceed if the destination has an object already
+        if (destinationTile.ObjectOnTile != null) {
+            return false;
+        }
+
+        destinationTile.ObjectOnTile = sourceTile.ObjectOnTile;
+        destinationTile.ObjectOnTile.Index = destinationTile.Index;
+        sourceTile.ObjectOnTile = null;
+
+        return true;
     }
 }

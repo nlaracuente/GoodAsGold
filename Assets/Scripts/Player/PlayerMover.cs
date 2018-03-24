@@ -126,20 +126,23 @@ public class PlayerMover : MonoBehaviour
     /// Hides/Shows the ui move arrows
     /// </summary>
     /// <param name="action"></param>
-    /// <param name="playerDestination"></param>
+    /// <param name="playerDirection"></param>
     /// <param name="objectTransform"></param>
     /// <returns></returns>
-    public IEnumerator PushPullRoutine(Vector3 playerDestination, Vector3 objectDestination, Transform objectTransform)
+    public IEnumerator PushPullRoutine(Vector3 playerDirection, Vector3 objectDestination, Transform objectTransform)
     {
         m_uiManager.HideArrows();
         m_isPushingOrPulling = true;
 
+        Debug.LogFormat("Moving object from {0} to {1}", objectTransform.position, objectDestination);
+
         // Decrease the push/pull speed to match curse status
         float moveSpeed = m_pushSpeed * m_speedDecrement;
 
-        while (Vector3.Distance(playerDestination, transform.position) > m_destinationProximity) {
-
-            Vector3 playerPos = Vector3.MoveTowards(transform.position, playerDestination, moveSpeed * Time.deltaTime);
+        // The object dictates where to move to
+        while (Vector3.Distance(objectDestination, objectTransform.position) > m_destinationProximity) {
+            // transform.position + (playerDirection * m_moveSpeed) * Time.deltaTime;//
+            Vector3 playerPos = Vector3.MoveTowards(transform.position, playerDirection, moveSpeed * Time.deltaTime);
             Vector3 objectPos = Vector3.MoveTowards(objectTransform.position, objectDestination, moveSpeed * Time.deltaTime);
 
             // Always move the object first to prevent the character controller from colliding with it and stopping
@@ -147,6 +150,9 @@ public class PlayerMover : MonoBehaviour
             transform.position = playerPos;
             yield return new WaitForEndOfFrame();
         }
+
+        // Snap the object into place
+        objectTransform.position = objectDestination;
 
         m_isPushingOrPulling = false;
         m_uiManager.ShowActiveDPadArrows();

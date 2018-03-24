@@ -27,30 +27,6 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     public Transform ParentTransform { get { return m_parentTransform; } }
 
     /// <summary>
-    /// Where the move (up) arrow ui above this object will be placed
-    /// </summary>
-    [SerializeField]
-    Transform m_upMoveArrowTransform;
-
-    /// <summary>
-    /// Where the move (left) arrow ui above this object will be placed
-    /// </summary>
-    [SerializeField]
-    Transform m_leftMoveArrowTransform;
-
-    /// <summary>
-    /// Where the move (down) arrow ui above this object will be placed
-    /// </summary>
-    [SerializeField]
-    Transform m_downMoveArrowTransform;
-
-    /// <summary>
-    /// Where the move (right) arrow ui above this object will be placed
-    /// </summary>
-    [SerializeField]
-    Transform m_rightMoveArrowTransform;
-
-    /// <summary>
     /// Set references
     /// </summary>
     void Awake()
@@ -191,6 +167,6 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     void Pull()
     {
-        m_playerManager.PullObject(this);
+       // m_playerManager.PullObject(this);
     }
 }
