@@ -134,8 +134,6 @@ public class PlayerMover : MonoBehaviour
         m_uiManager.HideArrows();
         m_isPushingOrPulling = true;
 
-        Debug.LogFormat("Moving object from {0} to {1}", objectTransform.position, objectDestination);
-
         // Decrease the push/pull speed to match curse status
         float moveSpeed = m_pushSpeed * m_speedDecrement;
 

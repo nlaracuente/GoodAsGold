@@ -167,6 +167,6 @@ public class Moveable : MonoBehaviour, IClickable, IButtonInteractible
     /// </summary>
     void Pull()
     {
-       // m_playerManager.PullObject(this);
+       m_playerManager.PullObject(this);
     }
 }
