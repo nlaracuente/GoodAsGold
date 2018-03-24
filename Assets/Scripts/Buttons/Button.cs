@@ -22,6 +22,7 @@ public class Button : MonoBehaviour
     /// <summary>
     /// True while the button is active
     /// </summary>
+    [SerializeField]
     bool m_isActive = false;
     public bool IsActive
     {
@@ -66,13 +67,11 @@ public class Button : MonoBehaviour
     /// Dispatches the OnButtonPressed event if the object in question is something that can interat with this
     /// </summary>
     /// <param name="other"></param>
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<IButtonInteractible>() != null && OnButtonPressed != null) {
-            // Ignore if already active
-            if (!m_isActive) {
-                OnButtonPressed(this, other.gameObject);
-            }
+        // Continues to dispatch the activate request until it becomes active
+        if (!m_isActive && other.GetComponent<IButtonInteractible>() != null && OnButtonPressed != null) {
+            OnButtonPressed(this, other.gameObject);
         }
     }
 
@@ -83,6 +82,7 @@ public class Button : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.GetComponent<IButtonInteractible>() != null && OnButtonReleased != null) {
+            m_isActive = false;
             OnButtonReleased(this, other.gameObject);
         }
     }
