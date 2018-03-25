@@ -269,7 +269,7 @@ public class MapController : MonoBehaviour
                     tile.Index = index;
 
                     // Right now we only want to store moveable objects
-                    if(objectInstance != null && objectInstance.CompareTag("Moveable")) {
+                    if(objectInstance != null) {
                         // Set a reference to the object on the tile should there be one
                         BaseObject objectOnTile = objectInstance.GetComponent<BaseObject>();
 

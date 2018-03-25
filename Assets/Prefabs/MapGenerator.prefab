@@ -88,6 +88,10 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 4278231211
     prefab: {fileID: 1113978975498780, guid: cabcc8aa56196e04b9fd1d70fb1401c9, type: 2}
+  - color:
+      serializedVersion: 2
+      rgba: 4280128759
+    prefab: {fileID: 1933426586202376, guid: edc5fd726e999a4408a0ff89ddf88fbd, type: 2}
   m_resourcePath: Levels
   m_tileTextureMap: {fileID: 2800000, guid: 526d615b9a6e6f447b5e30b4d94b9e3b, type: 3}
   m_objectsTextureMap: {fileID: 2800000, guid: 318e0a27dde186341830b7e4f6360863, type: 3}

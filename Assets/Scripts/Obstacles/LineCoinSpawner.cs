@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
 /// <summary>
 /// Creates coins in columns and rows based on the total lengths for each
@@ -106,12 +106,12 @@ public class LineCoinSpawner : MonoBehaviour
                 position.x -= columnOffset;
                 position.z -= rowOffset;
 
-                if (!Application.isEditor) {
+                //if (!Application.isEditor) {
                     instance = Instantiate(m_coinPrefab, position, Quaternion.identity);
-                } else {
-                    instance = PrefabUtility.InstantiatePrefab(m_coinPrefab) as GameObject;
-                    instance.transform.position = position;
-                }
+                //} else {
+                //    instance = PrefabUtility.InstantiatePrefab(m_coinPrefab) as GameObject;
+                //    instance.transform.position = position;
+                //}
                 
                 instance.name = instanceName;
                 instance.transform.SetParent(transform, false);

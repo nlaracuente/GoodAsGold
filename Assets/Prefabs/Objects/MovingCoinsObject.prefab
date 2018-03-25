@@ -90,7 +90,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4839260225028472}
   - component: {fileID: 114307457426707664}
-  - component: {fileID: 114334928417283394}
   m_Layer: 0
   m_Name: MovingCoinsObject
   m_TagString: Coin
@@ -1266,25 +1265,6 @@ MonoBehaviour:
     type: 2}
   m_coinModel: {fileID: 1825440555719740}
   m_hasRotation: 1
---- !u!114 &114334928417283394
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1113978975498780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 670d18b4def39814f9c829d35b1b4dcb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_loopType: 2
-  m_destinations:
-  - {fileID: 4141260344736946}
-  - {fileID: 4908141128556056}
-  m_speed: 5
-  m_delay: 0.25
-  m_autoStart: 1
-  m_segmented: 0
 --- !u!114 &114344560767382764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1502,7 +1482,7 @@ MonoBehaviour:
   - {fileID: 4908141128556056}
   - {fileID: 4141260344736946}
   m_speed: 5
-  m_delay: 0.25
+  m_delay: 1.5
   m_autoStart: 1
   m_segmented: 0
 --- !u!114 &114868574864275848
