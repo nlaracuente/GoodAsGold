@@ -14,6 +14,11 @@ public class Pickup : MonoBehaviour
     /// </summary>
     [SerializeField]
     float rotationSpeed = -120f;
+    public float RotationSpeed
+    {
+        set { this.rotationSpeed = value; }
+        get { return this.rotationSpeed; }
+    }
 
     /// <summary>
     /// How fast to rotate when collected
@@ -28,10 +33,19 @@ public class Pickup : MonoBehaviour
     bool isItemCollected = false;
 
     /// <summary>
+    /// Rotates the coins when "true"
+    /// </summary>
+    public bool StopRotation { get; set; }
+
+    /// <summary>
     /// Since these are non-physic based collectables
     /// </summary>
     void Update()
     {
+        if (this.StopRotation) {
+            return;
+        }
+
         // Rotate
         Vector3 targetRotation = new Vector3(
             0f,

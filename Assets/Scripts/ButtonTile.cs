@@ -26,6 +26,12 @@ public abstract class ButtonTile : MonoBehaviour
     protected new Renderer renderer;
 
     /// <summary>
+    /// Array of all the objects that want to listen to this event
+    /// </summary>
+    [SerializeField]
+    IMoveable[] eventListeners;
+
+    /// <summary>
     /// Delegates for enabling/disabling the switch
     /// </summary>
     /// <param name="value">Value of the object clicked</param>

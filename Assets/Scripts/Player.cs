@@ -243,7 +243,7 @@ public class Player : MonoBehaviour, IMoveable
             this.inputVector.Normalize();
         }
 
-        bool isActionButton = Input.GetButton("Jump");
+        bool isActionButton = Input.GetButton("Jump") || Input.GetButton("Fire1");
 
         // Currently not enaged
         // Trigger animation to engage
@@ -499,15 +499,15 @@ public class Player : MonoBehaviour, IMoveable
         );
 
         // Fire off the color changer
-        StopCoroutine(this.TurnIntoGold());
-        StartCoroutine(this.TurnIntoGold());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StartCoroutine(this.ChangeMaterialPerCurse());
     }
 
     /// <summary>
     /// Gradually changes the alpha of the gold color of the player to match their current curse state
     /// </summary>
     /// <returns></returns>
-    IEnumerator TurnIntoGold()
+    IEnumerator ChangeMaterialPerCurse()
     {
         float cursedPercent = this.CursePercent;        
         float currentAlpha  = this.renderer.materials[1].color.a;
@@ -549,11 +549,22 @@ public class Player : MonoBehaviour, IMoveable
     /// Removes the effects of being cursed
     /// Resets speed/rotation back to max
     /// </summary>
-    void LiftCurse()
+    public void LiftCurse()
     {
+        // Running out of time and want to make sure this is not a thing
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+        StopCoroutine(this.ChangeMaterialPerCurse());
+
         this.pickups = 0;
         this.moveSpeed = this.maxSpeed;
         this.rotationSpeed = this.maxRotationSpeed;
+
+        // Hide the gold texture
+        Color newColor = this.renderer.materials[1].color;
+        newColor.a = 0f;
+        this.renderer.materials[1].color = newColor;
     }
 
     /// <summary>
@@ -575,6 +586,7 @@ public class Player : MonoBehaviour, IMoveable
     /// </summary>
     public void PlayerVictory()
     {
+        this.LiftCurse();
         this.EndOfLevel("Victory");
     }
 
@@ -605,5 +617,23 @@ public class Player : MonoBehaviour, IMoveable
         } else {
             this.menu.GameWonMenu();
         }
+    }
+
+    /// <summary>
+    /// Triggers the player to respawn at the last respawn point
+    /// </summary>
+    public void Respawn()
+    {
+        this.transform.position = GameManager.instance.RespawnPoint;
+        this.LiftCurse();
+        this.IsDisabled = false;
+        this.UpdateAnimator("Respawn");
+        this.levelCamera.CameraEnabled = true;
+        this.playerCamera.gameObject.SetActive(false);
+
+        //// Running out of time so putting this here but it should be in GameManager
+        //foreach(WallCoinSpawner spawner in FindObjectsOfType<WallCoinSpawner>()) {
+        //    spawner.StartRoutine();
+        //}
     }
 }

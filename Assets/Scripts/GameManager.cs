@@ -26,6 +26,16 @@ public class GameManager : MonoBehaviour
     /// True when the game is completed
     /// </summary>
     public bool IsGameWon { get; set; }
+
+    /// <summary>
+    /// Stores the point where the player will respawn
+    /// </summary>
+    public Vector3 RespawnPoint { get; set; }
+
+    public bool IsMenuOpened
+    {
+        get { return FindObjectOfType<LevelMenu>().isMenuOpened; }
+    }
    
     /// <summary>
     /// Prevents more than once instance of the GameManager
