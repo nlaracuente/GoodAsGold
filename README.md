@@ -2,6 +2,7 @@
 
 # Good as Gold
 Is our entry for the [Ludum Dare 40 Game Jam](https://ldjam.com/events/ludum-dare/40/good-as-gold) where the theme was about "The more you have the worst it is."\
+For this theme we took the classic "coin collections" and twisted so that it harms you instead of helping you.
 
 ## Description
 Jones went searching for Pharaoh’s lost treasure hidden deep in the hottest parts of the Libyan Desert only to be met with a terrible curse! Quickly, help Jones navigate his way around the Pharaoh’s curse and back to safety. Fail to do so and you will become part of the Pharaoh’s collection for all eternity…
