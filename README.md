@@ -1,6 +1,6 @@
-![screenshot]:https://img.itch.zone/aW1hZ2UvMjQ2NTg0LzExNzgxNjMucG5n/347x500/PJxG3j.png "Good as Gold"
+![Alttext](https://img.itch.zone/aW1hZ2UvMjQ2NTg0LzExNzgxNjMucG5n/347x500/PJxG3j.png "Good as Gold")
 
-# Personal Space
+# Good as Gold
 Is our entry for the [Ludum Dare 40 Game Jam](https://ldjam.com/events/ludum-dare/40/good-as-gold) where the theme was about "The more you have the worst it is."\
 
 ## Description
